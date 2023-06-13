@@ -16,6 +16,9 @@ builder.Services.AddLiveHealthChecksClient(settings =>
     settings.ReceiveMethod = "SampleApiHealth";
     settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
     settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
+    //Set this to true if you want to publish anomalies
+    //ie those health reports with not Healthy status.
+    settings.PublishOnlyWhenNotHealthy = false;
 });
 
 var app = builder.Build();
