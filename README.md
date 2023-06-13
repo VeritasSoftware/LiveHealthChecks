@@ -91,4 +91,4 @@ connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
 await connection.StartAsync();
 ```
 
-[**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
+![**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
