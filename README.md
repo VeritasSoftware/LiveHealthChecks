@@ -1,11 +1,13 @@
+# LiveHealthChecks
 # Real-Time Api Health Check Monitoring
 
+## Background
 
-The Asp Net Core Web Api has a [**Health Checks**](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-6.0) system built into it.
+An Asp Net Core Web Api has a [**Health Checks**](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-6.0) system built into it.
 
 This project taps into that system & makes the generated [**Health Report**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthreport?view=dotnet-plat-ext-6.0),
 
-available to Monitoring client applications, in real-time.
+available to Monitoring applications, in real-time.
 
 
 
@@ -13,7 +15,7 @@ The **Client** package, installed in the Api, runs the **Health Check** periodic
 
 and uploads the generated Health Report to the **Server SignalR Hub**.
 
-The Hub generates sends a push notification to the connected clients,
+The Hub sends a web socket push notification to the connected clients,
 
 notifying them of the Health Report in real-time.
 
@@ -30,7 +32,9 @@ You can use a Console app as a Health Checks Server.
 
 Just create one with Web Sdk (project file):
 
+```C#
 <Project Sdk="Microsoft.NET.Sdk.Web">
+```
 
 Then, plug in the Server package.
 
@@ -67,14 +71,16 @@ services.AddLiveHealthChecksClient(settings =>
     settings.ReceiveMethod = "SampleApiHealth";
     settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
     settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
-    //Set this to true if you want to publish anomalies
-    //ie those health reports with not Healthy status.
     settings.PublishOnlyWhenNotHealthy = false;
 });
 ```
 The **ReceiveMethod** is what the SignalR method that Monitoring app needs to listen to.
 
 The **SecretKey** must be the same between Server & Api.
+
+Set **PublishOnlyWhenNotHealthy** to **true** if you want to publish anomalies,
+
+ie those Health Reports with **not Healthy** status.
 
 The Server sends the Health Report as a real-time push notification.
 
