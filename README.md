@@ -18,6 +18,12 @@ The Hub generates sends a push notification to the connected clients,
 notifying them of the Health Report in real-time.
 
 
+|Packages|Version & Downloads|
+|---------------------------|:---:|
+|*AspNetCore.Live.Api.HealthChecks.Server*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|
+|*AspNetCore.Live.Api.HealthChecks.Client*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
+
+
 ## Server
 
 You can use a Console app as a Health Checks Server.
