@@ -74,7 +74,7 @@ services.AddLiveHealthChecksClient(settings =>
     settings.PublishOnlyWhenNotHealthy = false;
 });
 ```
-The **ReceiveMethod** is what the SignalR method that Monitoring app needs to listen to.
+The **ReceiveMethod** is the SignalR method that Monitoring app needs to listen to.
 
 The **SecretKey** must be the same between Server & Api.
 
@@ -83,6 +83,8 @@ Set **PublishOnlyWhenNotHealthy** to **true** if you want to publish anomalies,
 ie those Health Reports with **not Healthy** status.
 
 The Server sends the Health Report as a real-time push notification.
+
+**Note:-** You can host a Server & Client in the same Api too. 
 
 ## Monitoring app
 
