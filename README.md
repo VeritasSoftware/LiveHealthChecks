@@ -19,6 +19,7 @@ The Hub sends a web socket push notification to the connected clients,
 
 notifying them of the Health Report in real-time.
 
+![**LiveHealthChecks**](/Docs/SequenceDiagram.png)
 
 |Packages|Version & Downloads|
 |---------------------------|:---:|
