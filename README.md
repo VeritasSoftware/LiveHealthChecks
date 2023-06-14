@@ -80,7 +80,7 @@ The **SecretKey** must be the same between Server & Api.
 
 Set **PublishOnlyWhenNotHealthy** to **true** if you want to publish anomalies,
 
-ie those Health Reports with **not Healthy** status.
+ie those Health Reports with **not Healthy** [**status**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthstatus?view=dotnet-plat-ext-6.0).
 
 The Server sends the Health Report as a real-time push notification.
 
