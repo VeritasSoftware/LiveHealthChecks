@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,12 +8,15 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Shantanu</Authors>
     <Company>Veritas Software</Company>
-    <Description>Client package for Real-Time Api Health Check Monitoring system called LiveHealthChecks.</Description>
+    <Description>LiveHealthChecks - Client package for Real-Time Api Health Check Monitoring.</Description>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Added feature to transform health report for publishing. Better logging.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr client</PackageTags>
+	<Version>1.1.0</Version>
+	<AssemblyVersion>1.0.0.1</AssemblyVersion>
+	<FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

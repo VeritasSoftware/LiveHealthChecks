@@ -24,8 +24,6 @@ The Hub sends a web socket push notification to the connected clients,
 
 notifying them of the Health Report in real-time.
 
-![**LiveHealthChecks**](/Docs/SequenceDiagram.png)
-
 ## Server
 
 You can use a Console app as a Health Checks Server.
@@ -54,8 +52,6 @@ app.UseEndpoints(endpoints =>
 
 app.Run();
 ```
-
-![**Sample Server**](/Docs/Server.jpg)
 
 ## Asp Net Core Api
 
@@ -98,8 +94,6 @@ The Server sends the Health Report as a real-time push notification.
 
 **Note:-** You can host a Server & Client in the same Api too. 
 
-![**Sample Api**](/Docs/Api.jpg)
-
 ## Monitoring app
 
 In your Monitoring app, create a SignalR connection to the Server Hub.
@@ -121,5 +115,3 @@ connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
 
 await connection.StartAsync();
 ```
-
-![**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
