@@ -19,16 +19,17 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
             {
                 if (string.Compare(_settings.SecretKey, myHealthCheck.SecretKey, false) == 0)
                 {
-                    _logger?.LogInformation($"Sending health check report to {myHealthCheck.ReceiveMethod}. Connection Id: {base.Context.ConnectionId}.");
+                    _logger?.LogInformation($"Sending Health Report ({myHealthCheck.Report}) to {myHealthCheck.ReceiveMethod}. Connection Id: {base.Context.ConnectionId}.");
 
                     await base.Clients.All.SendAsync(myHealthCheck.ReceiveMethod, myHealthCheck.Report, new object());
 
-                    _logger?.LogInformation($"Sent health check report to {myHealthCheck.ReceiveMethod}. Connection Id: {base.Context.ConnectionId}.");
+                    _logger?.LogInformation($"Sent Health Report ({myHealthCheck.Report}) to {myHealthCheck.ReceiveMethod}. Connection Id: {base.Context.ConnectionId}.");
                 }
             }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"Error in {nameof(LiveHealthChecksHub)}.");
+                throw;
             }                      
         }
     }

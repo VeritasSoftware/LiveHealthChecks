@@ -55,6 +55,8 @@ app.UseEndpoints(endpoints =>
 app.Run();
 ```
 
+![**Sample Server**](/Docs/Server.jpg)
+
 ## Asp Net Core Api
 
 In your Api add the Client Nuget package.
@@ -72,6 +74,16 @@ services.AddLiveHealthChecksClient(settings =>
     settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
     settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
     settings.PublishOnlyWhenNotHealthy = false;
+    //Optional - transform your health report to as you want it published.
+    settings.TransformHealthReport = healthReport => new
+    {
+        status = healthReport.Status.ToString(),
+        results = healthReport.Entries.Select(e => new
+        {
+            key = e.Key,
+            value = e.Value.Status.ToString()
+        })
+    };
 });
 ```
 The **ReceiveMethod** is the SignalR method that Monitoring app needs to listen to.
@@ -85,6 +97,8 @@ ie those Health Reports with **not Healthy** [**status**](https://learn.microsof
 The Server sends the Health Report as a real-time push notification.
 
 **Note:-** You can host a Server & Client in the same Api too. 
+
+![**Sample Api**](/Docs/Api.jpg)
 
 ## Monitoring app
 
