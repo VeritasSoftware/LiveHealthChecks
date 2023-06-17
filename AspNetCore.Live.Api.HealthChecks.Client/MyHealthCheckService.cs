@@ -24,38 +24,16 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
         {
             try
             {
+                await RunHealthCheckAndPublishHealthReport(stoppingToken);
+
                 TimeSpan interval = TimeSpan.FromMinutes(_settings.HealthCheckIntervalInMinutes);
                 using PeriodicTimer timer = new PeriodicTimer(interval);
 
-                while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken) && _healthCheckService != null)
+                while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
                 {
                     try
                     {
-                        _logger?.LogInformation("Running Health Check.");
-
-                        var report = await _healthCheckService.CheckHealthAsync(stoppingToken);
-
-                        _logger?.LogInformation("Finished running Health Check.");
-
-                        if (_settings.PublishOnlyWhenNotHealthy)
-                        {
-                            if (report.Status != HealthStatus.Healthy)
-                            {
-                                _logger?.LogInformation("Publishing Health Check.");
-
-                                await _publisher.Publish(report);
-
-                                _logger?.LogInformation("Finished publishing Health Check.");
-                            }
-                        }
-                        else
-                        {
-                            _logger?.LogInformation("Publishing Health Check.");
-
-                            await _publisher.Publish(report);
-
-                            _logger?.LogInformation("Finished publishing Health Check.");
-                        }
+                        await RunHealthCheckAndPublishHealthReport(stoppingToken);
                     }
                     catch (Exception ex)
                     {
@@ -66,6 +44,38 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckService)}.");
+            }            
+        }
+
+        private async Task RunHealthCheckAndPublishHealthReport(CancellationToken stoppingToken)
+        {            
+            if (_healthCheckService != null)
+            {
+                _logger?.LogInformation("Running Health Check.");
+
+                var report = await _healthCheckService.CheckHealthAsync(stoppingToken);
+
+                _logger?.LogInformation("Finished running Health Check.");
+
+                if (_settings.PublishOnlyWhenNotHealthy)
+                {
+                    if (report.Status != HealthStatus.Healthy)
+                    {
+                        _logger?.LogInformation("Publishing Health Check.");
+
+                        await _publisher.Publish(report);
+
+                        _logger?.LogInformation("Finished publishing Health Check.");
+                    }
+                }
+                else
+                {
+                    _logger?.LogInformation("Publishing Health Check.");
+
+                    await _publisher.Publish(report);
+
+                    _logger?.LogInformation("Finished publishing Health Check.");
+                }
             }            
         }
     }
