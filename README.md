@@ -137,4 +137,4 @@ and calling the **CheckHealthAsync** method.
 
 and then, publish the Health Report to the Server your self,
 
-by injecting **IMyHealthCheckPublisher** and calling the **Publish** method.
+by injecting the Client package's '**IMyHealthCheckPublisher** and calling the **Publish** method.
