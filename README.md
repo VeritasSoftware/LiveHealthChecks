@@ -121,3 +121,20 @@ await connection.StartAsync();
 ```
 
 ![**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
+
+## Live - Trigger your own Health Checks
+
+Besides, the Client package running the Health Check on the Api it self, periodically,
+
+you can run your own Health Check and publish the Health Report to the Server.
+
+
+You can trigger your own Health Check, at any point, in your API,
+
+by injecting the built-in Health Check system's' [**HealthCheckService**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthcheckservice?view=dotnet-plat-ext-6.0),
+
+and calling the **CheckHealthAsync** method.
+
+and then, publish the Health Report to the Server your self,
+
+by injecting **IMyHealthCheckPublisher** and calling the **Publish** method.
