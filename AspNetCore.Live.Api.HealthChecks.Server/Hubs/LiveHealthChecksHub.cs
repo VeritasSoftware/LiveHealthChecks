@@ -17,7 +17,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
         {
             try
             {
-                if (string.Compare(_settings.SecretKey, myHealthCheck.SecretKey, false) == 0)
+                var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == myHealthCheck.ReceiveMethod);
+
+                if (client == null)
+                {
+                    throw new ApplicationException($"Client Api with ReceiveMethod {myHealthCheck.ReceiveMethod} not found.");
+                }
+
+                if (string.Compare(client.SecretKey, myHealthCheck.SecretKey, false) == 0)
                 {
                     _logger?.LogInformation($"Sending Health Report ({myHealthCheck.Report}) to {myHealthCheck.ReceiveMethod}. Connection Id: {base.Context.ConnectionId}.");
 

@@ -8,7 +8,14 @@ Console.WriteLine(Environment.NewLine);
 var builder = WebApplication.CreateBuilder();
 
 builder.Services.AddSignalR();
-builder.Services.AddLiveHealthChecksServer(settings => settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692");
+builder.Services.AddLiveHealthChecksServer(settings => settings.Clients = new ClientSettings[]
+{
+    new ClientSettings
+    {
+        ReceiveMethod = "SampleApiHealth",
+        SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692"
+    }
+});
 
 var app = builder.Build();
 

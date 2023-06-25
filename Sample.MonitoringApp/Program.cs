@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 Console.WriteLine("Hello, Monitoring app!");
 Console.WriteLine(Environment.NewLine);
 
-Thread.Sleep(1000 * 30);
+Thread.Sleep(1000 * 15);
 
 var connection = new HubConnectionBuilder()
                         .WithUrl("https://localhost:5001/livehealthcheckshub")

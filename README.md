@@ -42,7 +42,14 @@ Then, plug in the Server package.
 var builder = WebApplication.CreateBuilder();
 
 builder.Services.AddSignalR();
-builder.Services.AddLiveHealthChecksServer(settings => settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692");
+builder.Services.AddLiveHealthChecksServer(settings => settings.Clients = new ClientSettings[]
+{
+    new ClientSettings
+    {
+        ReceiveMethod = "SampleApiHealth",
+        SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692"
+    }
+});
 
 var app = builder.Build();
 
@@ -54,6 +61,12 @@ app.UseEndpoints(endpoints =>
 
 app.Run();
 ```
+
+A **Client (Api)** with a **ReceiveMethod** & **SecretKey** are set up in the Server.
+
+The Api publishes to the Server with this information.
+
+The Server sends push notification to the ReceiveMethod, if the Client's  SecretKey matches.
 
 ![**Sample Server**](/Docs/Server.jpg)
 
