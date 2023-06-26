@@ -12,11 +12,11 @@
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-    <PackageReleaseNotes>Added feature to run health check on startup of api. Added extension to add client, to IHealthChecksBuilder.</PackageReleaseNotes>
+    <PackageReleaseNotes>Minor enhancements.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr client</PackageTags>
-	<Version>1.1.1</Version>
-	<AssemblyVersion>1.1.0.1</AssemblyVersion>
-	<FileVersion>1.1.0.1</FileVersion>
+	<Version>1.2.0</Version>
+	<AssemblyVersion>1.1.2.0</AssemblyVersion>
+	<FileVersion>1.1.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
