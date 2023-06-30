@@ -18,7 +18,11 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             services.AddHostedService<MyHealthCheckService>();
 
             _healthChecksHubConnection = new HubConnectionBuilder()
-                    .WithUrl(mySettings.HealthCheckServerHubUrl)
+                    .WithUrl(mySettings.HealthCheckServerHubUrl, o =>
+                    {
+                        o.Headers.Add("LiveHealthChecks-ReceiveMethod", mySettings.ReceiveMethod);
+                        o.Headers.Add("LiveHealthChecks-SecretKey", mySettings.SecretKey);
+                    })
                     .WithAutomaticReconnect()
                     .Build();
 

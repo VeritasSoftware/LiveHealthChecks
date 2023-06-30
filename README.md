@@ -117,9 +117,15 @@ In your Monitoring app, create a SignalR connection to the Server Hub.
 
 Then, start listening to the set **ReceiveMethod** ie "SampleApiHealth".
 
+Set the **Headers** as shown. Use the same **ReceiveMethod** & **SecretKey**.
+
 ```C#
 var connection = new HubConnectionBuilder()
-                        .WithUrl("https://localhost:5001/livehealthcheckshub")
+                        .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
+                        {
+                            o.Headers.Add("LiveHealthChecks-ReceiveMethod", "SampleApiHealth");
+                            o.Headers.Add("LiveHealthChecks-SecretKey", "43bf0968-17e0-4d22-816a-6eaadd766692");
+                        })
                         .WithAutomaticReconnect()
                         .Build();
 

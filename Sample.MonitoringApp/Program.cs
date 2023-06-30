@@ -7,7 +7,11 @@ Console.WriteLine(Environment.NewLine);
 Thread.Sleep(1000 * 15);
 
 var connection = new HubConnectionBuilder()
-                        .WithUrl("https://localhost:5001/livehealthcheckshub")
+                        .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
+                        {
+                            o.Headers.Add("LiveHealthChecks-ReceiveMethod", "SampleApiHealth");
+                            o.Headers.Add("LiveHealthChecks-SecretKey", "43bf0968-17e0-4d22-816a-6eaadd766692");
+                        })
                         .WithAutomaticReconnect()
                         .Build();
 

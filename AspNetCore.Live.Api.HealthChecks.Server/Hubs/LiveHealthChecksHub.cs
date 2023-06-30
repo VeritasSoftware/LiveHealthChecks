@@ -10,7 +10,22 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
         public LiveHealthChecksHub(MyHealthCheckSettings settings, ILogger<LiveHealthChecksHub>? logger = null)
         {
             _settings = settings;
-            _logger = logger;
+            _logger = logger;          
+        }
+
+        public override async Task OnConnectedAsync()
+        {            
+            var receiveMethod = Context.GetHttpContext()?.Request.Headers["LiveHealthChecks-ReceiveMethod"].ToString();
+            var secretKey = Context.GetHttpContext()?.Request.Headers["LiveHealthChecks-SecretKey"].ToString();
+
+            var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == receiveMethod && c.SecretKey == secretKey);
+
+            if (client == null)
+            {
+                throw new ApplicationException("Authorization failed.");
+            }
+
+            await base.OnConnectedAsync();
         }
 
         public async Task PublishMyHealthCheck(MyHealthCheckModel myHealthCheck)
