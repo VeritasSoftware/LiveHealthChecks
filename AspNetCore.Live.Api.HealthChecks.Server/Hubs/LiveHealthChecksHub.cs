@@ -14,16 +14,22 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
         }
 
         public override async Task OnConnectedAsync()
-        {            
+        {                   
             var receiveMethod = Context.GetHttpContext()?.Request.Headers["LiveHealthChecks-ReceiveMethod"].ToString();
             var secretKey = Context.GetHttpContext()?.Request.Headers["LiveHealthChecks-SecretKey"].ToString();
+
+            _logger?.LogInformation($"Authorizing ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}.");
 
             var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == receiveMethod && c.SecretKey == secretKey);
 
             if (client == null)
             {
+                _logger?.LogError($"Authorization failed ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}.");
+
                 throw new ApplicationException("Authorization failed.");
             }
+
+            _logger?.LogInformation($"Authorized ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}.");
 
             await base.OnConnectedAsync();
         }
