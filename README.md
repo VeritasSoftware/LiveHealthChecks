@@ -168,7 +168,7 @@ await connection.StartAsync();
 
 If you want to receive notifications for all **ReceiveMethods** in the system,
 
-set the **ReceiveMethod** header to ***** & use the SecretKey set in the Server.
+set the **ReceiveMethod** header to * & use the SecretKey set in the Server.
 
 
 ```C#
