@@ -34,7 +34,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                 throw new ApplicationException("Authorization failed. Please provide SecretKey.");
             }
 
-            _logger?.LogInformation($"Authorizing ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}.");
+            _logger?.LogInformation($"Logging in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}.");
 
             var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == receiveMethod && c.SecretKey == secretKey);
 
@@ -49,15 +49,19 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
             {
                 lock(this)
                 {
-                    _loggedInUsers.Add(new LoggedInUser
+                    var loggedInUser = new LoggedInUser
                     {
                         ReceiveMethod = receiveMethod,
                         ConnectionId = Context.ConnectionId
-                    });
-                }                
-            }            
+                    };                    
 
-            _logger?.LogInformation($"Authorized ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}.");            
+                    Context.Items.Add(Context.ConnectionId, receiveMethod);
+
+                    _loggedInUsers.Add(loggedInUser);
+
+                    _logger?.LogInformation($"Logged in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}.");
+                }                
+            }                        
 
             await base.OnConnectedAsync();
         }
@@ -75,7 +79,8 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                 {
                     _logger?.LogInformation($"Logging out ConnectionId: {Context.ConnectionId}.");
 
-                    _loggedInUsers.RemoveAll(u => u.ConnectionId == Context.ConnectionId);
+                    _loggedInUsers.RemoveAll(u => u.ReceiveMethod == Context.Items[Context.ConnectionId]?.ToString() 
+                                                    && u.ConnectionId == Context.ConnectionId);
 
                     _logger?.LogInformation($"Logged out ConnectionId: {Context.ConnectionId}.");
                 }                
