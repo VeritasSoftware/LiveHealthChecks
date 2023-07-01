@@ -26,6 +26,26 @@ notifying them of the Health Report in real-time.
 
 ![**LiveHealthChecks**](/Docs/SequenceDiagram.png)
 
+## System Architecture
+
+The system can comprise of multiple APIs & multiple Monitoring Apps.
+
+All connecting to the same Server Hub.
+
+Each **Api Client** has a **ReceiveMethod** & **SecretKey**.
+
+The ReceiveMethod is the method, the Monitoring apps have to listen to.
+
+All Health Reports of that Api are published to this ReceiveMethod.
+
+The **Server** has to be set up for each Api Client. The ReceiveMethod & SecretKey provided.
+
+The ReceiveMethod & SecretKey have to be provided in **custom headers** when the connection request is made.
+
+All connections to the Server (from the Api Client & Monitoring apps) use this for **Authorization**.
+
+![**LiveHealthChecks-SystemArchitecture**](/Docs/SystemArchitecture.jpg)
+
 ## Server
 
 You can use a Console app as a Health Checks Server.
