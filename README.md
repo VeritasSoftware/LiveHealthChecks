@@ -69,6 +69,13 @@ builder.Services.AddLiveHealthChecksServer(settings => settings.Clients = new Cl
         ReceiveMethod = "SampleApiHealth",
         SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692"
     }
+    //Optional
+    //Monitoring app connecting with ReceiveMethod *
+    //will receive notifications for all ReceiveMethods in the system.
+    new ClientSettings {
+        ReceiveMethod = "*",
+        SecretKey = "f22f3fd2-687d-48a1-aa2f-f2c9181364eb"
+    }
 });
 
 var app = builder.Build();
@@ -150,6 +157,38 @@ var connection = new HubConnectionBuilder()
                         .Build();
 
 connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
+    (arg1, arg2) =>
+    {
+        Console.WriteLine(arg1[0]);
+        return Task.CompletedTask;
+    }, new object());
+
+await connection.StartAsync();
+```
+
+If you want to receive notifications for all **ReceiveMethods** in the system,
+
+set the **ReceiveMethod** header to ***** & use the SecretKey set in the Server.
+
+
+```C#
+var connection = new HubConnectionBuilder()
+                        .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
+                        {
+                            o.Headers.Add("LiveHealthChecks-ReceiveMethod", "*");
+                            o.Headers.Add("LiveHealthChecks-SecretKey", "f22f3fd2-687d-48a1-aa2f-f2c9181364eb");
+                        })
+                        .WithAutomaticReconnect()
+                        .Build();
+
+connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
+    (arg1, arg2) =>
+    {
+        Console.WriteLine(arg1[0]);
+        return Task.CompletedTask;
+    }, new object());
+
+connection.On("SampleApi2Health", new Type[] { typeof(object), typeof(object) },
     (arg1, arg2) =>
     {
         Console.WriteLine(arg1[0]);

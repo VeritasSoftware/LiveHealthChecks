@@ -108,7 +108,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                 {
                     _logger?.LogInformation($"Sending Health Report ({myHealthCheck.Report}) to {myHealthCheck.ReceiveMethod}. Connection Id: {base.Context.ConnectionId}.");
 
-                    var connectionIds = _loggedInUsers.Where(u => u.ReceiveMethod == myHealthCheck.ReceiveMethod)
+                    var connectionIds = _loggedInUsers.Where(u => u.ReceiveMethod == "*" || u.ReceiveMethod == myHealthCheck.ReceiveMethod)
                                                       .Select(u => u.ConnectionId)
                                                       .ToList();
 
