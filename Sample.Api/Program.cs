@@ -9,7 +9,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddHealthChecks()
                 .AddLiveHealthChecksClient(settings =>
                 {
-                    settings.HealthCheckIntervalInMinutes = 30;
+                    settings.HealthCheckIntervalInMinutes = 60;
                     settings.ReceiveMethod = "SampleApiHealth";
                     settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
                     settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
