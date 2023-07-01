@@ -38,11 +38,11 @@ The ReceiveMethod is the method, the Monitoring apps have to listen to.
 
 All Health Reports of that Api are published to this ReceiveMethod.
 
-The **Server** has to be set up for each Api Client. The ReceiveMethod & SecretKey provided.
+The **Server** has to be set up for each Api Client's ReceiveMethod & SecretKey.
 
-The ReceiveMethod & SecretKey have to be provided in **custom headers** when the connection request is made.
+When a **connection request** is made to the Server, the ReceiveMethod & SecretKey have to be provided in **custom headers**.
 
-All connections to the Server (from the Api Client & Monitoring apps) use this for **Authorization**.
+All connections to the Server (from the Api Client & Monitoring apps) are **authorized** using ReceiveMethod & SecretKey.
 
 ![**LiveHealthChecks-SystemArchitecture**](/Docs/SystemArchitecture.jpg)
 
