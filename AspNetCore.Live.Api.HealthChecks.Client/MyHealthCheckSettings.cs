@@ -6,6 +6,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
     {
         public int HealthCheckIntervalInMinutes { get; set; } = 15;
         public string HealthCheckServerHubUrl { get; set; } = string.Empty;
+        public string ClientId { get; set; } = string.Empty;
         public string ReceiveMethod { get; set; } = string.Empty;
         public string SecretKey { get; set; } = string.Empty;
         public bool PublishOnlyWhenNotHealthy { get; set; }

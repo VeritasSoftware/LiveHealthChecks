@@ -40,10 +40,11 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             if (connection.State != HubConnectionState.Connected)
                 await connection.StartAsync();
 
-            _logger?.LogInformation($"Published Health Report: {publishedReport}");
+            _logger?.LogInformation($"Published Health Report: {publishedReport}, ReceiveMethod: {_settings.ReceiveMethod}, ClientId: {_settings.ClientId}");
 
             var request = new MyHealthCheckModel
             {
+                ClientId = _settings.ClientId,
                 ReceiveMethod = _settings.ReceiveMethod,
                 SecretKey = _settings.SecretKey,
                 Report = publishedReport

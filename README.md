@@ -108,6 +108,8 @@ builder.Services.AddHealthChecks() //Required - add all your health checks
                 .AddLiveHealthChecksClient(settings =>
                 {
                     settings.HealthCheckIntervalInMinutes = 60;
+                    //Providing ClientId is optional. Good for tracking in the logs.
+                    settings.ClientId = "SampleApi";
                     settings.ReceiveMethod = "SampleApiHealth";
                     settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
                     settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
@@ -152,6 +154,8 @@ var connection = new HubConnectionBuilder()
                         {
                             o.Headers.Add("LiveHealthChecks-ReceiveMethod", "SampleApiHealth");
                             o.Headers.Add("LiveHealthChecks-SecretKey", "43bf0968-17e0-4d22-816a-6eaadd766692");
+                            //Optional - value can be anything you want. good for tracking in the logs.
+                            o.Headers.Add("LiveHealthChecks-ClientId", "Monitoring App 1");
                         })
                         .WithAutomaticReconnect()
                         .Build();
@@ -177,6 +181,8 @@ var connection = new HubConnectionBuilder()
                         {
                             o.Headers.Add("LiveHealthChecks-ReceiveMethod", "*");
                             o.Headers.Add("LiveHealthChecks-SecretKey", "f22f3fd2-687d-48a1-aa2f-f2c9181364eb");
+                            //Optional - value can be anything you want. good for tracking in the logs.
+                            o.Headers.Add("LiveHealthChecks-ClientId", "Monitoring App 1");
                         })
                         .WithAutomaticReconnect()
                         .Build();

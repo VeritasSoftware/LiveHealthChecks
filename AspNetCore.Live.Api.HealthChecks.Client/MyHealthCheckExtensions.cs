@@ -22,6 +22,9 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                     {
                         o.Headers.Add("LiveHealthChecks-ReceiveMethod", mySettings.ReceiveMethod);
                         o.Headers.Add("LiveHealthChecks-SecretKey", mySettings.SecretKey);
+
+                        if (!string.IsNullOrEmpty(mySettings.ClientId))
+                            o.Headers.Add("LiveHealthChecks-ClientId", mySettings.ClientId);
                     })
                     .WithAutomaticReconnect()
                     .Build();
