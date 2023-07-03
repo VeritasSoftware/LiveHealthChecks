@@ -170,7 +170,7 @@ connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
 await connection.StartAsync();
 ```
 
-If you want to receive notifications for all **ReceiveMethods** in the system,
+If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
 
 set the **ReceiveMethod** header to * & use the SecretKey set in the Server.
 
@@ -215,7 +215,7 @@ you can run a Health Check and publish the Health Report to the Server.
 
 You can trigger a Health Check, at any point, from anywhere, in your API,
 
-by injecting the built-in Health Check system's' [**HealthCheckService**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthcheckservice?view=dotnet-plat-ext-6.0),
+by injecting the built-in Health Check system's [**HealthCheckService**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthcheckservice?view=dotnet-plat-ext-6.0),
 
 and calling the **CheckHealthAsync** method.
 
