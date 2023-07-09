@@ -24,12 +24,13 @@ connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
         return Task.CompletedTask;
     }, new object());
 
-connection.On("SampleApi2Health", new Type[] { typeof(object), typeof(object) },
-    (arg1, arg2) =>
-    {
-        Console.WriteLine(arg1[0]);
-        return Task.CompletedTask;
-    }, new object());
+//With a * ReceiveMethod header, you can add multiple ReceiveMethods, on the same connection.
+//connection.On("SampleApi2Health", new Type[] { typeof(object), typeof(object) },
+//    (arg1, arg2) =>
+//    {
+//        Console.WriteLine(arg1[0]);
+//        return Task.CompletedTask;
+//    }, new object());
 
 await connection.StartAsync();
 

@@ -13,9 +13,10 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             settings(mySettings);
 
             services.AddSingleton(sp => mySettings);
-
+            
             services.AddSingleton<IMyHealthCheckPublisher, MyHealthCheckPublisher>();
-            services.AddHostedService<MyHealthCheckService>();
+            services.AddSingleton<IMyHealthCheckService, MyHealthCheckService>();
+            services.AddHostedService<MyHealthCheckBackgroundService>();
 
             _healthChecksHubConnection = new HubConnectionBuilder()
                     .WithUrl(mySettings.HealthCheckServerHubUrl, o =>

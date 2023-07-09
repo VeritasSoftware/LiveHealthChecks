@@ -215,10 +215,15 @@ you can run a Health Check and publish the Health Report to the Server.
 
 You can trigger a Health Check, at any point, from anywhere, in your API,
 
-by injecting the built-in Health Check system's [**HealthCheckService**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthcheckservice?view=dotnet-plat-ext-6.0),
+by injecting the Client package's **IMyHealthCheckService** interface and,
 
-and calling the **CheckHealthAsync** method.
+calling the **CheckHealthAsync** method.
+
+
+This method is a wrapper around the built-in Health Check system's [**HealthCheckService**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthcheckservice?view=dotnet-plat-ext-6.0).
 
 and then, publish the generated Health Report to the Server yourself,
 
-by injecting the Client package's '**IMyHealthCheckPublisher** interface and calling the **Publish** method.
+by calling the **PublishAsync** method.
+
+![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)

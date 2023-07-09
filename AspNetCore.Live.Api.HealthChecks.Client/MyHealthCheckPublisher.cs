@@ -6,7 +6,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 {
     public interface IMyHealthCheckPublisher
     {
-        Task Publish(HealthReport healthReport);
+        Task PublishAsync(HealthReport healthReport);
     }
 
     public class MyHealthCheckPublisher : IMyHealthCheckPublisher
@@ -20,7 +20,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             _logger = logger;
         }
 
-        public async Task Publish(HealthReport healthReport)
+        public async Task PublishAsync(HealthReport healthReport)
         {
             bool isTransform = _settings.TransformHealthReport != null;
             string? publishedReport = null;
