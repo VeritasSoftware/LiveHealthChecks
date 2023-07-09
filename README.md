@@ -224,6 +224,6 @@ This method is a wrapper around the built-in Health Check system's [**HealthChec
 
 and then, publish the generated Health Report to the Server yourself,
 
-by calling the **PublishAsync** method.
+by calling the **PublishHealthReportAsync** method.
 
 ![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)
