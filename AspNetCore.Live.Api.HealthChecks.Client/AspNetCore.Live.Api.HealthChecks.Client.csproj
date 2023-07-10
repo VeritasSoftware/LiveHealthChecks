@@ -12,11 +12,11 @@
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-    <PackageReleaseNotes>Added end-to-end authorization.</PackageReleaseNotes>
+    <PackageReleaseNotes>More enhancements.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr client</PackageTags>
-	<Version>1.3.0</Version>
-	<AssemblyVersion>1.1.3.0</AssemblyVersion>
-	<FileVersion>1.1.3.0</FileVersion>
+	<Version>1.4.0</Version>
+	<AssemblyVersion>1.1.4.0</AssemblyVersion>
+	<FileVersion>1.1.4.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
