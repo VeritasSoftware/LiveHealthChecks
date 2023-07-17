@@ -68,7 +68,7 @@ builder.Services.AddLiveHealthChecksServer(settings => settings.Clients = new Cl
     {
         ReceiveMethod = "SampleApiHealth",
         SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692"
-    }
+    },
     //Optional
     //Monitoring app connecting with ReceiveMethod *
     //will receive notifications for all ReceiveMethods in the system.
