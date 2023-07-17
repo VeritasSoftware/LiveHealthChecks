@@ -160,12 +160,10 @@ var connection = new HubConnectionBuilder()
                         .WithAutomaticReconnect()
                         .Build();
 
-connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
-    (arg1, arg2) =>
-    {
-        Console.WriteLine(arg1[0]);
-        return Task.CompletedTask;
-    }, new object());
+connection.On<string>("SampleApiHealth", report =>
+{
+    Console.WriteLine(report);
+});
 
 await connection.StartAsync();
 ```
@@ -187,19 +185,15 @@ var connection = new HubConnectionBuilder()
                         .WithAutomaticReconnect()
                         .Build();
 
-connection.On("SampleApiHealth", new Type[] {typeof(object), typeof(object)},
-    (arg1, arg2) =>
-    {
-        Console.WriteLine(arg1[0]);
-        return Task.CompletedTask;
-    }, new object());
+connection.On<string>("SampleApiHealth", report =>
+{
+    Console.WriteLine(report);
+});
 
-connection.On("SampleApi2Health", new Type[] { typeof(object), typeof(object) },
-    (arg1, arg2) =>
-    {
-        Console.WriteLine(arg1[0]);
-        return Task.CompletedTask;
-    }, new object());
+connection.On<string>("SampleApi2Health", report =>
+{
+    Console.WriteLine(report);
+});
 
 await connection.StartAsync();
 ```

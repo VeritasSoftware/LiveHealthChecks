@@ -17,103 +17,119 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var httpContext = Context.GetHttpContext();
-
-            if (httpContext == null)
+            try
             {
-                _logger?.LogError($"Authorization failed. HttpContext is null.");
+                var httpContext = Context.GetHttpContext();
 
-                throw new ApplicationException("Authorization failed. HttpContext is null. Server Error.");
-            }
-            
-            string clientId = string.Empty;
-            if(httpContext.Request.Headers.TryGetValue("LiveHealthChecks-ClientId", out var cId))
-            {
-                clientId = cId.ToString();
-            }
-            var receiveMethod = httpContext.Request.Headers["LiveHealthChecks-ReceiveMethod"].ToString();
-            var secretKey = httpContext.Request.Headers["LiveHealthChecks-SecretKey"].ToString();
-
-            if (string.IsNullOrEmpty(receiveMethod))
-            {
-                _logger?.LogError($"Authorization failed ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
-
-                throw new ApplicationException("Authorization failed. Please provide ReceiveMethod.");
-            }
-
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                _logger?.LogError($"Authorization failed ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
-
-                throw new ApplicationException("Authorization failed. Please provide SecretKey.");
-            }
-
-            _logger?.LogInformation($"Logging in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
-
-            var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == receiveMethod && c.SecretKey == secretKey);
-
-            if (client == null)
-            {
-                _logger?.LogError($"Authorization failed ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
-
-                throw new ApplicationException("Authorization failed.");
-            }
-
-            if (!_loggedInUsers.Exists(u => u.ReceiveMethod == receiveMethod && u.ConnectionId == Context.ConnectionId))
-            {
-                lock(this)
+                if (httpContext == null)
                 {
-                    var loggedInUser = new LoggedInUser
+                    _logger?.LogError($"Authorization failed. HttpContext is null.");
+
+                    throw new ApplicationException("Authorization failed. HttpContext is null. Server Error.");
+                }
+
+                string clientId = string.Empty;
+                if (httpContext.Request.Headers.TryGetValue("LiveHealthChecks-ClientId", out var cId))
+                {
+                    clientId = cId.ToString();
+                }
+                var receiveMethod = httpContext.Request.Headers["LiveHealthChecks-ReceiveMethod"].ToString();
+                var secretKey = httpContext.Request.Headers["LiveHealthChecks-SecretKey"].ToString();
+
+                if (string.IsNullOrEmpty(receiveMethod))
+                {
+                    _logger?.LogError($"Authorization failed ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
+
+                    throw new ApplicationException("Authorization failed. Please provide ReceiveMethod.");
+                }
+
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    _logger?.LogError($"Authorization failed ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
+
+                    throw new ApplicationException("Authorization failed. Please provide SecretKey.");
+                }
+
+                _logger?.LogInformation($"Logging in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
+
+                var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == receiveMethod && c.SecretKey == secretKey);
+
+                if (client == null)
+                {
+                    _logger?.LogError($"Authorization failed ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
+
+                    throw new ApplicationException("Authorization failed.");
+                }
+
+                if (!_loggedInUsers.Exists(u => u.ReceiveMethod == receiveMethod && u.ConnectionId == Context.ConnectionId))
+                {
+                    lock (this)
                     {
-                        ClientId = clientId,
-                        ReceiveMethod = receiveMethod,
-                        ConnectionId = Context.ConnectionId
-                    };                    
+                        var loggedInUser = new LoggedInUser
+                        {
+                            ClientId = clientId,
+                            ReceiveMethod = receiveMethod,
+                            ConnectionId = Context.ConnectionId
+                        };
 
-                    Context.Items.Add(Context.ConnectionId, loggedInUser);
+                        Context.Items.Add(Context.ConnectionId, loggedInUser);
 
-                    _loggedInUsers.Add(loggedInUser);
+                        _loggedInUsers.Add(loggedInUser);
 
-                    _logger?.LogInformation($"Logged in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
-                }                
-            }                        
+                        _logger?.LogInformation($"Logged in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
+                    }
+                }
 
-            await base.OnConnectedAsync();
+                await base.OnConnectedAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"Server Error in {nameof(LiveHealthChecksHub)}.");
+                throw;
+            }            
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
-            if (exception != null)
-            {
-                _logger?.LogError(exception, "Server Error");
-            }
-
             try
             {
-                lock(this)
-                {                    
-                    var loggedInUser = Context.Items[Context.ConnectionId] as LoggedInUser;
+                if (exception != null)
+                {
+                    _logger?.LogError(exception, "Server Error");
+                }
 
-                    if (loggedInUser == null)
+                try
+                {
+                    lock (this)
                     {
-                        throw new ApplicationException("LoggedInUser details is null");
+                        var loggedInUser = Context.Items[Context.ConnectionId] as LoggedInUser;
+
+                        if (loggedInUser == null)
+                        {
+                            throw new ApplicationException("LoggedInUser details is null");
+                        }
+
+                        _logger?.LogInformation($"Logging out ConnectionId: {Context.ConnectionId}, ReceiveMethod: {loggedInUser.ReceiveMethod}, ClientId: {loggedInUser.ClientId}.");
+
+                        _loggedInUsers.RemoveAll(u => u.ClientId == loggedInUser.ClientId
+                                                        && u.ReceiveMethod == loggedInUser.ReceiveMethod
+                                                        && u.ConnectionId == Context.ConnectionId);
+
+                        _logger?.LogInformation($"Logged out ConnectionId: {Context.ConnectionId}, ReceiveMethod: {loggedInUser.ReceiveMethod}, ClientId: {loggedInUser.ClientId}.");
                     }
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Server Error: Removing logged in user failed.");
+                }
 
-                    _logger?.LogInformation($"Logging out ConnectionId: {Context.ConnectionId}, ReceiveMethod: {loggedInUser.ReceiveMethod}, ClientId: {loggedInUser.ClientId}.");
-
-                    _loggedInUsers.RemoveAll(u => u.ClientId == loggedInUser.ClientId 
-                                                    && u.ReceiveMethod == loggedInUser.ReceiveMethod 
-                                                    && u.ConnectionId == Context.ConnectionId);
-
-                    _logger?.LogInformation($"Logged out ConnectionId: {Context.ConnectionId}, ReceiveMethod: {loggedInUser.ReceiveMethod}, ClientId: {loggedInUser.ClientId}.");
-                }                
+                return base.OnDisconnectedAsync(exception);
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Server Error: Removing logged in user failed.");
+                _logger?.LogError(ex, $"Server Error in {nameof(LiveHealthChecksHub)}.");
+                throw;
             }
-
-            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task PublishMyHealthCheck(MyHealthCheckModel myHealthCheck)
@@ -135,7 +151,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                                                       .Select(u => u.ConnectionId)
                                                       .ToList();
 
-                    await base.Clients.Clients(connectionIds).SendAsync(myHealthCheck.ReceiveMethod, myHealthCheck.Report, new object());
+                    await base.Clients.Clients(connectionIds).SendAsync(myHealthCheck.ReceiveMethod, myHealthCheck.Report);
 
                     _logger?.LogInformation($"Sent Health Report ({myHealthCheck.Report}) to {myHealthCheck.ReceiveMethod}. Connection Id: {Context.ConnectionId}.");
                 }
