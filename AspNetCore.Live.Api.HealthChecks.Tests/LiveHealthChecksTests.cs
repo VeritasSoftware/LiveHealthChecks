@@ -14,15 +14,16 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
         public async Task Publish_Receive_Pass()
         {
             //Arrange
+            //The message to be published.
             var message = new MyHealthCheckModel
             {                
                 ReceiveMethod = "SampleApiHealth",
                 SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692",
                 ClientId = "SampleApi",
                 Report = "{\"Entries\":{},\"Status\":2,\"TotalDuration\":\"00:00:00.0015278\"}",
-            };
+            };            
 
-            var echo = string.Empty;
+            //Start the Sample Server
             var webHostBuilder = new WebHostBuilder()
                                         .UseStartup<Startup>()
                                         .UseKestrel(options => options.ListenAnyIP(5001, listenOptions => 
@@ -30,6 +31,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
 
             webHostBuilder.Start();
 
+            //Start monitoring app connection to Server
             var connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
                 {
@@ -41,23 +43,28 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
                 .WithAutomaticReconnect()
                 .Build();
 
+            var receivedReport = string.Empty;
+
+            //Listen for set ReceiveMethod.
             connection.On<string>("SampleApiHealth", msg =>
             {
-                echo = msg;
+                //Receive message from Server
+                receivedReport = msg;
             });
 
             await connection.StartAsync();
 
             //Act
+            //Publish message to Server
             await connection.InvokeAsync("PublishMyHealthCheck", message);
 
-            while(string.IsNullOrWhiteSpace(echo))
+            while(string.IsNullOrWhiteSpace(receivedReport))
             {
                 Thread.Sleep(50);
             }
 
             //Assert
-            Assert.Equal(message.Report, echo);
+            Assert.Equal(message.Report, receivedReport);
         }
     }
 }
