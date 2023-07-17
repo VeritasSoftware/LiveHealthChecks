@@ -14,9 +14,9 @@
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
     <PackageReleaseNotes>More enhancements.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr client</PackageTags>
-	<Version>1.4.0</Version>
-	<AssemblyVersion>1.1.4.0</AssemblyVersion>
-	<FileVersion>1.1.4.0</FileVersion>
+	<Version>1.4.1</Version>
+	<AssemblyVersion>1.1.4.1</AssemblyVersion>
+	<FileVersion>1.1.4.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

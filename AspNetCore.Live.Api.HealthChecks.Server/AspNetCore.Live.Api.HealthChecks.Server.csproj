@@ -14,9 +14,9 @@
 	<PackageReleaseNotes>More enhancements.</PackageReleaseNotes>
     <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>1.4.0</Version>
-	<AssemblyVersion>1.0.4.0</AssemblyVersion>
-	<FileVersion>1.0.4.0</FileVersion>
+	<Version>1.4.1</Version>
+	<AssemblyVersion>1.0.4.1</AssemblyVersion>
+	<FileVersion>1.0.4.1</FileVersion>
 	<PackageLicenseFile></PackageLicenseFile>
   </PropertyGroup>
 
