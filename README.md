@@ -62,21 +62,10 @@ Then, plug in the Server package.
 var builder = WebApplication.CreateBuilder();
 
 builder.Services.AddSignalR();
-builder.Services.AddLiveHealthChecksServer(settings => settings.Clients = new ClientSettings[]
-{
-    new ClientSettings
-    {
-        ReceiveMethod = "SampleApiHealth",
-        SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692"
-    },
-    //Optional
-    //Monitoring app connecting with ReceiveMethod *
-    //will receive notifications for all ReceiveMethods in the system.
-    new ClientSettings {
-        ReceiveMethod = "*",
-        SecretKey = "f22f3fd2-687d-48a1-aa2f-f2c9181364eb"
-    }
-});
+
+//Load the Clients dynamically
+builder.Services.AddScoped<IClientsService, ClientsService>();
+builder.Services.AddLiveHealthChecksServer();
 
 var app = builder.Build();
 
@@ -93,7 +82,44 @@ A **Client (Api)** with a **ReceiveMethod** & **SecretKey** are set up in the Se
 
 The Api publishes to the Server with this information.
 
-The Server sends push notification to the ReceiveMethod, if the Client's  SecretKey matches.
+The Server sends push notification to the ReceiveMethod, if the Client's SecretKey matches that on the Server.
+
+You implement Server interface **IClientsService** to get the list of Clients.
+
+The list can be stored in a database table (for eg.).
+
+You could fetch the list from the database & cache it.
+
+This way you do not need a Server shutdown to add a new Client Api to the system.
+
+### Sample ClientsService
+
+```C#
+    public class ClientsService : IClientsService
+    {
+        public async Task<ClientSettings[]> GetClientsAsync()
+        {
+            //The Clients list below is hard-coded but,
+            //You can fetch the Clients from a database (for eg.) and
+            //You can cache the Clients too.
+            return await Task.FromResult(new ClientSettings[]
+            {
+                new ClientSettings
+                {
+                    ReceiveMethod = "SampleApiHealth",
+                    SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692"
+                },
+                //Optional
+                //Monitoring app connecting with ReceiveMethod *
+                //will receive notifications for all ReceiveMethods in the system.
+                new ClientSettings {
+                    ReceiveMethod = "*",
+                    SecretKey = "f22f3fd2-687d-48a1-aa2f-f2c9181364eb"
+                }
+            });
+        }
+    }
+```
 
 ![**Sample Server**](/Docs/Server.jpg)
 

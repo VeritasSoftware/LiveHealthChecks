@@ -2,11 +2,11 @@
 {
     public static class MyHealthCheckExtensions
     {
-        public static IServiceCollection AddLiveHealthChecksServer(this IServiceCollection services, Action<MyHealthCheckSettings> settings)
+        public static IServiceCollection AddLiveHealthChecksServer(this IServiceCollection services, Action<MyHealthCheckSettings>? settings = null)
         {
             var mySettings = new MyHealthCheckSettings();
 
-            settings(mySettings);
+            settings?.Invoke(mySettings);
 
             services.AddSingleton(sp => mySettings);
 

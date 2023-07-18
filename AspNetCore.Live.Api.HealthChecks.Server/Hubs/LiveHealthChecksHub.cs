@@ -7,11 +7,13 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
         private static List<LoggedInUser> _loggedInUsers = new List<LoggedInUser>();
 
         private readonly MyHealthCheckSettings _settings;
+        private readonly IClientsService? _clientsService;
         private readonly ILogger<LiveHealthChecksHub>? _logger;
 
-        public LiveHealthChecksHub(MyHealthCheckSettings settings, ILogger<LiveHealthChecksHub>? logger = null)
+        public LiveHealthChecksHub(MyHealthCheckSettings settings, IClientsService? clientsService = null, ILogger<LiveHealthChecksHub>? logger = null)
         {
             _settings = settings;
+            _clientsService = clientsService;
             _logger = logger;          
         }
 
@@ -52,7 +54,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
 
                 _logger?.LogInformation($"Logging in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
 
-                var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == receiveMethod && c.SecretKey == secretKey);
+                var client = (_clientsService != null ? await _clientsService.GetClientsAsync() : _settings.Clients)?.SingleOrDefault(c => c.ReceiveMethod == receiveMethod && c.SecretKey == secretKey);
 
                 if (client == null)
                 {
@@ -136,7 +138,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
         {
             try
             {
-                var client = _settings.Clients?.SingleOrDefault(c => c.ReceiveMethod == myHealthCheck.ReceiveMethod);
+                var client = (_clientsService != null ? await _clientsService.GetClientsAsync() : _settings.Clients)?.SingleOrDefault(c => c.ReceiveMethod == myHealthCheck.ReceiveMethod);
 
                 if (client == null)
                 {
