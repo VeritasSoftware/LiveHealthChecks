@@ -1,4 +1,6 @@
-﻿namespace AspNetCore.Live.Api.HealthChecks.Client
+﻿using Cronos;
+
+namespace AspNetCore.Live.Api.HealthChecks.Client
 {
     public class MyHealthCheckBackgroundService : BackgroundService
     {
@@ -23,20 +25,52 @@
             {
                 await RunHealthCheckAndPublishHealthReport(stoppingToken);
 
-                TimeSpan interval = TimeSpan.FromMinutes(_settings.HealthCheckIntervalInMinutes);
-                using PeriodicTimer timer = new PeriodicTimer(interval);
-
-                while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
+                if (!string.IsNullOrEmpty(_settings.HealthCheckIntervalCronExpression))
                 {
-                    try
+                    var expression = CronExpression.Parse(_settings.HealthCheckIntervalCronExpression);
+
+                    var utcNow = DateTimeOffset.UtcNow;
+                    var nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);
+
+                    while(!stoppingToken.IsCancellationRequested && nextUtc.HasValue)
                     {
-                        await RunHealthCheckAndPublishHealthReport(stoppingToken);                       
+                        await Task.Delay((nextUtc! - utcNow).Value);
+
+                        try
+                        {
+                            await RunHealthCheckAndPublishHealthReport(stoppingToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
+                        }
+
+                        utcNow = DateTimeOffset.UtcNow;
+                        nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);                        
                     }
-                    catch (Exception ex)
-                    {
-                        _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
-                    }                   
                 }
+                else if (_settings.HealthCheckIntervalInMinutes.HasValue)
+                {
+                    TimeSpan interval = TimeSpan.FromMinutes(_settings.HealthCheckIntervalInMinutes.Value);
+
+                    using PeriodicTimer timer = new PeriodicTimer(interval);
+
+                    while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
+                    {
+                        try
+                        {
+                            await RunHealthCheckAndPublishHealthReport(stoppingToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ApplicationException("Please specify health check interval in cron expression or minutes");
+                }                
             }
             catch (Exception ex)
             {

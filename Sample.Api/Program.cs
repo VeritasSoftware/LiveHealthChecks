@@ -9,7 +9,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddHealthChecks()
                 .AddLiveHealthChecksClient(settings =>
                 {
-                    settings.HealthCheckIntervalInMinutes = 60;
+                    //You can set the health check interval
+                    //by a Cron Expression. 
+                    settings.HealthCheckIntervalCronExpression = "0 * * * *";
+                    //Or in minutes
+                    //settings.HealthCheckIntervalInMinutes = 60;
                     //Providing ClientId is optional. Good for tracking in the logs.
                     settings.ClientId = "SampleApi";
                     settings.ReceiveMethod = "SampleApiHealth";
