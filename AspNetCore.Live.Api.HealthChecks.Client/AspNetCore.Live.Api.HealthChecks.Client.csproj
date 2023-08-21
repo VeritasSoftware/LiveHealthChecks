@@ -12,11 +12,11 @@
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-    <PackageReleaseNotes>More enhancements.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added feature to set health check schedule using Cron expression.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr client</PackageTags>
-	<Version>1.5.0</Version>
-	<AssemblyVersion>1.1.5.0</AssemblyVersion>
-	<FileVersion>1.1.5.0</FileVersion>
+	<Version>1.6.0</Version>
+	<AssemblyVersion>1.1.6.0</AssemblyVersion>
+	<FileVersion>1.1.6.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

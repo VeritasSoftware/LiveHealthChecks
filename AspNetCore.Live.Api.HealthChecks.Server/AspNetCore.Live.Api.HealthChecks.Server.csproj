@@ -11,12 +11,12 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-	<PackageReleaseNotes>Added feature to dynamically add Clients to the Server.</PackageReleaseNotes>
+	<PackageReleaseNotes>More enhancements.</PackageReleaseNotes>
     <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>1.5.0</Version>
-	<AssemblyVersion>1.0.5.0</AssemblyVersion>
-	<FileVersion>1.0.5.0</FileVersion>
+	<Version>1.6.0</Version>
+	<AssemblyVersion>1.0.6.0</AssemblyVersion>
+	<FileVersion>1.0.6.0</FileVersion>
 	<PackageLicenseFile></PackageLicenseFile>
   </PropertyGroup>
 
