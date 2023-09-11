@@ -31,6 +31,21 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
 
             webHostBuilder.Start();
 
+
+            //Start Api connection to Server
+            var apiConnection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
+                {
+                    o.Headers.Add("LiveHealthChecks-ReceiveMethod", "SampleApiHealth");
+                    o.Headers.Add("LiveHealthChecks-SecretKey", "43bf0968-17e0-4d22-816a-6eaadd766692");
+                    //Optional - value can be anything you want. good for tracking in the logs.
+                    o.Headers.Add("LiveHealthChecks-ClientId", "Sample Api");
+                })
+                .WithAutomaticReconnect()
+                .Build();
+
+            await apiConnection.StartAsync();
+
             //Start monitoring app connection to Server
             var connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
@@ -43,28 +58,28 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
                 .WithAutomaticReconnect()
                 .Build();
 
-            var receivedReport = string.Empty;
+            var receivedHealthReport = string.Empty;
 
             //Listen for set ReceiveMethod.
-            connection.On<string>("SampleApiHealth", msg =>
+            connection.On<string>("SampleApiHealth", healthReport =>
             {
-                //Receive message from Server
-                receivedReport = msg;
+                //Receive health report from Server
+                receivedHealthReport = healthReport;
             });
 
             await connection.StartAsync();
 
+            //Api publishes message to Server
             //Act
-            //Publish message to Server
-            await connection.InvokeAsync("PublishMyHealthCheck", message);
+            await apiConnection.InvokeAsync("PublishMyHealthCheck", message);
 
-            while(string.IsNullOrWhiteSpace(receivedReport))
+            while(string.IsNullOrWhiteSpace(receivedHealthReport))
             {
                 Thread.Sleep(50);
             }
 
             //Assert
-            Assert.Equal(message.Report, receivedReport);
+            Assert.Equal(message.Report, receivedHealthReport);
         }
     }
 }
