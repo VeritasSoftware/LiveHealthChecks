@@ -1,7 +1,8 @@
-using AspNetCore.Live.Api.HealthChecks.Server;
+using AspNetCore.Live.Api.HealthChecks.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using Sample.Server;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,40 +14,25 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
         [Fact]
         public async Task Publish_Receive_Pass()
         {
-            //Arrange
-            //The message to be published.
-            var message = new MyHealthCheckModel
-            {                
-                ReceiveMethod = "SampleApiHealth",
-                SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692",
-                ClientId = "SampleApi",
-                Report = "{\"Entries\":{},\"Status\":2,\"TotalDuration\":\"00:00:00.0015278\"}",
-            };            
-
+            //Arrange           
             //Start the Sample Server
-            var webHostBuilder = new WebHostBuilder()
+            var serverWebHostBuilder = new WebHostBuilder()
                                         .UseStartup<Startup>()
                                         .UseKestrel(options => options.ListenAnyIP(5001, listenOptions => 
                                                         listenOptions.UseHttps(o => o.AllowAnyClientCertificate())));
 
-            webHostBuilder.Start();
+            serverWebHostBuilder.Start();
 
+            //Start the Sample Api
+            var apiWebHostBuilder = new WebHostBuilder()
+                                        .UseStartup<Sample.Api.Startup>()
+                                        .UseKestrel(options => options.ListenAnyIP(5000, listenOptions =>
+                                                        listenOptions.UseHttps(o => o.AllowAnyClientCertificate())));
 
-            //Start Api connection to Server
-            var apiConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
-                {
-                    o.Headers.Add("LiveHealthChecks-ReceiveMethod", "SampleApiHealth");
-                    o.Headers.Add("LiveHealthChecks-SecretKey", "43bf0968-17e0-4d22-816a-6eaadd766692");
-                    //Optional - value can be anything you want. good for tracking in the logs.
-                    o.Headers.Add("LiveHealthChecks-ClientId", "Sample Api");
-                })
-                .WithAutomaticReconnect()
-                .Build();
+            var app = apiWebHostBuilder.Build();
+            await app.StartAsync();            
 
-            await apiConnection.StartAsync();
-
-            //Start monitoring app connection to Server
+            //Start Monitoring app connection to Server
             var connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
                 {
@@ -58,28 +44,33 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
                 .WithAutomaticReconnect()
                 .Build();
 
-            var receivedHealthReport = string.Empty;
+            var receivedHealthReportStr = string.Empty;
 
             //Listen for set ReceiveMethod.
             connection.On<string>("SampleApiHealth", healthReport =>
             {
                 //Receive health report from Server
-                receivedHealthReport = healthReport;
+                receivedHealthReportStr = healthReport;
             });
 
             await connection.StartAsync();
 
-            //Api publishes message to Server
-            //Act
-            await apiConnection.InvokeAsync("PublishMyHealthCheck", message);
+            //Api publishes health report to Server
+            //Get IMyHealthCheckService service from Api container
+            var myHealthCheckService = (IMyHealthCheckService)app.Services.GetService(typeof(IMyHealthCheckService));
+            //Run health check on Api
+            var publishedHealthReport = await myHealthCheckService.CheckHealthAsync();
+            var publishedHealthReportStr = JsonSerializer.Serialize(publishedHealthReport);
+            //Act - Publish health report
+            await myHealthCheckService.PublishHealthReportAsync(publishedHealthReport);
 
-            while(string.IsNullOrWhiteSpace(receivedHealthReport))
+            while(string.IsNullOrWhiteSpace(receivedHealthReportStr))
             {
                 Thread.Sleep(50);
             }
 
             //Assert
-            Assert.Equal(message.Report, receivedHealthReport);
+            Assert.Equal(publishedHealthReportStr, receivedHealthReportStr);
         }
     }
 }
