@@ -60,9 +60,9 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
             var myHealthCheckService = (IMyHealthCheckService)app.Services.GetService(typeof(IMyHealthCheckService));
             //Run health check on Api
             var publishedHealthReport = await myHealthCheckService.CheckHealthAsync();
-            var publishedHealthReportStr = JsonSerializer.Serialize(publishedHealthReport);
-            //Act - Publish health report
+            //Act - Publish health report to Server
             await myHealthCheckService.PublishHealthReportAsync(publishedHealthReport);
+            var publishedHealthReportStr = JsonSerializer.Serialize(publishedHealthReport);            
 
             while(string.IsNullOrWhiteSpace(receivedHealthReportStr))
             {
