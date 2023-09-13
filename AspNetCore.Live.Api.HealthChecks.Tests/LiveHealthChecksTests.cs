@@ -55,6 +55,8 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
 
             await connection.StartAsync();
 
+            Thread.Sleep(2000);
+
             //Api publishes health report to Server
             //Get IMyHealthCheckService service from Api container
             var myHealthCheckService = (IMyHealthCheckService)app.Services.GetService(typeof(IMyHealthCheckService));
@@ -62,9 +64,9 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
             var publishedHealthReport = await myHealthCheckService.CheckHealthAsync();
             //Act - Publish health report to Server
             await myHealthCheckService.PublishHealthReportAsync(publishedHealthReport);
-            var publishedHealthReportStr = JsonSerializer.Serialize(publishedHealthReport);            
+            var publishedHealthReportStr = JsonSerializer.Serialize(publishedHealthReport);
 
-            while(string.IsNullOrWhiteSpace(receivedHealthReportStr))
+            while (string.IsNullOrWhiteSpace(receivedHealthReportStr))
             {
                 Thread.Sleep(50);
             }
