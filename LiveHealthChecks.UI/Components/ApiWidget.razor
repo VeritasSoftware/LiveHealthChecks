@@ -6,7 +6,7 @@
 
 @if(Api != null && Connection != null && @LeftMargin != null)
 {     
-    <div class="card" style="width: 300px;display:inline-block;margin-left: @LeftMargin">
+    <div class="card" style="width: 400px;display:inline-block;margin-left: @LeftMargin">
             <div class="card-header">
                 <h1 class="text-center">@Api.ApiName</h1>
             </div>
@@ -19,17 +19,22 @@
                                 InputData="@HealthChecks[Api.ReceiveMethod].ToArray()" 
                                 ChartOptions="@ChartOptions" 
                                 InputLabels="@Labels"
-                                Width="250px" 
-                                Height="250px"
+                                Width="350px" 
+                                Height="350px"
                         ></MudChart>
                     </MudPaper>   
                 }
                 <hr />
                 <div class="row">
-                    <div class="col-8">
-                        <b>Last Health Check</b> 
+                    <div class="col-10">
+                        <b>Last Health Check</b><br />
+                        @if (!string.IsNullOrEmpty(@LastHealthCheck))
+                        {
+                            @DateTime.Now.ToLongDateString()<br />
+                            @DateTime.Now.ToLongTimeString()    
+                        }                    
                     </div>
-                    <div class="col-4" style="background-color: @LastHealthCheck">
+                    <div class="col-2" style="background-color: @LastHealthCheck">
 
                     </div>
                 </div>
@@ -85,7 +90,7 @@
 
                     dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
 
-                    //Generate random Status
+                    //////Generate random Status
                     //var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
 
                     //Random = new Random(td);
