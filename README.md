@@ -220,12 +220,12 @@ Connection = new HubConnectionBuilder()
                     .Build();
 
 
-connection.On<string>(DashboardSettings.Apis[0].ReceiveMethod, report =>
+Connection.On<string>(DashboardSettings.Apis[0].ReceiveMethod, report =>
 {
     //Handle report here
 });
 
-connection.On<string>(DashboardSettings.Apis[1].ReceiveMethod, report =>
+Connection.On<string>(DashboardSettings.Apis[1].ReceiveMethod, report =>
 {
     //Handle report here
 });
@@ -240,14 +240,11 @@ await Connection.SendAsync("AuthenticateAsync", new
 });  
 ```
 
-To Disconnect example:
+To **Disconnect** example:
 
 ```C#
-if (Connection != null)
-{
-    await Connection.SendAsync("DisconnectAsync");
-    await Connection.DisposeAsync();
-} 
+await Connection.SendAsync("DisconnectAsync");
+await Connection.DisposeAsync(); 
 ```
 
 ## Monitoring app
