@@ -51,7 +51,7 @@
 
     ChartOptions ChartOptions = new ChartOptions();
 
-    private Random Random = new Random();
+    //private Random Random = new Random();
 
     private object SyncObject = new object();
 
@@ -80,16 +80,17 @@
 
                     dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
 
-                    var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
+                    //Generate random Status
+                    //var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
 
-                    Random = new Random(td);
+                    //Random = new Random(td);
 
-                    var seed = Random.Next();
+                    //var seed = Random.Next();
 
-                    var random = new Random(seed);
-                    var num = random.Next(1, 100);
+                    //var random = new Random(seed);
+                    //var num = random.Next(1, 100);
 
-                    jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
+                    //jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
 
                     List<double> healthChecksTemp;
 

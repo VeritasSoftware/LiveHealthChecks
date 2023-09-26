@@ -7,7 +7,7 @@ builder.Services.AddHealthChecks()
                 {
                     //You can set the health check interval
                     //by a Cron Expression. 
-                    settings.HealthCheckIntervalCronExpression = "* * * * *";
+                    settings.HealthCheckIntervalCronExpression = "0 * * * *";
                     //Or in minutes
                     //settings.HealthCheckIntervalInMinutes = 60;
                     //Providing ClientId is optional. Good for tracking in the logs.
