@@ -22,30 +22,27 @@
         var api2 = apis.ElementAtOrDefault(i + 1);
         var api3 = apis.ElementAtOrDefault(i + 2);
 
-        if (api1 != null && DashboardSettings != null && Connection != null)
+        if (api1 != null && Connection != null)
         {
             <ApiWidget
                 Api="api1"
-                DashboardSettings="DashboardSettings"
                 Connection="Connection"
             ></ApiWidget>
         }
         
-        if (api2 != null && DashboardSettings != null && Connection != null)
+        if (api2 != null && Connection != null)
         {
             <ApiWidget
                 Api="api2"
-                DashboardSettings="DashboardSettings"
                 Connection="Connection"
                 LeftMargin="10px"
             ></ApiWidget>
         }
 
-        if (api3 != null && DashboardSettings != null && Connection != null)
+        if (api3 != null && Connection != null)
         {
             <ApiWidget
                 Api="api3"
-                DashboardSettings="DashboardSettings"
                 Connection="Connection"
                 LeftMargin="10px"
             ></ApiWidget>

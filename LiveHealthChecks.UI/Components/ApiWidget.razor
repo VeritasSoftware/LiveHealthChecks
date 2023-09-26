@@ -4,7 +4,7 @@
 @using MudBlazor
 @using System.Text.Json.Nodes
 
-@if(Api != null && DashboardSettings != null && Connection != null && @LeftMargin != null)
+@if(Api != null && Connection != null && @LeftMargin != null)
 {     
     <div class="card" style="width: 300px;display:inline-block;margin-left: @LeftMargin">
             <div class="card-header">
@@ -23,17 +23,23 @@
                                 Height="250px"
                         ></MudChart>
                     </MudPaper>   
-                }                
+                }
+                <hr />
+                <div class="row">
+                    <div class="col-8">
+                        <b>Last Health Check</b> 
+                    </div>
+                    <div class="col-4" style="background-color: @LastHealthCheck">
+
+                    </div>
                 </div>
+            </div>
     </div>
 }
 
 @code {
     [Parameter]
     public MyApiHealthCheckModel? Api { get; set; }
-
-    [Parameter]
-    public DashboardSettings? DashboardSettings { get; set; }
 
     [Parameter]
     public HubConnection? Connection { get; set; }
@@ -51,21 +57,20 @@
 
     ChartOptions ChartOptions = new ChartOptions();
 
-    //private Random Random = new Random();
+    private Random Random = new Random();
 
-    private object SyncObject = new object();
+    private static object SyncObject = new object();
+
+    private string? LastHealthCheck;
 
     protected override async Task OnInitializedAsync()
     {
         ChartOptions.ChartPalette = new string[] { "green", "red" };
         ChartOptions.DisableLegend = true;
 
-        if (DashboardSettings != null && Connection != null)
+        if (Api != null && Connection != null)
         {
-            foreach(var model in DashboardSettings.Apis)
-            {
-                await BindApiAsync(Connection, model);
-            }   
+            await BindApiAsync(Connection, Api);
         }                    
     }
 
@@ -111,11 +116,13 @@
                     {
                         healthy = healthy + 1;
                         healthStatus = 2.00;
+                        LastHealthCheck = "green";
                     }
                     else
                     {
                         unHealthy = unHealthy + 1;
                         healthStatus = 1.00;
+                        LastHealthCheck = "red";
                     }
 
                     healthChecksTemp.Add(healthStatus);
@@ -123,14 +130,9 @@
 
                     var result = new double[2] { healthy, unHealthy };
 
-                    var resultList = result.ToList();
-                    resultList.RemoveAll(x => x == 0);
-
-                    result = resultList.ToArray();
-
                     if (HealthChecksTemp.ContainsKey(model.ReceiveMethod))
                     {
-                        HealthChecksTemp[model.ReceiveMethod].Add(healthStatus);
+                        HealthChecksTemp[model.ReceiveMethod] = healthChecksTemp;
                     }
                     else
                     {
@@ -145,9 +147,9 @@
                     {
                         HealthChecks.Add(model.ReceiveMethod, result);
                     }
-                }
 
-                StateHasChanged();
+                    StateHasChanged();
+                }                
 
                 await Task.CompletedTask;
             }
