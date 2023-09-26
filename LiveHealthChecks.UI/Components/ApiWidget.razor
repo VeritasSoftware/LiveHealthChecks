@@ -13,16 +13,20 @@
             <div class="card-body">
                 @if(@HealthChecks.ContainsKey(Api.ReceiveMethod))
                 {
-                     <MudPaper Class="pa-4">
-                        <MudChart 
-                                ChartType="ChartType.Pie" 
-                                InputData="@HealthChecks[Api.ReceiveMethod].ToArray()" 
-                                ChartOptions="@ChartOptions" 
-                                InputLabels="@Labels"
-                                Width="350px" 
-                                Height="350px"
-                        ></MudChart>
-                    </MudPaper>   
+                    <div class="row">
+                        <div class="col-12" style="text-align:center;">
+                            <MudPaper Class="pa-4">
+                                <MudChart 
+                                        ChartType="ChartType.Pie" 
+                                        InputData="@HealthChecks[Api.ReceiveMethod].ToArray()" 
+                                        ChartOptions="@ChartOptions" 
+                                        InputLabels="@Labels"
+                                        Width="300px" 
+                                        Height="300px"
+                                ></MudChart>
+                            </MudPaper>
+                        </div>
+                    </div>                        
                 }
                 <hr />
                 <div class="row">
@@ -90,7 +94,7 @@
 
                     dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
 
-                    //////Generate random Status
+                    ////Generate random Status
                     //var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
 
                     //Random = new Random(td);
