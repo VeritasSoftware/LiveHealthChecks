@@ -109,6 +109,11 @@ This way you do not need a Server shutdown to add a new Client Api to the system
                     ReceiveMethod = "SampleApiHealth",
                     SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692"
                 },
+                new ClientSettings
+                {
+                    ReceiveMethod = "SampleApi2Health",
+                    SecretKey = "ae6f9a48-259b-4d03-9956-a2bf8838aaa4"
+                },
                 //Optional
                 //Monitoring app connecting with ReceiveMethod *
                 //will receive notifications for all ReceiveMethods in the system.
