@@ -30,13 +30,68 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                     throw new ApplicationException("Authorization failed. HttpContext is null. Server Error.");
                 }
 
-                string clientId = string.Empty;
-                if (httpContext.Request.Headers.TryGetValue("LiveHealthChecks-ClientId", out var cId))
+                bool isAuthenticatedSeparately = false;
+
+                if (!httpContext.Request.Headers.ContainsKey("LiveHealthChecks-ReceiveMethod"))
                 {
-                    clientId = cId.ToString();
+                    _logger?.LogInformation($"Request does not contain LiveHealthChecks-ReceiveMethod header. Authorization deffered. ConnectionId: {Context.ConnectionId}");
+                    isAuthenticatedSeparately = true;
                 }
-                var receiveMethod = httpContext.Request.Headers["LiveHealthChecks-ReceiveMethod"].ToString();
-                var secretKey = httpContext.Request.Headers["LiveHealthChecks-SecretKey"].ToString();
+
+                if (!isAuthenticatedSeparately)
+                {
+                    string clientId = string.Empty;
+                    if (httpContext.Request.Headers.TryGetValue("LiveHealthChecks-ClientId", out var cId))
+                    {
+                        clientId = cId.ToString();
+                    }
+                    var receiveMethod = httpContext.Request.Headers["LiveHealthChecks-ReceiveMethod"].ToString();
+                    var secretKey = httpContext.Request.Headers["LiveHealthChecks-SecretKey"].ToString();
+                   
+                    await AuthenticateAsync(new MyHealthCheckBaseModel
+                    {
+                        ClientId = clientId,
+                        ReceiveMethod = receiveMethod,
+                        SecretKey = secretKey
+                    });
+                }                
+
+                await base.OnConnectedAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"Server Error in {nameof(LiveHealthChecksHub)}.");
+                throw;
+            }            
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            try
+            {
+                if (exception != null)
+                {
+                    _logger?.LogError(exception, "Server Error");
+                }
+
+                await DisconnectAsync();
+
+                await base.OnDisconnectedAsync(exception);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"Server Error in {nameof(LiveHealthChecksHub)}.");
+                throw;
+            }
+        }
+
+        public async Task AuthenticateAsync(MyHealthCheckBaseModel model)
+        {
+            try
+            {
+                string clientId = model.ClientId;
+                var receiveMethod = model.ReceiveMethod;
+                var secretKey = model.SecretKey;
 
                 if (string.IsNullOrEmpty(receiveMethod))
                 {
@@ -81,25 +136,18 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                         _logger?.LogInformation($"Logged in ReceiveMethod: {receiveMethod}, ConnectionId: {Context.ConnectionId}, ClientId: {clientId}.");
                     }
                 }
-
-                await base.OnConnectedAsync();
-            }
+            }           
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"Server Error in {nameof(LiveHealthChecksHub)}.");
                 throw;
-            }            
+            }
         }
 
-        public override Task OnDisconnectedAsync(Exception? exception)
+        public async Task DisconnectAsync()
         {
             try
             {
-                if (exception != null)
-                {
-                    _logger?.LogError(exception, "Server Error");
-                }
-
                 try
                 {
                     lock (this)
@@ -119,13 +167,13 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
 
                         _logger?.LogInformation($"Logged out ConnectionId: {Context.ConnectionId}, ReceiveMethod: {loggedInUser.ReceiveMethod}, ClientId: {loggedInUser.ClientId}.");
                     }
+
+                    await Task.CompletedTask;
                 }
                 catch (Exception ex)
                 {
                     _logger?.LogError(ex, "Server Error: Removing logged in user failed.");
                 }
-
-                return base.OnDisconnectedAsync(exception);
             }
             catch (Exception ex)
             {

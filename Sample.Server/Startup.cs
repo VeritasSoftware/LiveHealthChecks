@@ -13,7 +13,12 @@ namespace Sample.Server
 
         // This method gets called by the runtime. Use this method to add serices to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("BlazorWasm", builder => builder.WithOrigins("https://localhost:7151").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            });
+
             services.AddSignalR();
 
             //Load the Clients dynamically

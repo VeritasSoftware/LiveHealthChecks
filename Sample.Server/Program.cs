@@ -11,6 +11,13 @@ startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .WithOrigins("https://localhost:7151")
+    .SetIsOriginAllowed(origin => true) // allow any origin  
+    .AllowCredentials());     // allow credentials 
+
 startup.Configure(app, app.Environment);
 
 app.Run();

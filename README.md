@@ -170,6 +170,81 @@ The Server sends the Health Report as a real-time push notification.
 
 ![**Sample Api**](/Docs/Api.jpg)
 
+## Monitoring web app
+
+In your Monitoring web app, you call a Server Hub method called **AuthenticateAsync**.
+
+And, before you close the Connection, call **DisconnectAsync**.
+
+
+![**Sample Monitoring web app - LiveHealthChecks-UI**](/Docs/LiveHealthChecks-UI.jpg)
+
+
+First, you configure the Monitoring web app, in a JSON file eg dashboardSettings.json.
+
+
+```JSON
+{
+  "ServerUrl": "https://localhost:5001/livehealthcheckshub",
+  "ServerReceiveMethod": "*",
+  "ServerSecretKey": "f22f3fd2-687d-48a1-aa2f-f2c9181364eb",
+  "ServerClientId": "LiveHealthChecks-UI",
+  "Apis": [
+    {
+      "ApiName": "Sample Api",
+      "ReceiveMethod": "SampleApiHealth"
+    },
+    {
+      "ApiName": "Sample Api 2",
+      "ReceiveMethod": "SampleApi2Health"
+    }
+  ]
+}
+```
+
+If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
+
+set the **ServerReceiveMethod** header to * & use the SecretKey set in the Server.
+
+Starting SignalR Connection & Authenticating example:
+
+```C#
+Connection = new HubConnectionBuilder()
+                    .WithUrl(DashboardSettings.ServerUrl)
+                    .WithAutomaticReconnect()
+                    .Build();
+
+
+connection.On<string>(DashboardSettings.Apis[0].ReceiveMethod, report =>
+{
+    //Handle report here
+});
+
+connection.On<string>(DashboardSettings.Apis[1].ReceiveMethod, report =>
+{
+    //Handle report here
+});
+
+await Connection.StartAsync();
+
+await Connection.SendAsync("AuthenticateAsync", new
+{
+    ReceiveMethod = DashboardSettings.ServerReceiveMethod,
+    SecretKey = DashboardSettings.ServerSecretKey,
+    ClientId = DashboardSettings.ServerClientId
+});  
+```
+
+To Disconnect example:
+
+```C#
+if (Connection != null)
+{
+    await Connection.SendAsync("DisconnectAsync");
+    await Connection.DisposeAsync();
+} 
+```
+
 ## Monitoring app
 
 In your Monitoring app, create a SignalR connection to the Server Hub.

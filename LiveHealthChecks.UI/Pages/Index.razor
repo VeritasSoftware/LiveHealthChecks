@@ -1,0 +1,98 @@
+﻿@page "/"
+@inject HttpClient Http
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Text.Json
+@using MudBlazor
+@using System.Text.Json.Nodes
+@implements IAsyncDisposable
+
+<PageTitle>Index</PageTitle>
+
+<h1>Live Health Checks!</h1>
+
+<MudText Typo="Typo.h2"><span style="color:green">Healthy</span> vs <span style="color:red">Unhealthy</span></MudText>
+
+@if(DashboardSettings != null)
+{
+    var apis = DashboardSettings.Apis;
+
+    @for (int i=0; i < apis.Count; i=i+2)
+    {
+        var api1 = apis.ElementAtOrDefault(i);
+        var api2 = apis.ElementAtOrDefault(i + 1);
+        var api3 = apis.ElementAtOrDefault(i + 2);
+
+        if (api1 != null && DashboardSettings != null && Connection != null)
+        {
+            <ApiWidget
+                Api="api1"
+                DashboardSettings="DashboardSettings"
+                Connection="Connection"
+            ></ApiWidget>
+        }
+        
+        if (api2 != null && DashboardSettings != null && Connection != null)
+        {
+            <ApiWidget
+                Api="api2"
+                DashboardSettings="DashboardSettings"
+                Connection="Connection"
+                LeftMargin="10px"
+            ></ApiWidget>
+        }
+
+        if (api3 != null && DashboardSettings != null && Connection != null)
+        {
+            <ApiWidget
+                Api="api3"
+                DashboardSettings="DashboardSettings"
+                Connection="Connection"
+                LeftMargin="10px"
+            ></ApiWidget>
+        }
+    }   
+}
+
+@code {
+
+    public int SelectedIndex = -1;
+
+    HubConnection? Connection = null;
+
+    private DashboardSettings? DashboardSettings;
+
+    protected override async Task OnInitializedAsync()
+    {       
+        try
+        {
+            DashboardSettings = await Http.GetFromJsonAsync<DashboardSettings>("dashboardSettings.json");        
+
+            Connection = new HubConnectionBuilder()
+                               .WithUrl(DashboardSettings.ServerUrl)
+                               .WithAutomaticReconnect()
+                               .Build();
+
+            await Connection.StartAsync();
+
+            await Connection.SendAsync("AuthenticateAsync", new MyHealthCheckAuthModel
+            {
+                ReceiveMethod = DashboardSettings.ServerReceiveMethod,
+                SecretKey = DashboardSettings.ServerSecretKey,
+                ClientId = DashboardSettings.ServerClientId
+            });            
+        }
+        catch(Exception ex)
+        {
+
+        }     
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (Connection != null)
+        {
+            await Connection.SendAsync("DisconnectAsync");
+            await Connection.DisposeAsync();
+        }        
+    }
+}

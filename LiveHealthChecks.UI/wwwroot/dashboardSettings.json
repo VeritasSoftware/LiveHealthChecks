@@ -1,0 +1,16 @@
+﻿{
+  "ServerUrl": "https://localhost:5001/livehealthcheckshub",
+  "ServerReceiveMethod": "*",
+  "ServerSecretKey": "f22f3fd2-687d-48a1-aa2f-f2c9181364eb",
+  "ServerClientId": "LiveHealthChecks-UI",
+  "Apis": [
+    {
+      "ApiName": "Sample Api",
+      "ReceiveMethod": "SampleApiHealth"
+    },
+    {
+      "ApiName": "Sample Api 2",
+      "ReceiveMethod": "SampleApi2Health"
+    }
+  ]
+}

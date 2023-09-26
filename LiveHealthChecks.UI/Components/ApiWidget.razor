@@ -1,0 +1,161 @@
+﻿@inject HttpClient Http
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Text.Json
+@using MudBlazor
+@using System.Text.Json.Nodes
+
+@if(Api != null && DashboardSettings != null && Connection != null && @LeftMargin != null)
+{     
+    <div class="card" style="width: 300px;display:inline-block;margin-left: @LeftMargin">
+            <div class="card-header">
+                <h1 class="text-center">@Api.ApiName</h1>
+            </div>
+            <div class="card-body">
+                @if(@HealthChecks.ContainsKey(Api.ReceiveMethod))
+                {
+                     <MudPaper Class="pa-4">
+                        <MudChart 
+                                ChartType="ChartType.Pie" 
+                                InputData="@HealthChecks[Api.ReceiveMethod].ToArray()" 
+                                ChartOptions="@ChartOptions" 
+                                InputLabels="@Labels"
+                                Width="250px" 
+                                Height="250px"
+                        ></MudChart>
+                    </MudPaper>   
+                }                
+                </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public MyApiHealthCheckModel? Api { get; set; }
+
+    [Parameter]
+    public DashboardSettings? DashboardSettings { get; set; }
+
+    [Parameter]
+    public HubConnection? Connection { get; set; }
+
+    [Parameter]
+    public string? LeftMargin { get; set; } = "0px";
+
+    public int SelectedIndex = -1;
+
+    public string[] Labels = { "Healthy", "Unhealthy" };
+
+    public Dictionary<string, double[]> HealthChecks = new Dictionary<string, double[]>();
+
+    public Dictionary<string, List<double>> HealthChecksTemp = new Dictionary<string, List<double>>();    
+
+    ChartOptions ChartOptions = new ChartOptions();
+
+    private Random Random = new Random();
+
+    private object SyncObject = new object();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ChartOptions.ChartPalette = new string[] { "green", "red" };
+        ChartOptions.DisableLegend = true;
+
+        if (DashboardSettings != null && Connection != null)
+        {
+            foreach(var model in DashboardSettings.Apis)
+            {
+                await BindApiAsync(Connection, model);
+            }   
+        }                    
+    }
+
+    public async Task BindApiAsync(HubConnection connection, MyApiHealthCheckModel model)
+    {        
+        connection.On<string>(model.ReceiveMethod, async report =>
+        {
+            try
+            {
+                lock (SyncObject)
+                {
+
+                    dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
+
+                    var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
+
+                    Random = new Random(td);
+
+                    var seed = Random.Next();
+
+                    var random = new Random(seed);
+                    var num = random.Next(1, 100);
+
+                    jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
+
+                    List<double> healthChecksTemp;
+
+                    if (HealthChecksTemp.ContainsKey(model.ReceiveMethod))
+                    {
+                        healthChecksTemp = HealthChecksTemp[model.ReceiveMethod];
+                    }
+                    else
+                    {
+                        healthChecksTemp = new List<double>() { };
+                    }
+
+                    var healthy = healthChecksTemp.Count(x => x == 2.00);
+                    var unHealthy = healthChecksTemp.Count(x => x == 1.00);
+                    double healthStatus = -1;
+
+                    if ((int)jsonReport["Status"] == 2)
+                    {
+                        healthy = healthy + 1;
+                        healthStatus = 2.00;
+                    }
+                    else
+                    {
+                        unHealthy = unHealthy + 1;
+                        healthStatus = 1.00;
+                    }
+
+                    healthChecksTemp.Add(healthStatus);
+                    healthChecksTemp.RemoveAll(x => x == 0);
+
+                    var result = new double[2] { healthy, unHealthy };
+
+                    var resultList = result.ToList();
+                    resultList.RemoveAll(x => x == 0);
+
+                    result = resultList.ToArray();
+
+                    if (HealthChecksTemp.ContainsKey(model.ReceiveMethod))
+                    {
+                        HealthChecksTemp[model.ReceiveMethod].Add(healthStatus);
+                    }
+                    else
+                    {
+                        HealthChecksTemp.Add(model.ReceiveMethod, healthChecksTemp);
+                    }
+
+                    if (HealthChecks.ContainsKey(model.ReceiveMethod))
+                    {
+                        HealthChecks[model.ReceiveMethod] = result;
+                    }
+                    else
+                    {
+                        HealthChecks.Add(model.ReceiveMethod, result);
+                    }
+                }
+
+                StateHasChanged();
+
+                await Task.CompletedTask;
+            }
+            catch(Exception ex)
+            {
+
+            }            
+        });
+
+        await Task.CompletedTask;
+    }
+}
