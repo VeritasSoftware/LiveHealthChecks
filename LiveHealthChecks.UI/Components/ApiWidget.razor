@@ -1,8 +1,10 @@
-﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
-@using Microsoft.AspNetCore.SignalR.Client
+﻿@using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
 @using MudBlazor
 @using System.Text.Json.Nodes
+@using LiveHealthChecks.UI.Models
+@using LiveHealthChecks.UI.Repository
+@inject IMyHealthChecksRepository Repository;
 
 @if(Api != null && Connection != null && @LeftMargin != null)
 {     
@@ -112,9 +114,9 @@
 
                 List<HealthReport> healthChecksTemp;
 
-                if (await LocalStorage.ContainKeyAsync(model.ReceiveMethod))
+                if (await Repository.ContainKeyAsync(model.ReceiveMethod))
                 {
-                    healthChecksTemp = await GetHealthChecksDataAsync(model.ReceiveMethod);
+                    healthChecksTemp = await Repository.GetHealthChecksDataAsync(model.ReceiveMethod);
                 }
                 else
                 {
@@ -150,7 +152,7 @@
 
                 var result = new double[2] { healthy, unHealthy };
 
-                await SetHealthChecksDataAsync(model.ReceiveMethod, healthChecksTemp);
+                await Repository.SetHealthChecksDataAsync(model.ReceiveMethod, healthChecksTemp);
 
                 if (HealthChecks.ContainsKey(model.ReceiveMethod))
                 {
@@ -173,23 +175,13 @@
         });
 
         await Task.CompletedTask;
-    }
-
-    private async Task<List<HealthReport>> GetHealthChecksDataAsync(string receiveMethod) 
-    {
-        return await LocalStorage.GetItemAsync<List<HealthReport>>(receiveMethod);
-    }
-
-    private async Task SetHealthChecksDataAsync(string receiveMethod, List<HealthReport> data)
-    {
-        await LocalStorage.SetItemAsync(receiveMethod, data);
-    }
+    }    
 
     private async Task RefreshAsync(MyApiHealthCheckModel model)
     {
-        if (await LocalStorage.ContainKeyAsync(model.ReceiveMethod))
+        if (await Repository.ContainKeyAsync(model.ReceiveMethod))
         {
-            var healthChecksTemp = await GetHealthChecksDataAsync(model.ReceiveMethod);
+            var healthChecksTemp = await Repository.GetHealthChecksDataAsync(model.ReceiveMethod);
 
             var healthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Healthy);
             var unHealthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Unhealthy);
@@ -205,21 +197,5 @@
                 HealthChecks.Add(model.ReceiveMethod, result);
             }
         }               
-    }
-
-    public class HealthReport
-    {
-        public string Api { get; set; } = string.Empty;
-        public string ReceiveMethod { get; set; } = string.Empty;
-        public DateTime? ReceiveTimeStamp { get; set; } = null;
-        public string Report { get; set; } = string.Empty;
-        public double Status { get; set; }
-    }
-
-    public struct HealthStatus
-    {
-        public const double Unhealthy = 1.00;
-
-        public const double Healthy = 2.00;
     }
 }
