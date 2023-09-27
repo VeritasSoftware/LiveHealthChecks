@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Live.Api.HealthC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveHealthChecks.UI", "LiveHealthChecks.UI\LiveHealthChecks.UI.csproj", "{7B8BC1F0-486F-4EB6-A3F6-3AF2A1E6DE83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Api2", "Sample.Api2\Sample.Api2.csproj", "{60003707-3C00-41A6-9F24-1934A8DE776C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Api2", "Sample.Api2\Sample.Api2.csproj", "{60003707-3C00-41A6-9F24-1934A8DE776C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +71,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4DCDC450-E75B-4B78-A683-C15D289B0066} = {257D1425-1C8A-4E53-83F3-CD4E5B7170F9}
 		{1B59A863-35D5-452A-92EC-087FDD87A913} = {257D1425-1C8A-4E53-83F3-CD4E5B7170F9}
+		{7B8BC1F0-486F-4EB6-A3F6-3AF2A1E6DE83} = {257D1425-1C8A-4E53-83F3-CD4E5B7170F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D828A5B-FD1C-4AE0-84C8-6F9A90744F21}
