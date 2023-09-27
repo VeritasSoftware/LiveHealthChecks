@@ -1,4 +1,4 @@
-﻿@inject HttpClient Http
+﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
 @using MudBlazor
@@ -62,8 +62,6 @@
 
     public Dictionary<string, double[]> HealthChecks = new Dictionary<string, double[]>();
 
-    public Dictionary<string, List<double>> HealthChecksTemp = new Dictionary<string, List<double>>();    
-
     ChartOptions ChartOptions = new ChartOptions();
 
     private Random Random = new Random();
@@ -74,13 +72,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ChartOptions.ChartPalette = new string[] { "green", "red" };
-        ChartOptions.DisableLegend = true;
-
-        if (Api != null && Connection != null)
+        try
         {
-            await BindApiAsync(Connection, Api);
-        }                    
+            ChartOptions.ChartPalette = new string[] { "green", "red" };
+            ChartOptions.DisableLegend = true;
+
+            if (Api != null && Connection != null)
+            {
+                await RefreshAsync(Api);
+
+                await BindApiAsync(Connection, Api);
+            }
+        }
+        catch (Exception ex)
+        {
+            
+        }        
     }
 
     public async Task BindApiAsync(HubConnection connection, MyApiHealthCheckModel model)
@@ -89,78 +96,75 @@
         {
             try
             {
-                lock (SyncObject)
+                dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
+
+                ////Generate random Status
+                //var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
+
+                //Random = new Random(td);
+
+                //var seed = Random.Next();
+
+                //var random = new Random(seed);
+                //var num = random.Next(1, 100);
+
+                //jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
+
+                List<HealthReport> healthChecksTemp;
+
+                if (await LocalStorage.ContainKeyAsync(model.ReceiveMethod))
                 {
+                    healthChecksTemp = await GetHealthChecksDataAsync(model.ReceiveMethod);
+                }
+                else
+                {
+                    healthChecksTemp = new List<HealthReport>() { };
+                }
 
-                    dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
+                var healthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Healthy);
+                var unHealthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Unhealthy);
+                double healthStatus;
 
-                    ////Generate random Status
-                    //var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
+                if ((int)jsonReport["Status"] == 2)
+                {
+                    healthy = healthy + 1;
+                    healthStatus = 2.00;
+                    LastHealthCheck = "green";
+                }
+                else
+                {
+                    unHealthy = unHealthy + 1;
+                    healthStatus = 1.00;
+                    LastHealthCheck = "red";
+                }
 
-                    //Random = new Random(td);
+                healthChecksTemp.Add(new HealthReport {
+                    Api = model.ApiName,
+                    ReceiveMethod = model.ReceiveMethod,
+                    Report = report,
+                    ReceiveTimeStamp = DateTime.UtcNow,
+                    Status = healthStatus
+                });
 
-                    //var seed = Random.Next();
+                healthChecksTemp.RemoveAll(x => x.Status == 0);
 
-                    //var random = new Random(seed);
-                    //var num = random.Next(1, 100);
+                var result = new double[2] { healthy, unHealthy };
 
-                    //jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
+                await SetHealthChecksDataAsync(model.ReceiveMethod, healthChecksTemp);
 
-                    List<double> healthChecksTemp;
+                if (HealthChecks.ContainsKey(model.ReceiveMethod))
+                {
+                    HealthChecks[model.ReceiveMethod] = result;
+                }
+                else
+                {
+                    HealthChecks.Add(model.ReceiveMethod, result);
+                }
 
-                    if (HealthChecksTemp.ContainsKey(model.ReceiveMethod))
-                    {
-                        healthChecksTemp = HealthChecksTemp[model.ReceiveMethod];
-                    }
-                    else
-                    {
-                        healthChecksTemp = new List<double>() { };
-                    }
-
-                    var healthy = healthChecksTemp.Count(x => x == 2.00);
-                    var unHealthy = healthChecksTemp.Count(x => x == 1.00);
-                    double healthStatus = -1;
-
-                    if ((int)jsonReport["Status"] == 2)
-                    {
-                        healthy = healthy + 1;
-                        healthStatus = 2.00;
-                        LastHealthCheck = "green";
-                    }
-                    else
-                    {
-                        unHealthy = unHealthy + 1;
-                        healthStatus = 1.00;
-                        LastHealthCheck = "red";
-                    }
-
-                    healthChecksTemp.Add(healthStatus);
-                    healthChecksTemp.RemoveAll(x => x == 0);
-
-                    var result = new double[2] { healthy, unHealthy };
-
-                    if (HealthChecksTemp.ContainsKey(model.ReceiveMethod))
-                    {
-                        HealthChecksTemp[model.ReceiveMethod] = healthChecksTemp;
-                    }
-                    else
-                    {
-                        HealthChecksTemp.Add(model.ReceiveMethod, healthChecksTemp);
-                    }
-
-                    if (HealthChecks.ContainsKey(model.ReceiveMethod))
-                    {
-                        HealthChecks[model.ReceiveMethod] = result;
-                    }
-                    else
-                    {
-                        HealthChecks.Add(model.ReceiveMethod, result);
-                    }
-
-                    StateHasChanged();
-                }                
+                StateHasChanged();                
 
                 await Task.CompletedTask;
+         
             }
             catch(Exception ex)
             {
@@ -169,5 +173,53 @@
         });
 
         await Task.CompletedTask;
+    }
+
+    private async Task<List<HealthReport>> GetHealthChecksDataAsync(string receiveMethod) 
+    {
+        return await LocalStorage.GetItemAsync<List<HealthReport>>(receiveMethod);
+    }
+
+    private async Task SetHealthChecksDataAsync(string receiveMethod, List<HealthReport> data)
+    {
+        await LocalStorage.SetItemAsync(receiveMethod, data);
+    }
+
+    private async Task RefreshAsync(MyApiHealthCheckModel model)
+    {
+        if (await LocalStorage.ContainKeyAsync(model.ReceiveMethod))
+        {
+            var healthChecksTemp = await GetHealthChecksDataAsync(model.ReceiveMethod);
+
+            var healthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Healthy);
+            var unHealthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Unhealthy);
+
+            var result = new double[2] { healthy, unHealthy };
+
+            if (HealthChecks.ContainsKey(model.ReceiveMethod))
+            {
+                HealthChecks[model.ReceiveMethod] = result;
+            }
+            else
+            {
+                HealthChecks.Add(model.ReceiveMethod, result);
+            }
+        }               
+    }
+
+    public class HealthReport
+    {
+        public string Api { get; set; } = string.Empty;
+        public string ReceiveMethod { get; set; } = string.Empty;
+        public DateTime? ReceiveTimeStamp { get; set; } = null;
+        public string Report { get; set; } = string.Empty;
+        public double Status { get; set; }
+    }
+
+    public struct HealthStatus
+    {
+        public const double Unhealthy = 1.00;
+
+        public const double Healthy = 2.00;
     }
 }
