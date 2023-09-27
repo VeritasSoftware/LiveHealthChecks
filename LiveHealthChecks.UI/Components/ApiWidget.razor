@@ -130,13 +130,13 @@
                 if ((int)jsonReport["Status"] == 2)
                 {
                     healthy = healthy + 1;
-                    healthStatus = 2.00;
+                    healthStatus = HealthStatus.Healthy;
                     LastHealthCheck = "green";
                 }
                 else
                 {
                     unHealthy = unHealthy + 1;
-                    healthStatus = 1.00;
+                    healthStatus = HealthStatus.Unhealthy;
                     LastHealthCheck = "red";
                 }
 
