@@ -11,13 +11,13 @@
             <MudText Typo="Typo.h6">Health Reports</MudText>
             <MudSpacer />
             <MudSelect T="string" Label="Status" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedHealthStatus" @bind-SelectedItem="SelectedHealthStatus">
-                <MudSelectItem Value="@("-1")">ALL</MudSelectItem>
+                <MudSelectItem Value="@("-1")">---Select---</MudSelectItem>
                 <MudSelectItem Value="@("1.00")">Unhealthy</MudSelectItem>
                 <MudSelectItem Value="@("2.00")">Healthy</MudSelectItem>
             </MudSelect>
             <MudSpacer />
             <MudSelect T="string" Label="Period" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedPeriod" @bind-SelectedItem="SelectedPeriod">
-                <MudSelectItem Value="@("NoPeriod")"></MudSelectItem>
+                <MudSelectItem Value="@("NoPeriod")">---Select---</MudSelectItem>
                 <MudSelectItem Value="@("Last Hour")">Last Hour</MudSelectItem>
                 <MudSelectItem Value="@("Last 4 Hours")">Last 4 Hours</MudSelectItem>
                 <MudSelectItem Value="@("Last 8 Hour")">Last 8 Hour</MudSelectItem>
@@ -25,8 +25,7 @@
             </MudSelect>
             <MudSpacer />
             <MudSelect T="string" Label="Api" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedReceiveMethod" @bind-SelectedItem="SelectedReceiveMethod">
-                <MudSelectItem Value="@("NoReceiveMethod")" />
-                <MudSelectItem Value="@("AllReceiveMethod")">ALL</MudSelectItem>
+                <MudSelectItem Value="@("NoReceiveMethod")">---Select---</MudSelectItem>
                 @foreach (var api in DashboardSettings.Apis)
                 {
                     <MudSelectItem Value="@api.ReceiveMethod">@api.ApiName</MudSelectItem>
