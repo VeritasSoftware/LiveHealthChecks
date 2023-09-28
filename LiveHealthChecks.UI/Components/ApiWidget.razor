@@ -6,31 +6,13 @@
 @using LiveHealthChecks.UI.Repository
 @inject IMyHealthChecksRepository Repository;
 
-@if(Api != null && Connection != null && @LeftMargin != null)
+@if(Api != null && Connection != null)
 {     
-    <div class="card" style="width: 400px;display:inline-block;margin-left: @LeftMargin">
+    <div class="card" style="width: 400px;display:inline-block;">
             <div class="card-header">
                 <h1 class="text-center">@Api.ApiName</h1>
             </div>
             <div class="card-body">
-                @if(@HealthChecks.ContainsKey(Api.ReceiveMethod))
-                {
-                    <div class="row">
-                        <div class="col-12" style="text-align:center;">
-                            <MudPaper Class="pa-4">
-                                <MudChart 
-                                        ChartType="ChartType.Pie" 
-                                        InputData="@HealthChecks[Api.ReceiveMethod].ToArray()" 
-                                        ChartOptions="@ChartOptions" 
-                                        InputLabels="@Labels"
-                                        Width="300px" 
-                                        Height="300px"
-                                ></MudChart>
-                            </MudPaper>
-                        </div>
-                    </div>                        
-                }
-                <hr />
                 <div class="row">
                     <div class="col-10">
                         <b>Last Health Check</b><br />
@@ -39,7 +21,7 @@
                             @DateTime.Now.ToLongDateString()<br />
                             @DateTime.Now.ToLongTimeString()    
                         }                    
-                    </div>
+                    </div>                   
                     <div class="col-2">
                         @if(!string.IsNullOrEmpty(LastHealthCheck))
                         {
@@ -54,6 +36,52 @@
                         }                                            
                     </div>
                 </div>
+                @if(@HealthChecks.ContainsKey(Api.ReceiveMethod))
+                {
+                    <hr />
+                    <div class="row">
+                        <div class="col-12" style="text-align:center;">
+                            <MudPaper Class="pa-4">
+                                <MudChart 
+                                        ChartType="ChartType.Pie" 
+                                        InputData="@HealthChecks[Api.ReceiveMethod].ToArray()" 
+                                        ChartOptions="@ChartOptions" 
+                                        InputLabels="@Labels"
+                                        Width="300px" 
+                                        Height="300px"
+                                ></MudChart>
+                            </MudPaper>
+                        </div>
+                    </div>
+                }
+                @if(LastHealthChecks != null && LastHealthChecks.Any())
+                {
+                    <hr />
+                    <b>Last 5 Health Checks</b><br />                    
+                    @foreach(var hc in LastHealthChecks)
+                    {
+                        <div class="row">
+                            <div class="col-10">
+                                @($"{hc.ReceiveTimeStamp?.ToLongDateString()} - {hc.ReceiveTimeStamp?.ToLongTimeString()}")
+                            </div>                            
+                            <div class="col-2">
+                                @if(hc.Status == HealthStatus.Healthy)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: green; color: green;" />
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: red; color: red;" />
+                                }
+                            </div>
+                        </div> 
+                        <div>
+                            <div class="col-12">
+                                <br/>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
     </div>
 }
@@ -65,14 +93,13 @@
     [Parameter]
     public HubConnection? Connection { get; set; }
 
-    [Parameter]
-    public string? LeftMargin { get; set; } = "0px";
-
     public int SelectedIndex = -1;
 
     public string[] Labels = { "Healthy", "Unhealthy" };
 
     public Dictionary<string, double[]> HealthChecks = new Dictionary<string, double[]>();
+
+    public List<HealthReport> LastHealthChecks = new List<HealthReport>();
 
     ChartOptions ChartOptions = new ChartOptions();
 
@@ -98,7 +125,7 @@
         }
         catch (Exception ex)
         {
-            
+
         }        
     }
 
@@ -110,7 +137,7 @@
             {
                 dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
 
-                //Generate random Status
+                ////Generate random Status
                 //var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
 
                 //Random = new Random(td);
@@ -173,10 +200,14 @@
                     HealthChecks.Add(model.ReceiveMethod, result);
                 }
 
+                StateHasChanged();
+
+                LastHealthChecks = healthChecksTemp.TakeLast(5).Reverse().ToList();               
+
                 StateHasChanged();                
 
                 await Task.CompletedTask;
-         
+
             }
             catch(Exception ex)
             {
@@ -206,6 +237,12 @@
             {
                 HealthChecks.Add(model.ReceiveMethod, result);
             }
+
+            StateHasChanged();
+
+            LastHealthChecks = healthChecksTemp.TakeLast(5).Reverse().ToList();                      
+
+            StateHasChanged();
         }               
     }
 }
