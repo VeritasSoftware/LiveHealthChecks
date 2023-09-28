@@ -1,0 +1,141 @@
+﻿@using MudBlazor
+@using MudBlazor.Services
+@using LiveHealthChecks.UI.Models
+@using LiveHealthChecks.UI.Repository
+@inject IMyHealthChecksRepository Repository
+
+@if(DashboardSettings != null && HealthChecks != null)
+{
+    <MudTable T="HealthReport" Items="@HealthChecks" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="new Func<HealthReport, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Health Reports</MudText>
+            <MudSpacer />
+            <MudSelect T="string" Label="Status" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedHealthStatus" @bind-SelectedItem="SelectedHealthStatus">
+                <MudSelectItem Value="@("-1")">ALL</MudSelectItem>
+                <MudSelectItem Value="@("1.00")">Unhealthy</MudSelectItem>
+                <MudSelectItem Value="@("2.00")">Healthy</MudSelectItem>
+            </MudSelect>
+            <MudSpacer />
+            <MudSelect T="string" Label="Period" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedPeriod" @bind-SelectedItem="SelectedPeriod">
+                <MudSelectItem Value="@("NoPeriod")"></MudSelectItem>
+                <MudSelectItem Value="@("Last Hour")">Last Hour</MudSelectItem>
+                <MudSelectItem Value="@("Last 4 Hours")">Last 4 Hours</MudSelectItem>
+                <MudSelectItem Value="@("Last 8 Hour")">Last 8 Hour</MudSelectItem>
+                <MudSelectItem Value="@("Today")">Today</MudSelectItem>
+            </MudSelect>
+            <MudSpacer />
+            <MudSelect T="string" Label="Api" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedReceiveMethod" @bind-SelectedItem="SelectedReceiveMethod">
+                <MudSelectItem Value="@("NoReceiveMethod")" />
+                <MudSelectItem Value="@("AllReceiveMethod")">ALL</MudSelectItem>
+                @foreach (var api in DashboardSettings.Apis)
+                {
+                    <MudSelectItem Value="@api.ReceiveMethod">@api.ApiName</MudSelectItem>
+                }            
+            </MudSelect>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Receive Time</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Api Name</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Receive Time">@($"{context.ReceiveTimeStamp?.ToLocalTime().ToShortDateString()} - {context.ReceiveTimeStamp?.ToLocalTime().ToShortTimeString()}")</MudTd>
+            <MudTd DataLabel="Status" Style="@(context.Status == 2.0 ? "background-color: green; color: white;" : "background-color: red; color: white;")">@(context.Status == 2.00 ? "Healthy" : "Unhealthy")</MudTd>
+            <MudTd DataLabel="Api Name">@context.Api</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}
+
+@code {
+    [Parameter]
+    public DashboardSettings? DashboardSettings { get; set; }
+
+    private string SelectedHealthStatus = "-1";
+
+    private string NoReceiveMethod = "NoReceiveMethod";
+    private string NoPeriod = "NoPeriod";
+
+    private string AllReceiveMethod = "AllReceiveMethod";
+    private string AllPeriod = "AllPeriod";
+
+    private string SelectedPeriod = "NoPeriod";
+    private string SelectedReceiveMethod = "NoReceiveMethod";
+
+    [Parameter]
+    public bool NewDataArrived {
+        set
+        {
+            if (true)
+            {
+                LoadHealthChecksAsync().ConfigureAwait(true);
+            }
+        }
+    }
+
+    private List<HealthReport>? HealthChecksView { get; set; } = new List<HealthReport>();
+
+    private List<HealthReport>? HealthChecks { get; set; } = new List<HealthReport>();
+
+    private bool dense = false;
+    private bool hover = true;
+    private bool striped = false;
+    private bool bordered = false;
+    private HealthReport? selectedItem1 = null;
+    private HashSet<HealthReport> selectedItems = new HashSet<HealthReport>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await LoadHealthChecksAsync();
+        }
+        catch(Exception ex)
+        {
+
+        }
+    }
+
+    private async Task LoadHealthChecksAsync()
+    {
+        if (DashboardSettings != null)
+        {
+            HealthChecks = new List<HealthReport>();
+
+            foreach(var api in DashboardSettings.Apis)
+            {
+                HealthChecks = HealthChecks.Union(await Repository.GetHealthChecksDataAsync(api.ReceiveMethod)).ToList();
+            }
+        }        
+    }
+
+    private bool FilterFunc1(HealthReport element) => FilterFunc(element);
+
+    private bool FilterFunc(HealthReport element)
+    {
+        Func<HealthReport, bool> healthStatus = element => SelectedHealthStatus == "-1" ? true : element.Status == double.Parse(SelectedHealthStatus);
+        Func<HealthReport, int, bool> receiveTimestamp = (element, hours) => element.ReceiveTimeStamp >= DateTime.UtcNow.AddHours(hours);
+
+        switch(SelectedPeriod)
+        {
+            case "Last Hour":
+                return (healthStatus(element)) && (receiveTimestamp(element, -1))
+                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+
+            case "Last 4 Hours":
+                return (healthStatus(element)) && (receiveTimestamp(element, -4))
+                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+
+            case "Last 8 Hour":
+                return (healthStatus(element)) && (receiveTimestamp(element, -8))
+                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+            case "Today":
+                return (healthStatus(element)) && (receiveTimestamp(element, -24))
+                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+            default:
+                return (healthStatus(element)) && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+        }
+    }
+}

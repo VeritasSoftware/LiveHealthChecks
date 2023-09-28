@@ -1,9 +1,10 @@
 ﻿@inherits LayoutComponentBase
+@using MudBlazor
 
 <div class="page">
-    <div class="sidebar">
+    @*<div class="sidebar">
         <NavMenu />
-    </div>
+    </div>*@
 
     <main>
         <div class="top-row px-4">
@@ -13,5 +14,8 @@
         <article class="content px-4">
             @Body
         </article>
+
+        <MudThemeProvider/>
+        <MudDialogProvider/>
     </main>
 </div>

@@ -1,0 +1,35 @@
+﻿@using MudBlazor
+@inject HttpClient Http
+
+<MudDialog>
+    <DialogContent>
+        @if (DashboardSettings != null)
+        {
+            <SearchWidget 
+                DashboardSettings="DashboardSettings"
+                NewDataArrived="NewDataArrived"
+            ></SearchWidget>
+        }
+    </DialogContent>
+    <DialogActions>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private DashboardSettings? DashboardSettings;
+    private bool NewDataArrived = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            DashboardSettings = await Http.GetFromJsonAsync<DashboardSettings>("dashboardSettings.json");  
+        }
+        catch(Exception ex)
+        {
+            
+        }
+    }
+}

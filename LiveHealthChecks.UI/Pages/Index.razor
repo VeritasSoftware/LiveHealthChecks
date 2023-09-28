@@ -1,16 +1,26 @@
 ﻿@page "/"
-@inject HttpClient Http
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
 @using MudBlazor
 @using System.Text.Json.Nodes
 @implements IAsyncDisposable
+@inject HttpClient Http
+@inject IDialogService DialogService
 
 <PageTitle>Index</PageTitle>
 
 <h1>Live Health Checks!</h1>
 
-<MudText Typo="Typo.h2"><span style="color:green">Healthy</span> vs <span style="color:red">Unhealthy</span></MudText>
+<div class="row">
+    <div class="col-8">
+        <MudText Typo="Typo.h2"><span style="color:green">Healthy</span> vs <span style="color:red">Unhealthy</span></MudText>
+    </div>
+    <div class="col-4" style="float:right;">
+        <MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
+            Search
+        </MudButton>
+    </div>
+</div>
 
 @if(DashboardSettings != null)
 {
@@ -22,31 +32,38 @@
         var api2 = apis.ElementAtOrDefault(i + 1);
         var api3 = apis.ElementAtOrDefault(i + 2);
 
-        if (api1 != null && Connection != null)
+        @if (Connection != null)
         {
-            <ApiWidget
-                Api="api1"
-                Connection="Connection"
-            ></ApiWidget>
-        }
-        
-        if (api2 != null && Connection != null)
-        {
-            <ApiWidget
-                Api="api2"
-                Connection="Connection"
-                LeftMargin="10px"
-            ></ApiWidget>
-        }
-
-        if (api3 != null && Connection != null)
-        {
-            <ApiWidget
-                Api="api3"
-                Connection="Connection"
-                LeftMargin="10px"
-            ></ApiWidget>
-        }
+            <div class="row">
+                <div class="col-4">
+                    @if (api1 != null)
+                    {
+                        <ApiWidget
+                            Api="api1"
+                            Connection="Connection"
+                        ></ApiWidget>    
+                    }
+                </div>                
+                <div class="col-4">
+                    @if (api2 != null)
+                    {
+                        <ApiWidget
+                            Api="api2"
+                            Connection="Connection"
+                        ></ApiWidget>
+                    }
+                </div>
+                <div class="col-4">
+                    @if (api3 != null)
+                    {
+                        <ApiWidget
+                            Api="api3"
+                            Connection="Connection"
+                        ></ApiWidget>
+                    }
+                </div>
+            </div>            
+        }        
     }   
 }
 
@@ -57,6 +74,18 @@
     HubConnection? Connection = null;
 
     private DashboardSettings? DashboardSettings;
+
+    private void OpenDialog()
+    {
+        var options = new DialogOptions 
+        { 
+            CloseOnEscapeKey = true, 
+            MaxWidth = MaxWidth.ExtraExtraLarge,
+            Position = DialogPosition.Center,
+            CloseButton = true
+        };
+        DialogService.Show<SearchDialog>("Search", options);
+    }
 
     protected override async Task OnInitializedAsync()
     {       
