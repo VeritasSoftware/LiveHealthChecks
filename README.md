@@ -181,6 +181,7 @@ In your Monitoring web app, you call a Server Hub method called **AuthenticateAs
 
 And, before you close the Connection, call **DisconnectAsync**.
 
+### Real-Time Api Health Checks Monitoring web app
 
 ![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
 
