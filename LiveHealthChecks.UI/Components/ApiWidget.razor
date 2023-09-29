@@ -53,6 +53,51 @@
                             </MudPaper>
                         </div>
                     </div>
+                    <br /><br />
+                    <div class="row">
+                        <div class="col-12">
+                            @{
+                                var total = HealthChecksTemp.Count();
+                                var totalHealthy = HealthChecksTemp.Where(hc => hc.Status == HealthStatus.Healthy).Count();
+                                var totalUnhealthy = HealthChecksTemp.Where(hc => hc.Status == HealthStatus.Unhealthy).Count();
+                                var healthyPercent = (totalHealthy * 100) / total;
+                                var unhealthyPercent = (totalUnhealthy * 100) / total;
+                            }
+                            <div class="row">
+                                <div class="col-6">
+                                    <b>Total Health Checks</b>
+                                </div>
+                                <div class="col-3">
+                                    @total
+                                </div>
+                                <div class="col-3">
+                                    <br />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <b>Total <span style="color:green">Healthy</span> Checks</b>
+                                </div>
+                                <div class="col-3">
+                                    @totalHealthy
+                                </div>
+                                <div class="col-3">
+                                    @healthyPercent %
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <b>Total <span style="color:red">Unhealthy</span> Checks</b>
+                                </div>
+                                <div class="col-3">
+                                    @totalUnhealthy
+                                </div>
+                                <div class="col-3">
+                                    @unhealthyPercent %
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 }
                 @if(LastHealthChecks != null && LastHealthChecks.Any())
                 {
@@ -60,6 +105,7 @@
                     <b>Last 5 Health Checks</b><br />                    
                     @foreach(var hc in LastHealthChecks)
                     {
+                        <br />
                         <div class="row">
                             <div class="col-10">
                                 @($"{hc.ReceiveTimeStamp?.ToLongDateString()} - {hc.ReceiveTimeStamp?.ToLongTimeString()}")
@@ -98,6 +144,8 @@
     public string[] Labels = { "Healthy", "Unhealthy" };
 
     public Dictionary<string, double[]> HealthChecks = new Dictionary<string, double[]>();
+
+    public List<HealthReport> HealthChecksTemp = new List<HealthReport>();
 
     public List<HealthReport> LastHealthChecks = new List<HealthReport>();
 
@@ -200,6 +248,8 @@
                     HealthChecks.Add(model.ReceiveMethod, result);
                 }
 
+                HealthChecksTemp = healthChecksTemp;
+
                 StateHasChanged();
 
                 LastHealthChecks = healthChecksTemp.TakeLast(5).Reverse().ToList();               
@@ -237,6 +287,8 @@
             {
                 HealthChecks.Add(model.ReceiveMethod, result);
             }
+
+            HealthChecksTemp = healthChecksTemp;
 
             StateHasChanged();
 
