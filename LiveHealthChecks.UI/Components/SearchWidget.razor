@@ -6,7 +6,7 @@
 
 @if(DashboardSettings != null && HealthChecks != null)
 {
-    <MudTable T="HealthReport" Items="@HealthChecks" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="new Func<HealthReport, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <MudTable T="HealthReport" Items="@HealthChecks" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="FilterFunc" @bind-SelectedItem="selectedItem1">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Health Reports</MudText>
             <MudSpacer />
@@ -109,8 +109,6 @@
             }
         }        
     }
-
-    private bool FilterFunc1(HealthReport element) => FilterFunc(element);
 
     private bool FilterFunc(HealthReport element)
     {
