@@ -182,8 +182,9 @@ In your Monitoring web app, you call a Server Hub method called **AuthenticateAs
 And, before you close the Connection, call **DisconnectAsync**.
 
 
-![**Sample Monitoring web app - LiveHealthChecks-UI**](/Docs/LiveHealthChecks-UI.jpg)
+![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
 
+[**LiveHealthChecks.UI**](Docs/README_LiveHealthChecks.UI.md)
 
 First, you configure the Monitoring web app, in a JSON file eg dashboardSettings.json.
 
@@ -193,7 +194,7 @@ First, you configure the Monitoring web app, in a JSON file eg dashboardSettings
   "ServerUrl": "https://localhost:5001/livehealthcheckshub",
   "ServerReceiveMethod": "*",
   "ServerSecretKey": "f22f3fd2-687d-48a1-aa2f-f2c9181364eb",
-  "ServerClientId": "LiveHealthChecks-UI",
+  "ServerClientId": "LiveHealthChecks.UI",
   "Apis": [
     {
       "ApiName": "Sample Api",
