@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+@using LiveHealthChecks.UI.Models
+
+<MudDialog>
+    <DialogContent>
+        @if (HealthCheck != null)
+        {
+            <div style="min-width: 300px; min-height:300px;">
+                <View 
+                    HealthCheck="HealthCheck"
+                ></View>
+            </div>            
+        }
+    </DialogContent>
+    <DialogActions>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public HealthCheck? HealthCheck { get; set; }
+}

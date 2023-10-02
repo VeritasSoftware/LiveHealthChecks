@@ -53,3 +53,9 @@ received from the Server.
 Also, you can search this data in the Search popup (click on Search button on Dashboard).
 
 ![**Search**](/Docs/LiveHealthChecks-UI-Search.jpg)
+
+You can click on a row in the table and a **View Health Check** popup comes up.
+
+This has all the details of the Health Check, including the Health Report JSON.
+
+![**View Health Check**](/Docs/LiveHealthChecks-UI-ViewHealthCheck.jpg)

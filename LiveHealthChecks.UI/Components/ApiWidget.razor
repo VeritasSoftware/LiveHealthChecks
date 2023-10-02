@@ -145,9 +145,9 @@
 
     public Dictionary<string, double[]> HealthChecks = new Dictionary<string, double[]>();
 
-    public List<HealthReport> HealthChecksTemp = new List<HealthReport>();
+    public List<HealthCheck> HealthChecksTemp = new List<HealthCheck>();
 
-    public List<HealthReport> LastHealthChecks = new List<HealthReport>();
+    public List<HealthCheck> LastHealthChecks = new List<HealthCheck>();
 
     ChartOptions ChartOptions = new ChartOptions();
 
@@ -183,10 +183,12 @@
         {
             try
             {
-                dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
+                var deserializedHealthReport = JsonSerializer.Deserialize<HealthReport>(report);
+
+                //    dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
 
                 ////Generate random Status
-                //var td = int.Parse(jsonReport["TotalDuration"].ToString().Replace(":", "").Replace(".", ""));
+                //var td = int.Parse(deserializedHealthReport.TotalDuration?.ToString().Replace(":", "").Replace(".", ""));
 
                 //Random = new Random(td);
 
@@ -195,9 +197,11 @@
                 //var random = new Random(seed);
                 //var num = random.Next(1, 100);
 
-                //jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
+                ////jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
 
-                List<HealthReport> healthChecksTemp;
+                //deserializedHealthReport.Status = num % 2 == 0 ? Status.Healthy : Status.Unhealthy;
+
+                List<HealthCheck> healthChecksTemp;
 
                 if (await Repository.ContainKeyAsync(model.ReceiveMethod))
                 {
@@ -205,14 +209,14 @@
                 }
                 else
                 {
-                    healthChecksTemp = new List<HealthReport>() { };
+                    healthChecksTemp = new List<HealthCheck>() { };
                 }
 
                 var healthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Healthy);
                 var unHealthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Unhealthy);
                 double healthStatus;
 
-                if ((int)jsonReport["Status"] == 2)
+                if (deserializedHealthReport.Status == Status.Healthy)
                 {
                     healthy = healthy + 1;
                     healthStatus = HealthStatus.Healthy;
@@ -225,10 +229,10 @@
                     LastHealthCheck = "red";
                 }
 
-                healthChecksTemp.Add(new HealthReport {
+                healthChecksTemp.Add(new HealthCheck {
                     Api = model.ApiName,
                     ReceiveMethod = model.ReceiveMethod,
-                    Report = report,
+                    Report = deserializedHealthReport,
                     ReceiveTimeStamp = DateTime.UtcNow,
                     Status = healthStatus
                 });

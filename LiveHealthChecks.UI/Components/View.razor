@@ -1,0 +1,85 @@
+﻿@using System.Text.Json
+@using MudBlazor
+@using LiveHealthChecks.UI.Models
+
+@if (HealthCheck != null)
+{
+    <div style="min-width: 300px; min-height:300px;">
+        <div class="row">
+            <div class="col-10">
+                <b>Received Time</b>
+            </div>
+            <div class="col-2">
+                <b>Status</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-10">
+                @($"{HealthCheck?.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()} - {HealthCheck?.ReceiveTimeStamp?.ToLocalTime().ToLongTimeString()}")
+            </div>
+            <div class="col-2">
+                @if(HealthCheck?.Status == HealthStatus.Healthy)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: green; color: green;" />
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: red; color: red;" />
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-10">
+                <b>Api</b>
+            </div>
+            <div class="col-2">
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-10">
+                @HealthCheck?.Api
+            </div>
+            <div class="col-2">
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <b>Health Report</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @if(@HealthCheck?.Report != null)
+                {
+                    <pre>@JsonPrettify(HealthCheck?.Report)</pre>
+                }            
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public HealthCheck? HealthCheck { get; set; }
+
+    private string JsonPrettify(HealthReport healthReport)
+    {
+        if (healthReport == null)
+        {
+            return string.Empty;
+        }
+
+        var transformedHealthReport = new TransformedHealthReport
+        {
+            Status = healthReport.Status.ToString(),
+            Results = healthReport.Entries?.ToDictionary(x => x.Key, y => y.Value.ToString())
+        };
+
+        var transformedJson = JsonSerializer.Serialize<TransformedHealthReport>(transformedHealthReport,
+                                                    new JsonSerializerOptions { WriteIndented = true });
+
+        return transformedJson;
+    }
+}

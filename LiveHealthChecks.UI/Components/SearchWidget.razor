@@ -2,11 +2,12 @@
 @using MudBlazor.Services
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Repository
+@inject IDialogService DialogService
 @inject IMyHealthChecksRepository Repository
 
 @if(DashboardSettings != null && HealthChecks != null)
 {
-    <MudTable T="HealthReport" Items="@HealthChecks" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="FilterFunc" @bind-SelectedItem="selectedItem1">
+    <MudTable T="HealthCheck" Items="@HealthChecks" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="FilterFunc" @bind-SelectedItem="selectedItem1" OnRowClick="HealthCheckSelected">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Health Reports</MudText>
             <MudSpacer />
@@ -74,16 +75,16 @@
         }
     }
 
-    private List<HealthReport>? HealthChecksView { get; set; } = new List<HealthReport>();
+    private List<HealthCheck>? HealthChecksView { get; set; } = new List<HealthCheck>();
 
-    private List<HealthReport>? HealthChecks { get; set; } = new List<HealthReport>();
+    private List<HealthCheck>? HealthChecks { get; set; } = new List<HealthCheck>();
 
     private bool dense = false;
     private bool hover = true;
     private bool striped = false;
     private bool bordered = false;
-    private HealthReport? selectedItem1 = null;
-    private HashSet<HealthReport> selectedItems = new HashSet<HealthReport>();
+    private HealthCheck? selectedItem1 = null;
+    private HashSet<HealthCheck> selectedItems = new HashSet<HealthCheck>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,7 +102,7 @@
     {
         if (DashboardSettings != null)
         {
-            HealthChecks = new List<HealthReport>();
+            HealthChecks = new List<HealthCheck>();
 
             foreach(var api in DashboardSettings.Apis)
             {
@@ -110,10 +111,31 @@
         }        
     }
 
-    private bool FilterFunc(HealthReport element)
+    private void HealthCheckSelected(TableRowClickEventArgs<HealthCheck> e)
     {
-        Func<HealthReport, bool> healthStatus = element => SelectedHealthStatus == "-1" ? true : element.Status == double.Parse(SelectedHealthStatus);
-        Func<HealthReport, int, bool> receiveTimestamp = (element, hours) => element.ReceiveTimeStamp >= DateTime.UtcNow.AddHours(hours);
+        OpenDialog(e.Item);
+    }
+
+    private void OpenDialog(HealthCheck healthReport)
+    {
+        var options = new DialogOptions 
+        { 
+            CloseOnEscapeKey = true, 
+            MaxWidth = MaxWidth.ExtraSmall,
+            FullWidth = true,
+            Position = DialogPosition.Center,
+            CloseButton = true,            
+        };
+        var parameters = new DialogParameters<ViewDialog>();
+        parameters.Add(x => x.HealthCheck, healthReport);
+
+        DialogService.Show<ViewDialog>("View Health Check", parameters, options);
+    }
+
+    private bool FilterFunc(HealthCheck element)
+    {
+        Func<HealthCheck, bool> healthStatus = element => SelectedHealthStatus == "-1" ? true : element.Status == double.Parse(SelectedHealthStatus);
+        Func<HealthCheck, int, bool> receiveTimestamp = (element, hours) => element.ReceiveTimeStamp >= DateTime.UtcNow.AddHours(hours);
 
         switch(SelectedPeriod)
         {
