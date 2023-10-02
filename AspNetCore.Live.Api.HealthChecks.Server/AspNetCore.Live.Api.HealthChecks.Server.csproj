@@ -11,12 +11,12 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-	<PackageReleaseNotes>More enhancements.</PackageReleaseNotes>
+	<PackageReleaseNotes>Added support for web apps to talk to the Server.</PackageReleaseNotes>
     <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>1.6.0</Version>
-	<AssemblyVersion>1.0.6.0</AssemblyVersion>
-	<FileVersion>1.0.6.0</FileVersion>
+	<Version>1.6.1</Version>
+	<AssemblyVersion>1.0.6.1</AssemblyVersion>
+	<FileVersion>1.0.6.1</FileVersion>
 	<PackageLicenseFile></PackageLicenseFile>
   </PropertyGroup>
 
