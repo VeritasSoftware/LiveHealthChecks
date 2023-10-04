@@ -9,7 +9,7 @@
 {
     <MudTable T="HealthCheck" Items="@HealthChecks" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="FilterFunc" @bind-SelectedItem="selectedItem1" OnRowClick="HealthCheckSelected">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Health Reports</MudText>
+            <MudText Typo="Typo.h6">Health Checks</MudText>
             <MudSpacer />
             <MudSelect T="string" Label="Status" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedHealthStatus" @bind-SelectedItem="SelectedHealthStatus">
                 <MudSelectItem Value="@("-1")">---Select---</MudSelectItem>
