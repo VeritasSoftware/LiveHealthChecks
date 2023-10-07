@@ -22,6 +22,7 @@
                 <MudSelectItem Value="@("Last Hour")">Last Hour</MudSelectItem>
                 <MudSelectItem Value="@("Last 4 Hours")">Last 4 Hours</MudSelectItem>
                 <MudSelectItem Value="@("Last 8 Hour")">Last 8 Hour</MudSelectItem>
+                <MudSelectItem Value="@("Last 12 Hour")">Last 12 Hour</MudSelectItem>
                 <MudSelectItem Value="@("Today")">Today</MudSelectItem>
             </MudSelect>
             <MudSpacer />
@@ -136,25 +137,27 @@
     {
         Func<HealthCheck, bool> healthStatus = element => SelectedHealthStatus == "-1" ? true : element.Status == double.Parse(SelectedHealthStatus);
         Func<HealthCheck, int, bool> receiveTimestamp = (element, hours) => element.ReceiveTimeStamp >= DateTime.UtcNow.AddHours(hours);
+        Func<HealthCheck, bool> receiveMethod = element => SelectedReceiveMethod == "NoReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod;
 
         switch(SelectedPeriod)
         {
             case "Last Hour":
-                return (healthStatus(element)) && (receiveTimestamp(element, -1))
-                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+                return (healthStatus(element)) && (receiveTimestamp(element, -1)) && (receiveMethod(element));
 
             case "Last 4 Hours":
-                return (healthStatus(element)) && (receiveTimestamp(element, -4))
-                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+                return (healthStatus(element)) && (receiveTimestamp(element, -4)) && (receiveMethod(element));
 
             case "Last 8 Hour":
-                return (healthStatus(element)) && (receiveTimestamp(element, -8))
-                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+                return (healthStatus(element)) && (receiveTimestamp(element, -8)) && (receiveMethod(element));
+
+            case "Last 12 Hour":
+                return (healthStatus(element)) && (receiveTimestamp(element, -12)) && (receiveMethod(element));
+
             case "Today":
-                return (healthStatus(element)) && (receiveTimestamp(element, -24))
-                        && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+                return (healthStatus(element)) && (receiveTimestamp(element, -24)) && (receiveMethod(element));
+
             default:
-                return (healthStatus(element)) && (SelectedReceiveMethod == "NoReceiveMethod" || SelectedReceiveMethod == "AllReceiveMethod" ? true : element.ReceiveMethod == SelectedReceiveMethod);
+                return (healthStatus(element)) && (receiveMethod(element));
         }
     }
 }
