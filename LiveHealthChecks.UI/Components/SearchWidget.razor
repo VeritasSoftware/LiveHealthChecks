@@ -21,8 +21,8 @@
                 <MudSelectItem Value="@("NoPeriod")">---Select---</MudSelectItem>
                 <MudSelectItem Value="@("Last Hour")">Last Hour</MudSelectItem>
                 <MudSelectItem Value="@("Last 4 Hours")">Last 4 Hours</MudSelectItem>
-                <MudSelectItem Value="@("Last 8 Hour")">Last 8 Hour</MudSelectItem>
-                <MudSelectItem Value="@("Last 12 Hour")">Last 12 Hour</MudSelectItem>
+                <MudSelectItem Value="@("Last 8 Hours")">Last 8 Hours</MudSelectItem>
+                <MudSelectItem Value="@("Last 12 Hours")">Last 12 Hours</MudSelectItem>
                 <MudSelectItem Value="@("Today")">Today</MudSelectItem>
             </MudSelect>
             <MudSpacer />
@@ -147,10 +147,10 @@
             case "Last 4 Hours":
                 return (healthStatus(element)) && (receiveTimestamp(element, -4)) && (receiveMethod(element));
 
-            case "Last 8 Hour":
+            case "Last 8 Hours":
                 return (healthStatus(element)) && (receiveTimestamp(element, -8)) && (receiveMethod(element));
 
-            case "Last 12 Hour":
+            case "Last 12 Hours":
                 return (healthStatus(element)) && (receiveTimestamp(element, -12)) && (receiveMethod(element));
 
             case "Today":
