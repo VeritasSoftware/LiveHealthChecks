@@ -23,7 +23,12 @@
                 <MudSelectItem Value="@("Last 4 Hours")">Last 4 Hours</MudSelectItem>
                 <MudSelectItem Value="@("Last 8 Hours")">Last 8 Hours</MudSelectItem>
                 <MudSelectItem Value="@("Last 12 Hours")">Last 12 Hours</MudSelectItem>
-                <MudSelectItem Value="@("Today")">Today</MudSelectItem>
+                <MudSelectItem Value="@("Last 24 Hours")">Last 24 Hours</MudSelectItem>
+                <MudSelectItem Value="@("Last 3 Days")">Last 3 Days</MudSelectItem>
+                <MudSelectItem Value="@("Last 7 Days")">Last 7 Days</MudSelectItem>
+                <MudSelectItem Value="@("Last 14 Days")">Last 14 Days</MudSelectItem>
+                <MudSelectItem Value="@("Last 30 Days")">Last 30 Days</MudSelectItem>
+                <MudSelectItem Value="@("Last 90 Days")">Last 30 Days</MudSelectItem>
             </MudSelect>
             <MudSpacer />
             <MudSelect T="string" Label="Api" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedReceiveMethod" @bind-SelectedItem="SelectedReceiveMethod">
@@ -153,8 +158,23 @@
             case "Last 12 Hours":
                 return (healthStatus(element)) && (receiveTimestamp(element, -12)) && (receiveMethod(element));
 
-            case "Today":
+            case "Last 24 Hours":
                 return (healthStatus(element)) && (receiveTimestamp(element, -24)) && (receiveMethod(element));
+
+            case "Last 3 Days":
+                return (healthStatus(element)) && (receiveTimestamp(element, -24 * 3)) && (receiveMethod(element));
+
+            case "Last 7 Days":
+                return (healthStatus(element)) && (receiveTimestamp(element, -24 * 7)) && (receiveMethod(element));
+
+            case "Last 14 Days":
+                return (healthStatus(element)) && (receiveTimestamp(element, -24 * 14)) && (receiveMethod(element));
+
+            case "Last 30 Days":
+                return (healthStatus(element)) && (receiveTimestamp(element, -24 * 30)) && (receiveMethod(element));
+
+            case "Last 90 Days":
+                return (healthStatus(element)) && (receiveTimestamp(element, -24 * 90)) && (receiveMethod(element));
 
             default:
                 return (healthStatus(element)) && (receiveMethod(element));
