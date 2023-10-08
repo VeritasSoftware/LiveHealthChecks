@@ -6,6 +6,17 @@
 |*AspNetCore.Live.Api.HealthChecks.Server*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|
 |*AspNetCore.Live.Api.HealthChecks.Client*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
 
+##### Table of Contents
+[Background](#Background)
+[System Architecture](#SystemArchitecture)
+[Server](#Server)
+[Asp Net Core Api](#AspNetCoreApi)
+[Monitoring web app](#Monitoringwebapp)
+[Monitoring app](#Monitoringapp)
+[Live - Trigger & publish Health Checks](#Trigger-Publish)
+
+<a name="Background"/>
+
 ## Background
 
 An Asp Net Core Web Api has a [**Health Checks**](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-6.0) system built into it.
@@ -26,6 +37,8 @@ notifying them of the Health Report in real-time.
 
 ![**LiveHealthChecks**](/Docs/SequenceDiagram.png)
 
+<a name="SystemArchitecture"/>
+
 ## System Architecture
 
 The system can comprise of multiple APIs & multiple Monitoring Apps.
@@ -45,6 +58,8 @@ When a **connection request** is made to the Server, the ReceiveMethod & SecretK
 All connections to the Server (from the Api Client & Monitoring apps) are **authorized** using ReceiveMethod & SecretKey.
 
 ![**LiveHealthChecks-SystemArchitecture**](/Docs/SystemArchitecture.jpg)
+
+<a name="Server"/>
 
 ## Server
 
@@ -128,6 +143,8 @@ This way you do not need a Server shutdown to add a new Client Api to the system
 
 ![**Sample Server**](/Docs/Server.jpg)
 
+<a name="AspNetCoreApi"/>
+
 ## Asp Net Core Api
 
 In your Api add the Client Nuget package.
@@ -174,6 +191,8 @@ The Server sends the Health Report as a real-time push notification.
 **Note:-** You can host a Server & Client in the same Api too. 
 
 ![**Sample Api**](/Docs/Api.jpg)
+
+<a name="Monitoringwebapp"/>
 
 ## Monitoring web app
 
@@ -249,6 +268,8 @@ await Connection.SendAsync("DisconnectAsync");
 await Connection.DisposeAsync(); 
 ```
 
+<a name="Monitoringapp"/>
+
 ## Monitoring app
 
 In your Monitoring app, create a SignalR connection to the Server Hub.
@@ -308,6 +329,8 @@ await connection.StartAsync();
 ```
 
 ![**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
+
+<a name="Trigger-Publish"/>
 
 ## Live - Trigger & publish Health Checks
 
