@@ -40,7 +40,7 @@
             </MudSelect>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<HealthCheck, object>(x=>x.ReceiveTimeStamp!)">Receive Time</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<HealthCheck, object>(x=>x.ReceiveTimeStamp!)">Receive Time</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<HealthCheck, object>(x=>x.Status)">Status</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<HealthCheck, object>(x=>x.Api)">Api Name</MudTableSortLabel></MudTh>
         </HeaderContent>
