@@ -6,6 +6,8 @@
 |*AspNetCore.Live.Api.HealthChecks.Server*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|
 |*AspNetCore.Live.Api.HealthChecks.Client*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
 
+<a name="TOC"/>
+
 ##### Table of Contents
 *  [Background](#Background)
 *  [System Architecture](#SystemArchitecture)
@@ -14,6 +16,8 @@
 *  [Monitoring web app](#Monitoringwebapp)
 *  [Monitoring app](#Monitoringapp)
 *  [Live - Trigger & publish Health Checks](#Trigger-Publish)
+
+[Back to Table of Contents](#TOC)
 
 <a name="Background"/>
 
@@ -37,6 +41,8 @@ notifying them of the Health Report in real-time.
 
 ![**LiveHealthChecks**](/Docs/SequenceDiagram.png)
 
+[Back to Table of Contents](#TOC)
+
 <a name="SystemArchitecture"/>
 
 ## System Architecture
@@ -58,6 +64,8 @@ When a **connection request** is made to the Server, the ReceiveMethod & SecretK
 All connections to the Server (from the Api Client & Monitoring apps) are **authorized** using ReceiveMethod & SecretKey.
 
 ![**LiveHealthChecks-SystemArchitecture**](/Docs/SystemArchitecture.jpg)
+
+[Back to Table of Contents](#TOC)
 
 <a name="Server"/>
 
@@ -143,6 +151,8 @@ This way you do not need a Server shutdown to add a new Client Api to the system
 
 ![**Sample Server**](/Docs/Server.jpg)
 
+[Back to Table of Contents](#TOC)
+
 <a name="AspNetCoreApi"/>
 
 ## Asp Net Core Api
@@ -191,6 +201,8 @@ The Server sends the Health Report as a real-time push notification.
 **Note:-** You can host a Server & Client in the same Api too. 
 
 ![**Sample Api**](/Docs/Api.jpg)
+
+[Back to Table of Contents](#TOC)
 
 <a name="Monitoringwebapp"/>
 
@@ -270,6 +282,8 @@ await Connection.DisposeAsync();
 
 <a name="Monitoringapp"/>
 
+[Back to Table of Contents](#TOC)
+
 ## Monitoring app
 
 In your Monitoring app, create a SignalR connection to the Server Hub.
@@ -329,6 +343,8 @@ await connection.StartAsync();
 ```
 
 ![**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
+
+[Back to Table of Contents](#TOC)
 
 <a name="Trigger-Publish"/>
 
