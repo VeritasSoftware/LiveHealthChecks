@@ -7,13 +7,13 @@
 |*AspNetCore.Live.Api.HealthChecks.Client*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
 
 ##### Table of Contents
-[Background](#Background)
-[System Architecture](#SystemArchitecture)
-[Server](#Server)
-[Asp Net Core Api](#AspNetCoreApi)
-[Monitoring web app](#Monitoringwebapp)
-[Monitoring app](#Monitoringapp)
-[Live - Trigger & publish Health Checks](#Trigger-Publish)
+*  [Background](#Background)
+*  [System Architecture](#SystemArchitecture)
+*  [Server](#Server)
+*  [Asp Net Core Api](#AspNetCoreApi)
+*  [Monitoring web app](#Monitoringwebapp)
+*  [Monitoring app](#Monitoringapp)
+*  [Live - Trigger & publish Health Checks](#Trigger-Publish)
 
 <a name="Background"/>
 
