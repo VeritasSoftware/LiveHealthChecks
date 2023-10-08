@@ -17,7 +17,7 @@
 *  [Monitoring app](#Monitoringapp)
 *  [Live - Trigger & publish Health Checks](#Trigger-Publish)
 
-[Back to Table of Contents](#TOC)
+[Table of Contents](#TOC)
 
 <a name="Background"/>
 
@@ -41,7 +41,7 @@ notifying them of the Health Report in real-time.
 
 ![**LiveHealthChecks**](/Docs/SequenceDiagram.png)
 
-[Back to Table of Contents](#TOC)
+[Table of Contents](#TOC)
 
 <a name="SystemArchitecture"/>
 
@@ -65,7 +65,7 @@ All connections to the Server (from the Api Client & Monitoring apps) are **auth
 
 ![**LiveHealthChecks-SystemArchitecture**](/Docs/SystemArchitecture.jpg)
 
-[Back to Table of Contents](#TOC)
+[Table of Contents](#TOC)
 
 <a name="Server"/>
 
@@ -151,7 +151,7 @@ This way you do not need a Server shutdown to add a new Client Api to the system
 
 ![**Sample Server**](/Docs/Server.jpg)
 
-[Back to Table of Contents](#TOC)
+[Table of Contents](#TOC)
 
 <a name="AspNetCoreApi"/>
 
@@ -202,7 +202,7 @@ The Server sends the Health Report as a real-time push notification.
 
 ![**Sample Api**](/Docs/Api.jpg)
 
-[Back to Table of Contents](#TOC)
+[Table of Contents](#TOC)
 
 <a name="Monitoringwebapp"/>
 
@@ -280,9 +280,9 @@ await Connection.SendAsync("DisconnectAsync");
 await Connection.DisposeAsync(); 
 ```
 
-<a name="Monitoringapp"/>
+[Table of Contents](#TOC)
 
-[Back to Table of Contents](#TOC)
+<a name="Monitoringapp"/>
 
 ## Monitoring app
 
@@ -344,7 +344,7 @@ await connection.StartAsync();
 
 ![**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
 
-[Back to Table of Contents](#TOC)
+[Table of Contents](#TOC)
 
 <a name="Trigger-Publish"/>
 
@@ -369,3 +369,5 @@ and then, publish the generated Health Report to the Server yourself,
 by calling the **PublishHealthReportAsync** method.
 
 ![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)
+
+[Table of Contents](#TOC)
