@@ -40,9 +40,9 @@
             </MudSelect>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Receive Time</MudTh>
-            <MudTh>Status</MudTh>
-            <MudTh>Api Name</MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<HealthCheck, object>(x=>x.ReceiveTimeStamp!)">Receive Time</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<HealthCheck, object>(x=>x.Status)">Status</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<HealthCheck, object>(x=>x.Api)">Api Name</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Receive Time">@($"{context.ReceiveTimeStamp?.ToLocalTime().ToShortDateString()} - {context.ReceiveTimeStamp?.ToLocalTime().ToShortTimeString()}")</MudTd>
