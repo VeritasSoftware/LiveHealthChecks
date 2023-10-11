@@ -57,4 +57,8 @@
         public string? Status { get; set; }
         public Dictionary<string, string>? Results { get; set; }
     }
+
+    public class ApplicationLogs
+    {
+    }
 }

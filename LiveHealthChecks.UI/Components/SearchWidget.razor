@@ -2,6 +2,7 @@
 @using MudBlazor.Services
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Repository
+@inject ILogger Logger
 @inject IDialogService DialogService
 @inject IMyHealthChecksRepository Repository
 
@@ -64,9 +65,6 @@
     private string NoReceiveMethod = "NoReceiveMethod";
     private string NoPeriod = "NoPeriod";
 
-    private string AllReceiveMethod = "AllReceiveMethod";
-    private string AllPeriod = "AllPeriod";
-
     private string SelectedPeriod = "NoPeriod";
     private string SelectedReceiveMethod = "NoReceiveMethod";
 
@@ -85,8 +83,6 @@
         }
     }
 
-    private List<HealthCheck>? HealthChecksView { get; set; } = new List<HealthCheck>();
-
     private List<HealthCheck>? HealthChecks { get; set; } = new List<HealthCheck>();
 
     private bool dense = false;
@@ -104,7 +100,7 @@
         }
         catch(Exception ex)
         {
-
+            Logger.LogError("Error in app.", ex);
         }
     }
 

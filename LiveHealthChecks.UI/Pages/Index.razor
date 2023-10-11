@@ -5,6 +5,7 @@
 @using MudBlazor
 @using System.Text.Json.Nodes
 @implements IAsyncDisposable
+@inject ILogger Logger
 @inject HttpClient Http
 @inject IDialogService DialogService
 
@@ -110,16 +111,23 @@
         }
         catch(Exception ex)
         {
-
+            Logger.LogError("Error in app.", ex);
         }     
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (Connection != null)
+        try
         {
-            await Connection.SendAsync("DisconnectAsync");
-            await Connection.DisposeAsync();
-        }        
+            if (Connection != null)
+            {
+                await Connection.SendAsync("DisconnectAsync");
+                await Connection.DisposeAsync();
+            }
+        }
+        catch(Exception ex)
+        {
+            Logger.LogError("Error in app.", ex);
+        }                
     }
 }

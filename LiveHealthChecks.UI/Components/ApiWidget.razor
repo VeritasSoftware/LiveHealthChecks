@@ -4,6 +4,7 @@
 @using System.Text.Json.Nodes
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Repository
+@inject ILogger Logger
 @inject IMyHealthChecksRepository Repository;
 
 @if(Api != null && Connection != null)
@@ -173,7 +174,7 @@
         }
         catch (Exception ex)
         {
-
+            Logger.LogError("Error in app.", ex);
         }        
     }
 
@@ -185,9 +186,9 @@
             {
                 var deserializedHealthReport = JsonSerializer.Deserialize<HealthReport>(report);
 
-                //    dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
-
                 ////Generate random Status
+                ////dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
+                
                 //var td = int.Parse(deserializedHealthReport.TotalDuration?.ToString().Replace(":", "").Replace(".", ""));
 
                 //Random = new Random(td);
@@ -265,7 +266,7 @@
             }
             catch(Exception ex)
             {
-
+                Logger.LogError("Error in app.", ex);
             }            
         });
 
