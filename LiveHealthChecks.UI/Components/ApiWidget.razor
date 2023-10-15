@@ -19,8 +19,8 @@
                         <b>Last Health Check</b><br />
                         @if (!string.IsNullOrEmpty(@LastHealthCheck))
                         {
-                            @DateTime.Now.ToLongDateString()<br />
-                            @DateTime.Now.ToLongTimeString()    
+                            @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()<br />
+                            @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToLongTimeString()    
                         }                    
                     </div>                   
                     <div class="col-2">
