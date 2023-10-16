@@ -68,7 +68,7 @@ It is all configured for containerization using **Alpine Linux container** & **n
 
 Also, **SSL** supported **https**.
 
-Just run the build:
+From the solution directory, run the build:
 
 ```
 docker compose build --pull --no-cache
@@ -80,4 +80,4 @@ then, deploy container:
 docker compose up
 ```
 
-from the solution directory.
+Then, open the app in browser, by url: https://localhost:8001
