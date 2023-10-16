@@ -20,7 +20,7 @@
                         @if (!string.IsNullOrEmpty(@LastHealthCheck))
                         {
                             @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()<br />
-                            @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToLongTimeString()    
+                            @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToString("hh:mm:ss tt")    
                         }                    
                     </div>                   
                     <div class="col-2">
@@ -109,7 +109,7 @@
                         <br />
                         <div class="row">
                             <div class="col-10">
-                                @($"{hc.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()} - {hc.ReceiveTimeStamp?.ToLocalTime().ToLongTimeString()}")
+                                @($"{hc.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()} - {hc.ReceiveTimeStamp?.ToLocalTime().ToString("hh:mm:ss tt")}")
                             </div>                            
                             <div class="col-2">
                                 @if(hc.Status == HealthStatus.Healthy)

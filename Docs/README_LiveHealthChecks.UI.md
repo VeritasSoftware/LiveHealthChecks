@@ -59,3 +59,17 @@ You can click on a row in the table and a **View Health Check** popup comes up.
 This has all the details of the Health Check, including the Health Report JSON.
 
 ![**View Health Check**](/Docs/LiveHealthChecks-UI-ViewHealthCheck.jpg)
+
+## Docker containerization
+
+You can clone the solution and containerize the Monitoring web app.
+
+It is all configured for containerization using **Alpine Linux container** & **nginx**.
+
+Just run
+
+```
+docker compose up --build
+```
+
+from the solution directory.
