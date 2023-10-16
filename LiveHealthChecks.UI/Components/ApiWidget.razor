@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
+@using System.Globalization
 @using MudBlazor
 @using System.Text.Json.Nodes
 @using LiveHealthChecks.UI.Models
@@ -20,7 +21,7 @@
                         @if (!string.IsNullOrEmpty(@LastHealthCheck))
                         {
                             @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()<br />
-                            @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToLongTimeString()    
+                            @LastHealthChecks.FirstOrDefault()?.ReceiveTimeStamp?.ToLocalTime().ToString("hh:mm:ss tt", CultureInfo.InvariantCulture)    
                         }                    
                     </div>                   
                     <div class="col-2">
@@ -109,7 +110,7 @@
                         <br />
                         <div class="row">
                             <div class="col-10">
-                                @($"{hc.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()} - {hc.ReceiveTimeStamp?.ToLocalTime().ToLongTimeString()}")
+                                @($"{hc.ReceiveTimeStamp?.ToLocalTime().ToLongDateString()} - {hc.ReceiveTimeStamp?.ToLocalTime().ToString("hh:mm:ss tt", CultureInfo.InvariantCulture)}")
                             </div>                            
                             <div class="col-2">
                                 @if(hc.Status == HealthStatus.Healthy)
