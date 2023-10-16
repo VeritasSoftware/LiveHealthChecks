@@ -66,10 +66,18 @@ You can clone the solution and containerize the Monitoring web app.
 
 It is all configured for containerization using **Alpine Linux container** & **nginx**.
 
-Just run
+Also, **SSL** supported **https**.
+
+Just run the build:
 
 ```
-docker compose up --build
+docker compose build --pull --no-cache
+```
+
+then, deploy container:
+
+```
+docker compose up
 ```
 
 from the solution directory.
