@@ -8,19 +8,21 @@
 @inject ILogger Logger
 @inject HttpClient Http
 @inject IDialogService DialogService
+@inject NavigationManager NavigationManager
 
-<PageTitle>Index</PageTitle>
+<PageTitle>LiveHealthChecks.UI</PageTitle>
 
-<h1>Live Health Checks!</h1>
+<MudAppBar Color="Color.Primary" Fixed="false" Dense="true">
+    <MudIconButton @onclick="OpenDialog" Icon="@Icons.Material.Filled.Search" Color="Color.Surface" />
+    <MudIconButton @onclick="OpenDeleteDialog" Icon="@Icons.Material.Filled.DeleteForever" Color="Color.Error" />
+</MudAppBar>
 
 <div class="row">
-    <div class="col-8">
-        <MudText Typo="Typo.h2"><span style="color:green">Healthy</span> vs <span style="color:red">Unhealthy</span></MudText>
+    <div class="col-sm col-md col" style="text-align: center;">
+        <MudText Typo="Typo.h2">Live Health Checks!</MudText>
     </div>
-    <div class="col-4" style="float:right;">
-        <MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
-            Search
-        </MudButton>
+    <div class="col-sm col-md col" style="text-align: center;">
+        <MudText Typo="Typo.h2"><span style="color:green">Healthy</span> vs <span style="color:red">Unhealthy</span></MudText>
     </div>
 </div>
 
@@ -33,11 +35,11 @@
         var api1 = apis.ElementAtOrDefault(i);
         var api2 = apis.ElementAtOrDefault(i + 1);
         var api3 = apis.ElementAtOrDefault(i + 2);
-
+        
         @if (Connection != null)
         {
             <div class="row">
-                <div class="col-4">
+                <div class="col-sm col-md col">
                     @if (api1 != null)
                     {
                         <ApiWidget
@@ -46,7 +48,7 @@
                         ></ApiWidget>    
                     }
                 </div>                
-                <div class="col-4">
+                <div class="col-sm col-md col">
                     @if (api2 != null)
                     {
                         <ApiWidget
@@ -55,7 +57,7 @@
                         ></ApiWidget>
                     }
                 </div>
-                <div class="col-4">
+                <div class="col-sm col-md col">
                     @if (api3 != null)
                     {
                         <ApiWidget
@@ -64,7 +66,7 @@
                         ></ApiWidget>
                     }
                 </div>
-            </div>            
+            </div>                       
         }        
     }   
 }
@@ -87,6 +89,26 @@
             CloseButton = true
         };
         DialogService.Show<SearchDialog>("Search", options);
+    }
+
+    private async Task OpenDeleteDialog()
+    {
+        var options = new DialogOptions 
+        { 
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.ExtraSmall,
+            FullWidth = false,
+            Position = DialogPosition.Center,
+            CloseButton = true,            
+        };
+        var parameters = new DialogParameters<DeleteDialog>();
+        parameters.Add(x => x.DashboardSettings, DashboardSettings);
+
+        var dialogRef = DialogService.Show<DeleteDialog>("Delete", parameters, options);
+
+        var result = await dialogRef.Result;
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
     }
 
     protected override async Task OnInitializedAsync()

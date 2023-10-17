@@ -1,0 +1,100 @@
+﻿@using MudBlazor
+@using MudBlazor.Services
+@using LiveHealthChecks.UI.Models
+@using LiveHealthChecks.UI.Repository
+@inject ILogger Logger
+@inject IMyHealthChecksRepository Repository
+
+@if(DashboardSettings != null)
+{
+    <div class="row">
+        <div class="col-7">
+            <MudSelect T="string" Label="Period" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedPeriod" @bind-SelectedItem="SelectedPeriod">
+                <MudSelectItem Value="@("Older Than 1 Day")">Older Than 1 Day</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 3 Days")">Older Than 3 Days</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 5 Days")">Older Than 5 Days</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 7 Days")">Older Than 7 Days</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 10 Days")">Older Than 10 Days</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 14 Days")">Older Than 14 Days</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 30 Days")">Older Than 30 Days</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 90 Days")">Older Than 90 Days</MudSelectItem>
+                <MudSelectItem Value="@("All")">All</MudSelectItem>
+            </MudSelect>
+        </div>
+        <div class="col-5">
+            <MudSelect T="string" Label="Api" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedReceiveMethod" @bind-SelectedItem="SelectedReceiveMethod">
+                <MudSelectItem Value="@("NoReceiveMethod")">---Select---</MudSelectItem>
+                @foreach (var api in DashboardSettings.Apis)
+                {
+                    <MudSelectItem Value="@api.ReceiveMethod">@api.ApiName</MudSelectItem>
+                }            
+            </MudSelect>
+        </div>
+    </div>
+    <div class="row" style="padding-top:30px;">
+        <div class="col-12">
+            <MudButton @onclick="DeleteAsync" Variant="Variant.Filled" Color="Color.Error">
+                Delete
+            </MudButton>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public DashboardSettings? DashboardSettings { get; set; }
+
+    private string NoReceiveMethod = "NoReceiveMethod";
+
+    private string SelectedPeriod = "Older Than 1 Day";
+    private string SelectedReceiveMethod = "NoReceiveMethod";
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    private async Task DeleteAsync()
+    {
+        try
+        {
+
+            Func<string[]> selectedApi = () => SelectedReceiveMethod == "NoReceiveMethod" ? DashboardSettings.Apis.Select(api => api.ReceiveMethod).ToArray()
+                                                                                          : new string[] { SelectedReceiveMethod };
+
+            switch(SelectedPeriod)
+            {
+                case "Older Than 1 Day":
+                    await Repository.DeleteHealthChecksAsync(-24, selectedApi());
+                    break;
+                case "Older Than 3 Days":
+                    await Repository.DeleteHealthChecksAsync(-24 * 3, selectedApi());
+                    break;
+                case "Older Than 5 Days":
+                    await Repository.DeleteHealthChecksAsync(-24 * 5, selectedApi());
+                    break;
+                case "Older Than 7 Days":
+                    await Repository.DeleteHealthChecksAsync(-24 * 7, selectedApi());
+                    break;
+                case "Older Than 10 Days":
+                    await Repository.DeleteHealthChecksAsync(-24 * 10, selectedApi());
+                    break;
+                case "Older Than 14 Days":
+                    await Repository.DeleteHealthChecksAsync(-24 * 14, selectedApi());
+                    break;
+                case "Older Than 30 Days":
+                    await Repository.DeleteHealthChecksAsync(-24 * 30, selectedApi());
+                    break;
+                case "Older Than 90 Days":
+                    await Repository.DeleteHealthChecksAsync(-24 * 90, selectedApi());
+                    break;
+                default:
+                    await Repository.DeleteHealthChecksAsync(int.MaxValue, selectedApi());
+                    break;
+            }
+        }
+        catch(Exception ex)
+        {
+            Logger.LogError("Error in app.", ex);
+        }
+    }
+}

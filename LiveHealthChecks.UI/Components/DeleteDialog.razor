@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+@using LiveHealthChecks.UI.Models
+
+<MudDialog>
+    <DialogContent>
+        @if(DashboardSettings != null)
+        {
+            <div>
+                <DeleteWidget 
+                    DashboardSettings="DashboardSettings"
+                ></DeleteWidget>
+            </div>            
+        }
+    </DialogContent>
+    <DialogActions>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public DashboardSettings? DashboardSettings { get; set; }
+}

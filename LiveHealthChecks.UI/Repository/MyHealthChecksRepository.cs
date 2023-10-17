@@ -8,6 +8,7 @@ namespace LiveHealthChecks.UI.Repository
         ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default);
         ValueTask<List<HealthCheck>> GetHealthChecksDataAsync(string receiveMethod, CancellationToken cancellationToken = default);
         ValueTask SetHealthChecksDataAsync(string receiveMethod, List<HealthCheck> data, CancellationToken cancellationToken = default);
+        ValueTask DeleteHealthChecksAsync(int hours, params string[] receiveMethods);
     }
 
 
@@ -33,6 +34,32 @@ namespace LiveHealthChecks.UI.Repository
         public async ValueTask SetHealthChecksDataAsync(string receiveMethod, List<HealthCheck> data, CancellationToken cancellationToken = default)
         {
             await _localStorageService.SetItemAsync(receiveMethod, data, cancellationToken);
+        }
+
+        public async ValueTask DeleteHealthChecksAsync(int hours, params string[] receiveMethods)
+        {
+            if (hours == int.MaxValue)
+            {
+                receiveMethods.ToList().ForEach(async receiveMethod =>
+                {
+                    await _localStorageService.RemoveItemAsync(receiveMethod);
+                });
+
+                return;
+            }
+
+            var dateTime = DateTime.Now.AddHours(hours).ToUniversalTime();
+
+            receiveMethods.ToList().ForEach(async receiveMethod =>
+            {
+                var healthChecks = await GetHealthChecksDataAsync(receiveMethod);
+
+                healthChecks.RemoveAll(hc => hc.ReceiveTimeStamp > dateTime);
+
+                await SetHealthChecksDataAsync(receiveMethod, healthChecks);
+            });
+
+            await Task.CompletedTask;
         }
     }
 }

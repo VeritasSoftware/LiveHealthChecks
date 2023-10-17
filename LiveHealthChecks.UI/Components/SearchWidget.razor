@@ -10,35 +10,39 @@
 {
     <MudTable T="HealthCheck" Items="@HealthChecks" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="FilterFunc" @bind-SelectedItem="selectedItem1" OnRowClick="HealthCheckSelected">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Health Checks</MudText>
-            <MudSpacer />
-            <MudSelect T="string" Label="Status" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedHealthStatus" @bind-SelectedItem="SelectedHealthStatus">
-                <MudSelectItem Value="@("-1")">---Select---</MudSelectItem>
-                <MudSelectItem Value="@("1.00")">Unhealthy</MudSelectItem>
-                <MudSelectItem Value="@("2.00")">Healthy</MudSelectItem>
-            </MudSelect>
-            <MudSpacer />
-            <MudSelect T="string" Label="Period" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedPeriod" @bind-SelectedItem="SelectedPeriod">
-                <MudSelectItem Value="@("NoPeriod")">---Select---</MudSelectItem>
-                <MudSelectItem Value="@("Last Hour")">Last Hour</MudSelectItem>
-                <MudSelectItem Value="@("Last 4 Hours")">Last 4 Hours</MudSelectItem>
-                <MudSelectItem Value="@("Last 8 Hours")">Last 8 Hours</MudSelectItem>
-                <MudSelectItem Value="@("Last 12 Hours")">Last 12 Hours</MudSelectItem>
-                <MudSelectItem Value="@("Last 24 Hours")">Last 24 Hours</MudSelectItem>
-                <MudSelectItem Value="@("Last 3 Days")">Last 3 Days</MudSelectItem>
-                <MudSelectItem Value="@("Last 7 Days")">Last 7 Days</MudSelectItem>
-                <MudSelectItem Value="@("Last 14 Days")">Last 14 Days</MudSelectItem>
-                <MudSelectItem Value="@("Last 30 Days")">Last 30 Days</MudSelectItem>
-                <MudSelectItem Value="@("Last 90 Days")">Last 30 Days</MudSelectItem>
-            </MudSelect>
-            <MudSpacer />
-            <MudSelect T="string" Label="Api" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedReceiveMethod" @bind-SelectedItem="SelectedReceiveMethod">
-                <MudSelectItem Value="@("NoReceiveMethod")">---Select---</MudSelectItem>
-                @foreach (var api in DashboardSettings.Apis)
-                {
-                    <MudSelectItem Value="@api.ReceiveMethod">@api.ApiName</MudSelectItem>
-                }            
-            </MudSelect>
+            <div class="row">
+                <div class="col-sm col-md col">
+                    <MudSelect T="string" Label="Status" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedHealthStatus" @bind-SelectedItem="SelectedHealthStatus">
+                        <MudSelectItem Value="@("-1")">---Select---</MudSelectItem>
+                        <MudSelectItem Value="@("1.00")">Unhealthy</MudSelectItem>
+                        <MudSelectItem Value="@("2.00")">Healthy</MudSelectItem>
+                    </MudSelect>
+                </div>
+                <div class="col-sm col-md col">
+                    <MudSelect T="string" Label="Period" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedPeriod" @bind-SelectedItem="SelectedPeriod">
+                        <MudSelectItem Value="@("NoPeriod")">---Select---</MudSelectItem>
+                        <MudSelectItem Value="@("Last Hour")">Last Hour</MudSelectItem>
+                        <MudSelectItem Value="@("Last 4 Hours")">Last 4 Hours</MudSelectItem>
+                        <MudSelectItem Value="@("Last 8 Hours")">Last 8 Hours</MudSelectItem>
+                        <MudSelectItem Value="@("Last 12 Hours")">Last 12 Hours</MudSelectItem>
+                        <MudSelectItem Value="@("Last 24 Hours")">Last 24 Hours</MudSelectItem>
+                        <MudSelectItem Value="@("Last 3 Days")">Last 3 Days</MudSelectItem>
+                        <MudSelectItem Value="@("Last 7 Days")">Last 7 Days</MudSelectItem>
+                        <MudSelectItem Value="@("Last 14 Days")">Last 14 Days</MudSelectItem>
+                        <MudSelectItem Value="@("Last 30 Days")">Last 30 Days</MudSelectItem>
+                        <MudSelectItem Value="@("Last 90 Days")">Last 30 Days</MudSelectItem>
+                    </MudSelect>
+                </div>
+                <div class="col-sm col-md col">
+                    <MudSelect T="string" Label="Api" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedReceiveMethod" @bind-SelectedItem="SelectedReceiveMethod">
+                        <MudSelectItem Value="@("NoReceiveMethod")">---Select---</MudSelectItem>
+                        @foreach (var api in DashboardSettings.Apis)
+                        {
+                            <MudSelectItem Value="@api.ReceiveMethod">@api.ApiName</MudSelectItem>
+                        }            
+                    </MudSelect>
+                </div>
+            </div>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="receiveTimestampSort">Receive Time</MudTableSortLabel></MudTh>

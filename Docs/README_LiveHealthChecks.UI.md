@@ -3,7 +3,14 @@
 
 ## Dashboard
 
+### Desktop
+
 ![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
+
+### Mobile
+
+![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI-Mobile.jpg)
+
 
 ## Dashboard Settings
 
@@ -50,9 +57,15 @@ The web app also uses the **browser's local storage database** for storing the H
 
 received from the Server.
 
-Also, you can search this data in the Search popup (click on Search button on Dashboard).
+Also, you can search this data in the Search popup (click on Search button on App bar).
+
+### Desktop
 
 ![**Search**](/Docs/LiveHealthChecks-UI-Search.jpg)
+
+### Mobile
+
+![**Search**](/Docs/LiveHealthChecks-UI-Search-Mobile.jpg)
 
 You can click on a row in the table and a **View Health Check** popup comes up.
 
