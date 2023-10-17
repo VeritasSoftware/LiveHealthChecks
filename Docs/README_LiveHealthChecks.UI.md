@@ -71,7 +71,13 @@ You can click on a row in the table and a **View Health Check** popup comes up.
 
 This has all the details of the Health Check, including the Health Report JSON.
 
+### Desktop
+
 ![**View Health Check**](/Docs/LiveHealthChecks-UI-ViewHealthCheck.jpg)
+
+### Mobile
+
+![**View Health Check**](/Docs/LiveHealthChecks-UI-ViewHealthCheck-Mobile.jpg)
 
 ## Docker containerization
 
