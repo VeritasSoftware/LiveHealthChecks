@@ -10,6 +10,7 @@
     <div class="row">
         <div class="col-7">
             <MudSelect T="string" Label="Period" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedPeriod" @bind-SelectedItem="SelectedPeriod">
+                <MudSelectItem Value="@("---Select All---")">---Select All---</MudSelectItem>
                 <MudSelectItem Value="@("Older Than 1 Day")">Older Than 1 Day</MudSelectItem>
                 <MudSelectItem Value="@("Older Than 3 Days")">Older Than 3 Days</MudSelectItem>
                 <MudSelectItem Value="@("Older Than 5 Days")">Older Than 5 Days</MudSelectItem>
@@ -17,13 +18,12 @@
                 <MudSelectItem Value="@("Older Than 10 Days")">Older Than 10 Days</MudSelectItem>
                 <MudSelectItem Value="@("Older Than 14 Days")">Older Than 14 Days</MudSelectItem>
                 <MudSelectItem Value="@("Older Than 30 Days")">Older Than 30 Days</MudSelectItem>
-                <MudSelectItem Value="@("Older Than 90 Days")">Older Than 90 Days</MudSelectItem>
-                <MudSelectItem Value="@("All")">All</MudSelectItem>
+                <MudSelectItem Value="@("Older Than 90 Days")">Older Than 90 Days</MudSelectItem>                
             </MudSelect>
         </div>
         <div class="col-5">
             <MudSelect T="string" Label="Api" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="SelectedReceiveMethod" @bind-SelectedItem="SelectedReceiveMethod">
-                <MudSelectItem Value="@("NoReceiveMethod")">---Select---</MudSelectItem>
+                <MudSelectItem Value="@("NoReceiveMethod")">---Select All---</MudSelectItem>
                 @foreach (var api in DashboardSettings.Apis)
                 {
                     <MudSelectItem Value="@api.ReceiveMethod">@api.ApiName</MudSelectItem>

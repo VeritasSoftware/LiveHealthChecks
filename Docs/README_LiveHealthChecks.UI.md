@@ -79,6 +79,22 @@ This has all the details of the Health Check, including the Health Report JSON.
 
 ![**View Health Check**](/Docs/LiveHealthChecks-UI-ViewHealthCheck-Mobile.jpg)
 
+## Delete Health Checks
+
+The user can delete Health Checks from the database.
+
+Click on the App bar Delete icon & a popup will appear.
+
+Filter the Health Checks you want to delete & click Delete button.
+
+### Desktop
+
+![**Delete Health Checks**](/Docs/LiveHealthChecks-UI-Delete.jpg)
+
+### Mobile
+
+![**Delete Health Checks**](/Docs/LiveHealthChecks-UI-Delete-Mobile.jpg)
+
 ## Docker containerization
 
 You can clone the solution and containerize the Monitoring web app.
