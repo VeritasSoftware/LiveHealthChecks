@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using System.Globalization
+@using MudBlazor
 @using MudBlazor.Services
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Repository
@@ -50,8 +51,8 @@
             <MudTh><MudTableSortLabel SortBy="apiNameSort">Api Name</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Receive Time">@($"{context.ReceiveTimeStamp?.ToLocalTime().ToShortDateString()} - {context.ReceiveTimeStamp?.ToLocalTime().ToShortTimeString()}")</MudTd>
-            <MudTd DataLabel="Status" Style="@(context.Status == 2.0 ? "background-color: green; color: white;" : "background-color: red; color: white;")">@(context.Status == 2.00 ? "Healthy" : "Unhealthy")</MudTd>
+            <MudTd DataLabel="Receive Time">@($"{context.ReceiveTimeStamp?.ToLocalTime().ToShortDateString()} - {context.ReceiveTimeStamp?.ToLocalTime().ToString("hh:mm:ss tt", CultureInfo.InvariantCulture)}")</MudTd>
+            <MudTd DataLabel="Status" Style="@(context.Status == HealthStatus.Healthy ? "background-color: green; color: white;" : "background-color: red; color: white;")">@(context.Status == HealthStatus.Healthy ? "Healthy" : "Unhealthy")</MudTd>
             <MudTd DataLabel="Api Name">@context.Api</MudTd>
         </RowTemplate>
         <PagerContent>
