@@ -38,6 +38,18 @@
             </MudButton>
         </div>
     </div>
+    <div class="row" style="padding-top:30px;">
+        <div class="col-12">
+            @if(IsSuccess)
+            {
+                <span style="color: green;">The health check records were deleted from the database.</span>
+            }
+            else if (IsError)
+            {
+                <span style="color: red;">There was an error deleting health check records from the database.</span>
+            }
+        </div>
+    </div>
 }
 
 @code {
@@ -49,14 +61,15 @@
     private string SelectedPeriod = "Older Than 1 Day";
     private string SelectedReceiveMethod = "NoReceiveMethod";
 
-    protected override async Task OnInitializedAsync()
-    {
-    }
+    private bool IsError { get; set; } = false;
+    private bool IsSuccess { get; set; } = false;
 
     private async Task DeleteAsync()
     {
         try
         {
+            IsError = false;
+            IsSuccess = false;
 
             Func<string[]> selectedApi = () => SelectedReceiveMethod == "NoReceiveMethod" ? DashboardSettings.Apis.Select(api => api.ReceiveMethod).ToArray()
                                                                                           : new string[] { SelectedReceiveMethod };
@@ -91,9 +104,14 @@
                     await Repository.DeleteHealthChecksAsync(int.MaxValue, selectedApi());
                     break;
             }
+
+            IsSuccess = true;
         }
         catch(Exception ex)
         {
+            IsSuccess = false;
+            IsError = true;
+
             Logger.LogError("Error in app.", ex);
         }
     }

@@ -54,7 +54,7 @@ namespace LiveHealthChecks.UI.Repository
             {
                 var healthChecks = await GetHealthChecksDataAsync(receiveMethod);
 
-                healthChecks.RemoveAll(hc => hc.ReceiveTimeStamp > dateTime);
+                healthChecks.RemoveAll(hc => hc.ReceiveTimeStamp < dateTime);
 
                 await SetHealthChecksDataAsync(receiveMethod, healthChecks);
             });
