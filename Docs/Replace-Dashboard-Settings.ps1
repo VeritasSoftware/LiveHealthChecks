@@ -11,6 +11,11 @@ $dest = "/user/share/nginx/html/dashboardSettings.json"
 # Get container Id by image name
 $containerId = docker ps -aqf "ancestor=livehealthchecks.ui" --all
 
+if ($containerId -eq $null -or $containerId -eq "") {
+   Write-Host "Could not find a container by image name."
+   exit
+}
+
 Write-Host "The container Id is $($containerId)..."
 
 $docker_arguments = @("stop",                                               `
