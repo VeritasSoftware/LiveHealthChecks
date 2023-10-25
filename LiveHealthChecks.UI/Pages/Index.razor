@@ -15,6 +15,7 @@
 <MudAppBar Color="Color.Primary" Fixed="false" Dense="true">
     <MudIconButton Title="Search" @onclick="OpenDialog" Icon="@Icons.Material.Filled.Search" Color="Color.Surface" Size="Size.Large" />
     <MudIconButton Title="Delete" @onclick="OpenDeleteDialog" Icon="@Icons.Material.Filled.DeleteForever" Color="Color.Error" Size="Size.Large" />
+    <MudIconButton Title="Connect to Server" @onclick="ConnectToServer" Icon="@Icons.Material.Filled.CastConnected" Color="Color.Surface" Size="Size.Large" />
 </MudAppBar>
 
 <div class="row">
@@ -115,11 +116,17 @@
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
     }
 
-    protected override async Task OnInitializedAsync()
-    {       
+    private async Task ConnectToServer()
+    {
         try
         {
+            await DisconnectFromServer();
+
+            Console.WriteLine("Fetching Dashboard Settings file.");
+
             DashboardSettings = await Http.GetFromJsonAsync<DashboardSettings>("dashboardSettings.json");        
+
+            Console.WriteLine("Connecting to Server.");
 
             Connection = new HubConnectionBuilder()
                                .WithUrl(DashboardSettings.ServerUrl)
@@ -134,26 +141,45 @@
                 SecretKey = DashboardSettings.ServerSecretKey,
                 ClientId = DashboardSettings.ServerClientId
             });            
+
+            Console.WriteLine("Connected to Server.");
+
+            StateHasChanged();
         }
         catch(Exception ex)
         {
+            Console.WriteLine($"Error connecting to Server. Message: {ex.Message}");
             Logger.LogError("Error in app.", ex);
-        }     
+        }        
     }
 
-    public async ValueTask DisposeAsync()
+    private async ValueTask DisconnectFromServer()
     {
         try
         {
             if (Connection != null)
             {
+                Console.WriteLine("Disconnecting from Server.");
                 await Connection.SendAsync("DisconnectAsync");
                 await Connection.DisposeAsync();
+                Connection = null;
+                StateHasChanged();
             }
         }
         catch(Exception ex)
         {
+            Console.WriteLine($"Error disconnecting from Server. Message: {ex.Message}");
             Logger.LogError("Error in app.", ex);
-        }                
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ConnectToServer();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisconnectFromServer();                        
     }
 }
