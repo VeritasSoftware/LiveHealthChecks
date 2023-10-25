@@ -120,3 +120,12 @@ Then, open the app in browser, by url: https://localhost:8001
 To run the Sample in the Solution, make sure the below projects, are started up, in the specified order.
 
 ![**Solution Startup**](/Docs/LiveHealthChecks-Solution-Startup.jpg)
+
+You can use [**this Powershell script**](/Docs/Replace-Dashboard-Settings.ps1), to replace the **dashboardSettings.json** file, in a docker container.
+
+Usage:
+
+```
+.\Replace-Dashboard-Settings.ps1 path/to/file/on/your/file/system
+```
+![**Replace Dashboard Settings**](/Docs/LiveHealthChecks-Replace-Dashboard-Settings.jpg)
