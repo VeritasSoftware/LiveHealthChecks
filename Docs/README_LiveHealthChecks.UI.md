@@ -126,6 +126,6 @@ You can use [**this Powershell script**](/Docs/Replace-Dashboard-Settings.ps1), 
 Usage:
 
 ```
-.\Replace-Dashboard-Settings.ps1 path/to/file/on/your/file/system
+.\Replace-Dashboard-Settings.ps1 path\to\file\on\your\file\system
 ```
 ![**Replace Dashboard Settings**](/Docs/LiveHealthChecks-Replace-Dashboard-Settings.jpg)
