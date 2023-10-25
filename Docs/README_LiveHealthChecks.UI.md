@@ -117,6 +117,6 @@ docker compose up
 
 Then, open the app in browser, by url: https://localhost:8001
 
-Make sure the below projects, in the Solution, are started up, in the specified order.
+To run the Sample in the Solution, make sure the below projects, are started up, in the specified order.
 
 ![**Solution Startup**](/Docs/LiveHealthChecks-Solution-Startup.jpg)
