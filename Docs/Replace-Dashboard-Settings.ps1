@@ -8,6 +8,7 @@ Write-Host "Starting replace of dashboard settings file..."
 $source = $args[0]
 $dest = "/user/share/nginx/html/dashboardSettings.json"
 
+# Get container Id by image name
 $containerId = docker ps -aqf "ancestor=livehealthchecks.ui" --all
 
 Write-Host "The container Id is $($containerId)..."
