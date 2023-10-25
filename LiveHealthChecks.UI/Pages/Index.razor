@@ -88,7 +88,11 @@
             Position = DialogPosition.Center,
             CloseButton = true
         };
-        DialogService.Show<SearchDialog>("Search", options);
+
+        var parameters = new DialogParameters<SearchDialog>();
+        parameters.Add(x => x.DashboardSettings, DashboardSettings);
+
+        DialogService.Show<SearchDialog>("Search", parameters, options);
     }
 
     private async Task OpenDeleteDialog()
