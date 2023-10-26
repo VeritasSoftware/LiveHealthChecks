@@ -121,12 +121,12 @@
     private async Task ConnectToServer()
     {
         try
-        {
-            await DisconnectFromServer();
-
+        {            
             Console.WriteLine("Fetching Dashboard Settings file.");
 
             DashboardSettings = await Http.GetFromJsonAsync<DashboardSettings>("dashboardSettings.json");        
+
+            await DisconnectFromServer();
 
             Console.WriteLine("Connecting to Server.");
 
@@ -153,8 +153,6 @@
             string errorMsg = $"Error connecting to Server. Message: {ex.Message}";
             MyDialogService.OpenMessageDialog(errorMsg);
             Logger.LogError(errorMsg, ex);
-            Connection = null;
-            StateHasChanged();
         }        
     }
 
@@ -172,7 +170,6 @@
 
                 Console.WriteLine("Disposing connection.");
                 await Connection.DisposeAsync();
-                Connection = null;
                 StateHasChanged();
             }
         }
@@ -181,8 +178,6 @@
             var errorMsg = $"Error disconnecting from Server. Message: {ex.Message}";
             MyDialogService.OpenMessageDialog(errorMsg);
             Logger.LogError(errorMsg, ex);
-            Connection = null;
-            StateHasChanged();
         }
     }
 
