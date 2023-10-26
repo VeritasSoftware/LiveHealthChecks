@@ -128,7 +128,7 @@
 
             await DisconnectFromServer();
 
-            Console.WriteLine("Connecting to Server.");
+            Console.WriteLine("Connecting to Server.");          
 
             Connection = new HubConnectionBuilder()
                                .WithUrl(DashboardSettings.ServerUrl)
@@ -153,6 +153,8 @@
             string errorMsg = $"Error connecting to Server. Message: {ex.Message}";
             MyDialogService.OpenMessageDialog(errorMsg);
             Logger.LogError(errorMsg, ex);
+
+            StateHasChanged();
         }        
     }
 
@@ -170,6 +172,7 @@
 
                 Console.WriteLine("Disposing connection.");
                 await Connection.DisposeAsync();
+                Connection = null;
                 StateHasChanged();
             }
         }
@@ -178,6 +181,8 @@
             var errorMsg = $"Error disconnecting from Server. Message: {ex.Message}";
             MyDialogService.OpenMessageDialog(errorMsg);
             Logger.LogError(errorMsg, ex);
+
+            StateHasChanged();
         }
     }
 
