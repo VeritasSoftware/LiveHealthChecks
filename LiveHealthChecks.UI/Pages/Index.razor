@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using LiveHealthChecks.UI.Models
+@using LiveHealthChecks.UI.Services
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
 @using MudBlazor
@@ -8,6 +9,7 @@
 @inject ILogger Logger
 @inject HttpClient Http
 @inject IDialogService DialogService
+@inject IMyDialogService MyDialogService
 @inject NavigationManager NavigationManager
 
 <PageTitle>LiveHealthChecks.UI</PageTitle>
@@ -148,8 +150,9 @@
         }
         catch(Exception ex)
         {
-            Console.WriteLine($"Error connecting to Server. Message: {ex.Message}");
-            Logger.LogError("Error in app.", ex);
+            string errorMsg = $"Error connecting to Server. Message: {ex.Message}";
+            MyDialogService.OpenMessageDialog(errorMsg);
+            Logger.LogError(errorMsg, ex);
             Connection = null;
             StateHasChanged();
         }        
@@ -175,8 +178,9 @@
         }
         catch(Exception ex)
         {
-            Console.WriteLine($"Error disconnecting from Server. Message: {ex.Message}");
-            Logger.LogError("Error in app.", ex);
+            var errorMsg = $"Error disconnecting from Server. Message: {ex.Message}";
+            MyDialogService.OpenMessageDialog(errorMsg);
+            Logger.LogError(errorMsg, ex);
             Connection = null;
             StateHasChanged();
         }

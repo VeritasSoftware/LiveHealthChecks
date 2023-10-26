@@ -1,0 +1,29 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        @if (!string.IsNullOrEmpty(Message))
+        {
+            if (@IsError)
+            {
+                <div style="color:red">
+                    @Message
+                </div>                
+            }
+            else
+            {
+                <div>
+                    @Message
+                </div>   
+            }               
+        }        
+    </DialogContent>
+    <DialogActions>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public bool IsError { get; set; } = true;
+}

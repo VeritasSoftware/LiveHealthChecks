@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using LiveHealthChecks.UI;
 using LiveHealthChecks.UI.Models;
 using LiveHealthChecks.UI.Repository;
+using LiveHealthChecks.UI.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -21,5 +22,6 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IMyHealthChecksRepository, MyHealthChecksRepository>();
+builder.Services.AddScoped<IMyDialogService, MyDialogService>();
 
 await builder.Build().RunAsync();

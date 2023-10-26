@@ -5,7 +5,9 @@
 @using System.Text.Json.Nodes
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Repository
+@using LiveHealthChecks.UI.Services
 @inject ILogger Logger
+@inject IMyDialogService MyDialogService
 @inject IMyHealthChecksRepository Repository;
 
 @if(Api != null && Connection != null)
@@ -175,7 +177,9 @@
         }
         catch (Exception ex)
         {
-            Logger.LogError("Error in app.", ex);
+            var errorMsg = $"Error binding to Api ({Api?.ApiName}). Message: {ex.Message}";
+            MyDialogService.OpenMessageDialog(errorMsg);
+            Logger.LogError(errorMsg, ex);
         }        
     }
 

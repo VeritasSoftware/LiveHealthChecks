@@ -3,8 +3,10 @@
 @using MudBlazor.Services
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Repository
+@using LiveHealthChecks.UI.Services
 @inject ILogger Logger
 @inject IDialogService DialogService
+@inject IMyDialogService MyDialogService
 @inject IMyHealthChecksRepository Repository
 
 @if(DashboardSettings != null && HealthChecks != null)
@@ -105,7 +107,9 @@
         }
         catch(Exception ex)
         {
-            Logger.LogError("Error in app.", ex);
+            var errorMsg = $"Error loading health checks from database. Message: {ex.Message}";
+            MyDialogService.OpenMessageDialog(errorMsg);
+            Logger.LogError(errorMsg, ex);
         }
     }
 

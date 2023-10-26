@@ -2,7 +2,9 @@
 @using MudBlazor.Services
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Repository
+@using LiveHealthChecks.UI.Services
 @inject ILogger Logger
+@inject IMyDialogService MyDialogService
 @inject IMyHealthChecksRepository Repository
 
 @if(DashboardSettings != null)
@@ -112,7 +114,9 @@
             IsSuccess = false;
             IsError = true;
 
-            Logger.LogError("Error in app.", ex);
+            var errorMsg = $"Error deleting health checks from database. Message: {ex.Message}";
+            MyDialogService.OpenMessageDialog(errorMsg);
+            Logger.LogError(errorMsg, ex);
         }
     }
 }
