@@ -37,13 +37,13 @@ The web app has a **dashboardSettings.json** file in the **wwwroot** folder.
 
 ## Information
 
-You can create a similar json file for your own system.
+**Note:** You should create a similar json settings file for your own system.
 
 The web app takes over from there.
 
 If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
 
-set the **ServerReceiveMethod** header to * & use the SecretKey set in the Server.
+set the **ServerReceiveMethod** to * & use the SecretKey set in the Server.
 
 The web app renders the Widgets for each Api specified in the file.
 

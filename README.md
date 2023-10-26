@@ -218,7 +218,7 @@ And, before you close the Connection, call **DisconnectAsync**.
 
 [**LiveHealthChecks.UI**](Docs/README_LiveHealthChecks.UI.md)
 
-First, you configure the Monitoring web app, in a JSON file eg dashboardSettings.json.
+First, you may want to configure your Monitoring web app, in a JSON file eg dashboardSettings.json.
 
 
 ```JSON
@@ -242,7 +242,7 @@ First, you configure the Monitoring web app, in a JSON file eg dashboardSettings
 
 If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
 
-set the **ServerReceiveMethod** header to * & use the SecretKey set in the Server.
+set the **ServerReceiveMethod** to * & use the SecretKey set in the Server.
 
 Starting SignalR Connection & Authenticating example:
 
