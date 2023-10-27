@@ -9,7 +9,11 @@ $source = $args[0]
 $dest = "/user/share/nginx/html/dashboardSettings.json"
 
 # Get container Id by image name
-$containerId = docker ps -aqf "ancestor=livehealthchecks.ui" --all
+# the Solution image name is livehealthchecks.ui
+# the Docker Hub image name is shantanun/livehealthchecks.ui
+$containerIdArray = docker ps -aqf "ancestor=shantanun/livehealthchecks.ui" --all
+
+$containerId = $containerIdArray[0]
 
 if ($containerId -eq $null -or $containerId -eq "") {
    Write-Host "Could not find a container by image name."
