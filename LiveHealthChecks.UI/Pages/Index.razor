@@ -131,7 +131,7 @@
             Console.WriteLine("Connecting to Server.");          
 
             Connection = new HubConnectionBuilder()
-                               .WithUrl(DashboardSettings.ServerUrl)
+                               .WithUrl(DashboardSettings!.ServerUrl)
                                .WithAutomaticReconnect()
                                .Build();
 

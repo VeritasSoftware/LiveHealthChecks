@@ -53,9 +53,9 @@
         </div>
         <div class="row">
             <div class="col-12">
-                @if(@HealthCheck?.Report != null)
+                @if(@HealthCheck != null && @HealthCheck?.Report != null)
                 {
-                    <pre>@JsonPrettify(HealthCheck?.Report)</pre>
+                    <pre>@JsonPrettify(HealthCheck?.Report!)</pre>
                 }            
             </div>
         </div>

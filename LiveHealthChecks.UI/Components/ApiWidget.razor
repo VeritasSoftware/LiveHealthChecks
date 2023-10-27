@@ -222,7 +222,7 @@
                 var unHealthy = healthChecksTemp.Count(x => x.Status == HealthStatus.Unhealthy);
                 double healthStatus;
 
-                if (deserializedHealthReport.Status == Status.Healthy)
+                if (deserializedHealthReport!.Status == Status.Healthy)
                 {
                     healthy = healthy + 1;
                     healthStatus = HealthStatus.Healthy;
@@ -271,7 +271,9 @@
             }
             catch(Exception ex)
             {
-                Logger.LogError("Error in app.", ex);
+                var errorMsg = $"Error on receive of health report for Api ({Api?.ApiName}). Message: {ex.Message}";
+                MyDialogService.OpenMessageDialog(errorMsg);
+                Logger.LogError(errorMsg, ex);
             }            
         });
 

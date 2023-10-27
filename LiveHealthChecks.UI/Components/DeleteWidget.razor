@@ -58,8 +58,6 @@
     [Parameter]
     public DashboardSettings? DashboardSettings { get; set; }
 
-    private string NoReceiveMethod = "NoReceiveMethod";
-
     private string SelectedPeriod = "Older Than 1 Day";
     private string SelectedReceiveMethod = "NoReceiveMethod";
 
@@ -73,8 +71,11 @@
             IsError = false;
             IsSuccess = false;
 
-            Func<string[]> selectedApi = () => SelectedReceiveMethod == "NoReceiveMethod" ? DashboardSettings.Apis.Select(api => api.ReceiveMethod).ToArray()
-                                                                                          : new string[] { SelectedReceiveMethod };
+            Func<string[]> selectedApi = () => SelectedReceiveMethod == "NoReceiveMethod" 
+                                                ? (DashboardSettings != null 
+                                                    ? DashboardSettings.Apis.Select(api => api.ReceiveMethod).ToArray()
+                                                    : new string[] { })            
+                                                : new string[] { SelectedReceiveMethod };
 
             switch(SelectedPeriod)
             {

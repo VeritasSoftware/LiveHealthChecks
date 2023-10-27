@@ -15,7 +15,8 @@ builder.Services.AddLogging();
 
 var serviceProvider = builder.Services.BuildServiceProvider();
 var logger = serviceProvider.GetService<ILogger<ApplicationLogs>>();
-builder.Services.AddSingleton(typeof(ILogger), logger);
+if (logger != null)
+    builder.Services.AddSingleton(typeof(ILogger), logger);
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddBlazoredLocalStorage();
