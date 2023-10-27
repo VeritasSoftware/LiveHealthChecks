@@ -121,6 +121,24 @@ To run the Sample in the Solution, make sure the below projects, are started up,
 
 ![**Solution Startup**](/Docs/LiveHealthChecks-Solution-Startup.jpg)
 
+### Docker Hub
+
+You can pull an image of the monitoring web app, from Docker Hub.
+
+The command is:
+
+```
+docker pull shantanun/livehealthchecks.ui:latest
+```
+
+This will create the image in your local docker.
+
+Then, you can start up the image in a container, using command:
+
+```
+docker run -t -d --name livehealthchecks.ui -p 8001:443 shantanun/livehealthchecks.ui 
+```
+
 You can use [**this Powershell script**](/Docs/Replace-Dashboard-Settings.ps1), to replace the **dashboardSettings.json** file, in a docker container.
 
 Usage:
