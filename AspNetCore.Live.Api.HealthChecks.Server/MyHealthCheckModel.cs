@@ -1,4 +1,6 @@
-﻿namespace AspNetCore.Live.Api.HealthChecks.Server
+﻿using MongoDB.Bson;
+
+namespace AspNetCore.Live.Api.HealthChecks.Server
 {
     public class MyHealthCheckBaseModel
     {
@@ -10,5 +12,14 @@
     public class MyHealthCheckModel : MyHealthCheckBaseModel
     {     
         public string Report { get; set; } = string.Empty;
+    }
+
+    public class MyHealthCheckDbModel
+    {
+        public ObjectId Id { get; set; }
+        public string ClientId { get; set; } = string.Empty;
+        public string ReceiveMethod { get; set; } = string.Empty;
+        public string Report { get; set; } = string.Empty;
+        public DateTime Timestamp { get; set; }
     }
 }

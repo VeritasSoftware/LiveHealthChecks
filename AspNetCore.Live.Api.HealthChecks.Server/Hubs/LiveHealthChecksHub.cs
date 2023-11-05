@@ -9,12 +9,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
         private readonly MyHealthCheckSettings _settings;
         private readonly IClientsService? _clientsService;
         private readonly ILogger<LiveHealthChecksHub>? _logger;
+        private readonly IServerRepository? _repository;
 
-        public LiveHealthChecksHub(MyHealthCheckSettings settings, IClientsService? clientsService = null, ILogger<LiveHealthChecksHub>? logger = null)
+        public LiveHealthChecksHub(MyHealthCheckSettings settings, IClientsService? clientsService = null, ILogger<LiveHealthChecksHub>? logger = null, IServerRepository? repository = null)
         {
             _settings = settings;
             _clientsService = clientsService;
-            _logger = logger;          
+            _logger = logger;
+            _repository = repository;
         }
 
         public override async Task OnConnectedAsync()
@@ -203,7 +205,23 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
 
                     await base.Clients.Clients(connectionIds).SendAsync(myHealthCheck.ReceiveMethod, myHealthCheck.Report);
 
-                    _logger?.LogInformation($"Sent Health Report ({myHealthCheck.Report}) to {myHealthCheck.ReceiveMethod}. Connection Id: {Context.ConnectionId}.");
+                    _logger?.LogInformation($"Sent Health Report ({myHealthCheck.Report}) to {myHealthCheck.ReceiveMethod}. Connection Id: {Context.ConnectionId}.");                    
+
+                    if (_settings.UseDatabase && _repository != null)
+                    {
+                        _logger?.LogInformation($"Saving Health Check to the database.");
+
+                        await _repository.AddHealthCheckAsync(
+                            new MyHealthCheckDbModel
+                            {
+                                ClientId = myHealthCheck.ClientId,
+                                ReceiveMethod = myHealthCheck.ReceiveMethod,
+                                Report = myHealthCheck.Report,
+                                Timestamp = DateTime.UtcNow
+                            });
+
+                        _logger?.LogInformation($"Saved Health Check to the database.");
+                    }
                 }
             }
             catch (Exception ex)

@@ -23,7 +23,14 @@ namespace Sample.Server
 
             //Load the Clients dynamically
             services.AddScoped<IClientsService, ClientsService>();
-            services.AddLiveHealthChecksServer();
+            services.AddLiveHealthChecksServer(options =>
+            {
+                //Optional - Save Health Check info with Report to MongoDB database.
+                //Set flag to true.
+                //Provide the MongoDB connection string.
+                options.UseDatabase = true;
+                options.DatabaseConnectionString = Configuration.GetConnectionString("MongoDb");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

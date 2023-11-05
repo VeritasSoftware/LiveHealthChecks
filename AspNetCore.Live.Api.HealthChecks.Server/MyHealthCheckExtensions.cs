@@ -1,4 +1,6 @@
-﻿namespace AspNetCore.Live.Api.HealthChecks.Server
+﻿using MongoDB.Driver;
+
+namespace AspNetCore.Live.Api.HealthChecks.Server
 {
     public static class MyHealthCheckExtensions
     {
@@ -9,6 +11,12 @@
             settings?.Invoke(mySettings);
 
             services.AddSingleton(sp => mySettings);
+
+            if (mySettings.UseDatabase)
+            {
+                services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(mySettings.DatabaseConnectionString));
+                services.AddScoped<IServerRepository, ServerRepository>();
+            }
 
             return services;
         }
