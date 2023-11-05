@@ -26,9 +26,9 @@ namespace Sample.Server
             services.AddLiveHealthChecksServer(options =>
             {
                 //Optional - Save Health Check info with Report to MongoDB database.
-                //Set flag to true.
+                //Set UseDatabase flag to true.
                 //Provide the MongoDB connection string.
-                options.UseDatabase = true;
+                options.UseDatabase = false;
                 options.DatabaseConnectionString = Configuration.GetConnectionString("MongoDb");
             });
         }
