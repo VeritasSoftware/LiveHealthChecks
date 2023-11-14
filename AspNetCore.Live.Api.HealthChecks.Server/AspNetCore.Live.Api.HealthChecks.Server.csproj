@@ -7,26 +7,34 @@
 	<IsPackable>true</IsPackable>
     <Authors>Shantanu</Authors>
     <Company>Veritas Software</Company>
-    <PackageTags>asp net core;web api;health check;live;real time;signalr;server</PackageTags>
+    <PackageTags>asp net core;web api;health check;live;real time;signalr;server;diagnostics;health report;</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-	<PackageReleaseNotes>Added support for web apps to talk to the Server.</PackageReleaseNotes>
+	<PackageReleaseNotes>Added optional feature to save health checks to database.</PackageReleaseNotes>
     <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>1.6.1</Version>
-	<AssemblyVersion>1.0.6.1</AssemblyVersion>
-	<FileVersion>1.0.6.1</FileVersion>
+	<Version>1.6.2</Version>
+	<AssemblyVersion>1.0.6.2</AssemblyVersion>
+	<FileVersion>1.0.6.2</FileVersion>
 	<PackageLicenseFile></PackageLicenseFile>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
+  </ItemGroup>-->
 
+	<ItemGroup>
+		<None Include=".\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
   </ItemGroup>
