@@ -128,20 +128,9 @@
         OpenDialog(e.Item);
     }
 
-    private void OpenDialog(HealthCheck healthReport)
+    private void OpenDialog(HealthCheck healthCheck)
     {
-        var options = new DialogOptions 
-        { 
-            CloseOnEscapeKey = true, 
-            MaxWidth = MaxWidth.ExtraSmall,
-            FullWidth = true,
-            Position = DialogPosition.Center,
-            CloseButton = true,            
-        };
-        var parameters = new DialogParameters<ViewDialog>();
-        parameters.Add(x => x.HealthCheck, healthReport);
-
-        DialogService.Show<ViewDialog>("View Health Check", parameters, options);
+        MyDialogService.OpenViewHealthCheckDialog(healthCheck);        
     }
 
     private bool FilterFunc(HealthCheck element)

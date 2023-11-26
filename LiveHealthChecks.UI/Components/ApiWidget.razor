@@ -31,11 +31,11 @@
                         {
                             @if (LastHealthCheck == "green")
                             {
-                                <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: green; color: green;" />
+                                <MudIcon @onmouseenter="x => ShowHealthCheck(LastHealthChecks.FirstOrDefault()!)" Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: green; color: green;" />
                             }
                             else 
                             {
-                                <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: red; color: red;" />
+                                <MudIcon @onmouseenter="x => ShowHealthCheck(LastHealthChecks.FirstOrDefault()!)" Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: red; color: red;" />
                             }
                         }                                            
                     </div>
@@ -117,11 +117,11 @@
                             <div class="col-2">
                                 @if(hc.Status == HealthStatus.Healthy)
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: green; color: green;" />
+                                    <MudIcon @onmouseenter="x => ShowHealthCheck(hc)" Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: green; color: green;" />
                                 }
                                 else
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: red; color: red;" />
+                                    <MudIcon @onmouseenter="x => ShowHealthCheck(hc)" Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: red; color: red;" />
                                 }
                             </div>
                         </div> 
@@ -193,7 +193,7 @@
 
                 ////Generate random Status
                 ////dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
-                
+
                 //var td = int.Parse(deserializedHealthReport.TotalDuration?.ToString().Replace(":", "").Replace(".", ""));
 
                 //Random = new Random(td);
@@ -278,7 +278,12 @@
         });
 
         await Task.CompletedTask;
-    }    
+    }
+
+    private void ShowHealthCheck(HealthCheck healthCheck)
+    {
+        MyDialogService.OpenViewHealthCheckDialog(healthCheck);
+    }
 
     private async Task RefreshAsync(MyApiHealthCheckModel model)
     {

@@ -1,4 +1,5 @@
 ﻿using LiveHealthChecks.UI.Components;
+using LiveHealthChecks.UI.Models;
 using MudBlazor;
 
 namespace LiveHealthChecks.UI.Services
@@ -6,6 +7,7 @@ namespace LiveHealthChecks.UI.Services
     public interface IMyDialogService
     {
         void OpenMessageDialog(string message, bool isError = true);
+        void OpenViewHealthCheckDialog(HealthCheck healthCheck);
     }
 
     public class MyDialogService : IMyDialogService
@@ -34,6 +36,22 @@ namespace LiveHealthChecks.UI.Services
             _dialogService.Show<MessageDialog>("Message", parameters, options);
 
             Console.WriteLine(message);
+        }
+
+        public void OpenViewHealthCheckDialog(HealthCheck healthCheck)
+        {
+            var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true,
+                MaxWidth = MaxWidth.ExtraSmall,
+                FullWidth = true,
+                Position = DialogPosition.Center,
+                CloseButton = true,
+            };
+            var parameters = new DialogParameters<ViewDialog>();
+            parameters.Add(x => x.HealthCheck, healthCheck);
+
+            _dialogService.Show<ViewDialog>("View Health Check", parameters, options);
         }
     }
 }

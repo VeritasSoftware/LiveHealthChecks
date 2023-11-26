@@ -3,6 +3,12 @@
 
 ## Dashboard
 
+The Monitoring dashboard opens a **SignalR Client connection** to the Server.
+
+Then, each Api widget listens to that Api's ReceiveMethod for push notifications with the Health Report.
+
+The widgets are rendered based this data.
+
 ### Desktop
 
 ![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
@@ -47,7 +53,7 @@ set the **ServerReceiveMethod** to * & use the SecretKey set in the Server.
 
 The web app renders the Widgets for each Api specified in the file.
 
-Also, each widget is listening to the **ReceiveMethod** of that Api.
+Also, each widget is listening to the SignalR **ReceiveMethod** of that Api.
 
 When a **Health Report** for an Api is received from the Server,
 
