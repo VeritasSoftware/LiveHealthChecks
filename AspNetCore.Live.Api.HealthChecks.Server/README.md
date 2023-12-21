@@ -176,6 +176,10 @@ The Server sends the Health Report as a real-time push notification.
 
 ## Real-Time Monitoring App
 
+The Monitoring App connects to the Server using a [**SignalR Client library**](https://learn.microsoft.com/en-us/aspnet/core/signalr/client-features?view=aspnetcore-8.0).
+
+Then, the App authenticates & listens to the **ReceiveMethod** to start receiving push notifications.
+
 If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
 
 set the **ReceiveMethod** to * & use the **SecretKey** set in the Server.
