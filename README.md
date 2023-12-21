@@ -8,13 +8,13 @@
 
 <a name="TOC"/>
 
-##### Table of Contents
+## Table of Contents
+
 *  [Background](#Background)
 *  [System Architecture](#SystemArchitecture)
 *  [Server](#Server)
 *  [Asp Net Core Api](#AspNetCoreApi)
-*  [Monitoring web app](#Monitoringwebapp)
-*  [Monitoring app](#Monitoringapp)
+*  [Real-Time Monitoring app](#Monitoringapp)
 *  [Live - Trigger & publish Health Checks](#Trigger-Publish)
 
 [Table of Contents](#TOC)
@@ -211,61 +211,29 @@ The Server sends the Health Report as a real-time push notification.
 
 [Table of Contents](#TOC)
 
-<a name="Monitoringwebapp"/>
+<a name="Monitoringapp"/>
 
-## Monitoring web app
-
-In your Monitoring web app, you call a Server Hub method called **AuthenticateAsync**.
-
-And, before you close the Connection, call **DisconnectAsync**.
-
-### Real-Time Api Health Checks Monitoring web app
-
-![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
-
-[**LiveHealthChecks.UI**](Docs/README_LiveHealthChecks.UI.md)
-
-First, you may want to configure your Monitoring web app, in a JSON file eg dashboardSettings.json.
-
-
-```JSON
-{
-  "ServerUrl": "https://localhost:5001/livehealthcheckshub",
-  "ServerReceiveMethod": "*",
-  "ServerSecretKey": "f22f3fd2-687d-48a1-aa2f-f2c9181364eb",
-  "ServerClientId": "LiveHealthChecks.UI",
-  "Apis": [
-    {
-      "ApiName": "Sample Api",
-      "ReceiveMethod": "SampleApiHealth"
-    },
-    {
-      "ApiName": "Sample Api 2",
-      "ReceiveMethod": "SampleApi2Health"
-    }
-  ]
-}
-```
+## Real-Time Monitoring App
 
 If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
 
-set the **ServerReceiveMethod** to * & use the SecretKey set in the Server.
+set the **ReceiveMethod** to * & use the **SecretKey** set in the Server.
 
-Starting SignalR Connection & Authenticating example:
+The **ClientId** is optional, but useful in the logs.
 
 ```C#
-Connection = new HubConnectionBuilder()
-                    .WithUrl(DashboardSettings.ServerUrl)
+var Connection = new HubConnectionBuilder()
+                    .WithUrl("https://localhost:5001/livehealthcheckshub")
                     .WithAutomaticReconnect()
                     .Build();
 
 
-Connection.On<string>(DashboardSettings.Apis[0].ReceiveMethod, report =>
+Connection.On<string>("SampleApiHealth", report =>
 {
     //Handle report here
 });
 
-Connection.On<string>(DashboardSettings.Apis[1].ReceiveMethod, report =>
+Connection.On<string>("SampleApi2Health", report =>
 {
     //Handle report here
 });
@@ -274,10 +242,37 @@ await Connection.StartAsync();
 
 await Connection.SendAsync("AuthenticateAsync", new
 {
-    ReceiveMethod = DashboardSettings.ServerReceiveMethod,
-    SecretKey = DashboardSettings.ServerSecretKey,
-    ClientId = DashboardSettings.ServerClientId
+    ReceiveMethod = "*",
+    SecretKey = "f22f3fd2-687d-48a1-aa2f-f2c9181364eb",
+    ClientId = "Monitoring App"
 });  
+```
+
+If you want to receive notification from a specific Api,
+
+you can Authenticate with that Api's **ReceiveMethod** & **SecretKey**.
+
+The **ClientId** is optional, but useful in the logs.
+
+```C#
+var connection = new HubConnectionBuilder()
+                        .WithUrl("https://localhost:5001/livehealthcheckshub")
+                        .WithAutomaticReconnect()
+                        .Build();
+
+connection.On<string>("SampleApiHealth", report =>
+{
+    Console.WriteLine(report);
+});
+
+await connection.StartAsync();
+
+await Connection.SendAsync("AuthenticateAsync", new
+{
+    ReceiveMethod = "SampleApiHealth",
+    SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692",
+    ClientId = "SampleApi"
+});
 ```
 
 To **Disconnect** example:
@@ -287,69 +282,15 @@ await Connection.SendAsync("DisconnectAsync");
 await Connection.DisposeAsync(); 
 ```
 
-[Table of Contents](#TOC)
+### Sample
 
-<a name="Monitoringapp"/>
+I have provided a sample real-time health checks monitoring web app.
 
-## Monitoring app
+The sample web app is containerized & there is an docker image you can download from **DockerHub**.
 
-In your Monitoring app, create a SignalR connection to the Server Hub.
+![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
 
-Then, start listening to the set **ReceiveMethod** ie "SampleApiHealth".
-
-Set the **Headers** as shown. Use the same **ReceiveMethod** & **SecretKey**.
-
-```C#
-var connection = new HubConnectionBuilder()
-                        .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
-                        {
-                            o.Headers.Add("LiveHealthChecks-ReceiveMethod", "SampleApiHealth");
-                            o.Headers.Add("LiveHealthChecks-SecretKey", "43bf0968-17e0-4d22-816a-6eaadd766692");
-                            //Optional - value can be anything you want. good for tracking in the logs.
-                            o.Headers.Add("LiveHealthChecks-ClientId", "Monitoring App 1");
-                        })
-                        .WithAutomaticReconnect()
-                        .Build();
-
-connection.On<string>("SampleApiHealth", report =>
-{
-    Console.WriteLine(report);
-});
-
-await connection.StartAsync();
-```
-
-If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
-
-set the **ReceiveMethod** header to * & use the SecretKey set in the Server.
-
-
-```C#
-var connection = new HubConnectionBuilder()
-                        .WithUrl("https://localhost:5001/livehealthcheckshub", o =>
-                        {
-                            o.Headers.Add("LiveHealthChecks-ReceiveMethod", "*");
-                            o.Headers.Add("LiveHealthChecks-SecretKey", "f22f3fd2-687d-48a1-aa2f-f2c9181364eb");
-                            //Optional - value can be anything you want. good for tracking in the logs.
-                            o.Headers.Add("LiveHealthChecks-ClientId", "Monitoring App 1");
-                        })
-                        .WithAutomaticReconnect()
-                        .Build();
-
-connection.On<string>("SampleApiHealth", report =>
-{
-    Console.WriteLine(report);
-});
-
-connection.On<string>("SampleApi2Health", report =>
-{
-    Console.WriteLine(report);
-});
-
-await connection.StartAsync();
-```
-
-![**Sample Monitoring App**](/Docs/MonitoringApp.jpg)
+[**LiveHealthChecks.UI**](Docs/README_LiveHealthChecks.UI.md)
 
 [Table of Contents](#TOC)
 
