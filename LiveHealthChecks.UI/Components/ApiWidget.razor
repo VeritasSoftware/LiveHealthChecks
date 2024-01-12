@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client
-@using System.Text.Json
+﻿@using System.Text.Json
 @using System.Globalization
 @using MudBlazor
 @using System.Text.Json.Nodes
@@ -9,8 +8,9 @@
 @inject ILogger Logger
 @inject IMyDialogService MyDialogService
 @inject IMyHealthChecksRepository Repository;
+@inject IMyServerService MyServerService;
 
-@if(Api != null && Connection != null)
+@if(Api != null)
 {     
     <div class="card">
             <div class="card-header">
@@ -140,9 +140,6 @@
     [Parameter]
     public MyApiHealthCheckModel? Api { get; set; }
 
-    [Parameter]
-    public HubConnection? Connection { get; set; }
-
     public int SelectedIndex = -1;
 
     public string[] Labels = { "Healthy", "Unhealthy" };
@@ -168,11 +165,11 @@
             ChartOptions.ChartPalette = new string[] { "green", "red" };
             ChartOptions.DisableLegend = true;
 
-            if (Api != null && Connection != null)
+            if (Api != null)
             {
                 await RefreshAsync(Api);
 
-                await BindApiAsync(Connection, Api);
+                await BindApiAsync(Api);
             }
         }
         catch (Exception ex)
@@ -183,9 +180,9 @@
         }        
     }
 
-    public async Task BindApiAsync(HubConnection connection, MyApiHealthCheckModel model)
+    public async Task BindApiAsync(MyApiHealthCheckModel model)
     {        
-        connection.On<string>(model.ReceiveMethod, async report =>
+        MyServerService.Listen(model.ReceiveMethod, async report =>
         {
             try
             {

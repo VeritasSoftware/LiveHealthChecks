@@ -1,5 +1,12 @@
-﻿namespace LiveHealthChecks.UI.Models
+﻿using Microsoft.AspNetCore.SignalR.Client;
+
+namespace LiveHealthChecks.UI.Models
 {
+    public class MyServerConnection
+    {
+        public HubConnection? Connection { get; set; }
+    }
+
     public class MyHealthCheckAuthModel
     {
         public string ClientId { get; set; } = string.Empty;

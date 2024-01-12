@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using LiveHealthChecks.UI.Models
 @using LiveHealthChecks.UI.Services
-@using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
 @using MudBlazor
 @using System.Text.Json.Nodes
@@ -10,6 +9,7 @@
 @inject HttpClient Http
 @inject IDialogService DialogService
 @inject IMyDialogService MyDialogService
+@inject IMyServerService MyServerService
 @inject NavigationManager NavigationManager
 
 <PageTitle>LiveHealthChecks.UI</PageTitle>
@@ -17,7 +17,7 @@
 <MudAppBar Color="Color.Primary" Fixed="false" Dense="true">
     <MudIconButton Title="Search" @onclick="OpenDialog" Icon="@Icons.Material.Filled.Search" Color="Color.Surface" Size="Size.Large" />
     <MudIconButton Title="Delete" @onclick="OpenDeleteDialog" Icon="@Icons.Material.Filled.DeleteForever" Color="Color.Error" Size="Size.Large" />
-    <MudIconButton Title="Connect to Server" @onclick="ConnectToServer" Icon="@Icons.Material.Filled.CastConnected" Color="Color.Surface" Size="Size.Large" />
+    <MudIconButton Title="Connect to Server" @onclick="ConnectToServerAsync" Icon="@Icons.Material.Filled.CastConnected" Color="Color.Surface" Size="Size.Large" />
 </MudAppBar>
 
 <div class="row">
@@ -39,15 +39,14 @@
         var api2 = apis.ElementAtOrDefault(i + 1);
         var api3 = apis.ElementAtOrDefault(i + 2);
         
-        @if (Connection != null)
+        @if (ServerConnection.Connection != null)
         {
             <div class="row">
                 <div class="col-sm col-md col">
                     @if (api1 != null)
                     {
                         <ApiWidget
-                            Api="api1"
-                            Connection="Connection"
+                            Api="api1"                            
                         ></ApiWidget>    
                     }
                 </div>                
@@ -55,8 +54,7 @@
                     @if (api2 != null)
                     {
                         <ApiWidget
-                            Api="api2"
-                            Connection="Connection"
+                            Api="api2"                            
                         ></ApiWidget>
                     }
                 </div>
@@ -64,8 +62,7 @@
                     @if (api3 != null)
                     {
                         <ApiWidget
-                            Api="api3"
-                            Connection="Connection"
+                            Api="api3"                            
                         ></ApiWidget>
                     }
                 </div>
@@ -78,7 +75,7 @@
 
     public int SelectedIndex = -1;
 
-    HubConnection? Connection = null;
+    MyServerConnection ServerConnection = new MyServerConnection();
 
     private DashboardSettings? DashboardSettings;
 
@@ -118,81 +115,56 @@
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
     }
 
-    private async Task ConnectToServer()
+    private async Task ConnectToServerAsync()
     {
         try
-        {            
-            Console.WriteLine("Fetching Dashboard Settings file.");
-
-            DashboardSettings = await Http.GetFromJsonAsync<DashboardSettings>("dashboardSettings.json");        
-
-            await DisconnectFromServer();
-
-            Console.WriteLine("Connecting to Server.");          
-
-            Connection = new HubConnectionBuilder()
-                               .WithUrl(DashboardSettings!.ServerUrl)
-                               .WithAutomaticReconnect()
-                               .Build();
-
-            await Connection.StartAsync();
-
-            await Connection.SendAsync("AuthenticateAsync", new MyHealthCheckAuthModel
-            {
-                ReceiveMethod = DashboardSettings.ServerReceiveMethod,
-                SecretKey = DashboardSettings.ServerSecretKey,
-                ClientId = DashboardSettings.ServerClientId
-            });            
-
-            Console.WriteLine("Connected to Server.");
+        {    
+            ServerConnection.Connection = null;
 
             StateHasChanged();
+
+            Console.WriteLine("Fetching Dashboard Settings file.");
+
+            DashboardSettings = await Http.GetFromJsonAsync<DashboardSettings>("dashboardSettings.json");
+
+            if (DashboardSettings != null)
+            {                
+                ServerConnection.Connection = await MyServerService.ConnectAsync(DashboardSettings);
+            }            
         }
         catch(Exception ex)
         {
             string errorMsg = $"Error connecting to Server. Message: {ex.Message}";
             MyDialogService.OpenMessageDialog(errorMsg);
-            Logger.LogError(errorMsg, ex);
+            Logger.LogError(errorMsg, ex);            
+        }
 
-            StateHasChanged();
-        }        
+        StateHasChanged();
     }
 
-    private async ValueTask DisconnectFromServer()
+    private async ValueTask DisconnectFromServerAsync()
     {
         try
         {
-            if (Connection != null)
-            {
-                if (Connection.State == HubConnectionState.Connected)
-                {
-                    Console.WriteLine("Disconnecting from Server.");
-                    await Connection.SendAsync("DisconnectAsync");                                           
-                }
-
-                Console.WriteLine("Disposing connection.");
-                await Connection.DisposeAsync();
-                Connection = null;
-                StateHasChanged();
-            }
+            await MyServerService.DisconnectAsync();
         }
         catch(Exception ex)
         {
             var errorMsg = $"Error disconnecting from Server. Message: {ex.Message}";
             MyDialogService.OpenMessageDialog(errorMsg);
-            Logger.LogError(errorMsg, ex);
-
-            StateHasChanged();
+            Logger.LogError(errorMsg, ex);            
         }
+
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await ConnectToServer();
+        await ConnectToServerAsync();
     }
 
     public async ValueTask DisposeAsync()
     {
-        await DisconnectFromServer();                        
+        await DisconnectFromServerAsync();                        
     }
 }

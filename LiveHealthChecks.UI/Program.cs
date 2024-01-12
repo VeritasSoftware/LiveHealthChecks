@@ -24,5 +24,6 @@ builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IMyHealthChecksRepository, MyHealthChecksRepository>();
 builder.Services.AddScoped<IMyDialogService, MyDialogService>();
+builder.Services.AddSingleton<IMyServerService, MyServerService>();
 
 await builder.Build().RunAsync();
