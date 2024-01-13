@@ -182,7 +182,7 @@
 
     public async Task BindApiAsync(MyApiHealthCheckModel model)
     {        
-        MyServerService.Listen(model.ReceiveMethod, async report =>
+        MyServerService.Subscribe(model.ReceiveMethod, async report =>
         {
             try
             {

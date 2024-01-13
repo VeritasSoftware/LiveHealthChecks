@@ -72,11 +72,8 @@
 }
 
 @code {
-
     public int SelectedIndex = -1;
-
-    MyServerConnection ServerConnection = new MyServerConnection();
-
+    private MyServerConnection ServerConnection = new MyServerConnection();
     private DashboardSettings? DashboardSettings;
 
     private void OpenDialog()

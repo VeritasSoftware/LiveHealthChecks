@@ -7,7 +7,7 @@ namespace LiveHealthChecks.UI.Services
     {
         Task<HubConnection> ConnectAsync(DashboardSettings dashboardSettings);
         ValueTask DisconnectAsync();
-        void Listen(string receiveMethod, Func<string, Task> onHealthReportReceivedHandler);
+        void Subscribe(string receiveMethod, Func<string, Task> onHealthReportReceivedHandler);
     }
 
     public class MyServerService : IMyServerService
@@ -53,7 +53,7 @@ namespace LiveHealthChecks.UI.Services
             }
         }
 
-        public void Listen(string receiveMethod, Func<string, Task> onHealthReportReceivedHandler)
+        public void Subscribe(string receiveMethod, Func<string, Task> onHealthReportReceivedHandler)
         {
             _connection?.On<string>(receiveMethod, onHealthReportReceivedHandler);  
         }
