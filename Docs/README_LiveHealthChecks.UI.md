@@ -1,6 +1,13 @@
 # LiveHealthChecks.UI
 # Real-Time Api Health Check Monitoring Dashboard
 
+### Dashboard tech stack:
+
+* Blazor Web Assembly
+* SignalR Client
+* MudBlazor
+* Blazored.LocalStorage
+
 ## Dashboard
 
 The Monitoring dashboard opens a **SignalR Client connection** to the Server.
