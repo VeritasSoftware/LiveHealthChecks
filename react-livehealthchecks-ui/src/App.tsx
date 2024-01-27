@@ -25,8 +25,8 @@ const App: React.FC<{myServerService: MyServerService}> = ({myServerService}) =>
       { 
         triple(apis).map((api, i) => {
           return <div className="row"><div className="col-sm col-md col"><ApiWidget ApiName={api[0].ApiName} ReceiveMethod={api[0].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div>
-          {api[1] != null ? <div className="col-sm col-md col"><ApiWidget ApiName={api[1].ApiName} ReceiveMethod={api[1].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div> : ""}
-          {api[2] != null ? <div className="col-sm col-md col"><ApiWidget ApiName={api[2].ApiName} ReceiveMethod={api[2].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div> : ""}
+          {api[1] != null ? <div className="col-sm col-md col"><ApiWidget ApiName={api[1].ApiName} ReceiveMethod={api[1].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div> : <div className="col-sm col-md col"></div>}
+          {api[2] != null ? <div className="col-sm col-md col"><ApiWidget ApiName={api[2].ApiName} ReceiveMethod={api[2].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div> : <div className="col-sm col-md col"></div>}
           </div>
         })
       }      
