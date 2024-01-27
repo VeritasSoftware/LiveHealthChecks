@@ -16,6 +16,7 @@
 
             // Add services to the container.
             services.AddHealthChecks()
+                    .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")
                     .AddLiveHealthChecksClient(settings =>
                     {
                         //You can set the health check interval

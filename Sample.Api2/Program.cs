@@ -1,8 +1,11 @@
+using Sample.Api2;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddHealthChecks()
+                .AddCheck<SampleHealthCheck>("Sample Health Check Api 2")
                 .AddLiveHealthChecksClient(settings =>
                 {
                     //You can set the health check interval

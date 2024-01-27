@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 import ApiWidget from './Components/ApiWidget';
 import { MyServerService } from './Services/MyServerService';
 import { MyHealthChecksRepository } from './Repository/MyHealthChecksRepository';
 import dashboardSettings from './dashboardSettings.json';
-
-
-const signalr = require('@microsoft/signalr') 
 
 const App: React.FC<{myServerService: MyServerService}> = ({myServerService}) => {
   let myHealthChecksRepository = new MyHealthChecksRepository();

@@ -1,3 +1,5 @@
+using Sample.Api;
+
 Console.WriteLine("Hello, Api!");
 Console.WriteLine(Environment.NewLine);
 
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddHealthChecks()
+                .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")
                 .AddLiveHealthChecksClient(settings =>
                 {
                     //You can set the health check interval

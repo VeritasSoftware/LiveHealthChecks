@@ -49,7 +49,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
       healthCheck.Api = props.ApiName;
       healthCheck.ReceiveMethod = props.ReceiveMethod;
       healthCheck.ReceiveTimeStamp = new Date().toLocaleString();
-      healthCheck.Status = r["Status"];
+      healthCheck.Status = r["Status"] == 2 ? 2 : 1;
 
       myHealthChecksRepository?.saveHealthChecks(props.ReceiveMethod, healthCheck);
 
