@@ -4,35 +4,32 @@ import './App.css';
 import ApiWidget from './Components/ApiWidget';
 import { MyServerService } from './Services/MyServerService';
 import { MyHealthChecksRepository } from './Repository/MyHealthChecksRepository';
+import dashboardSettings from './dashboardSettings.json';
 
 
 const signalr = require('@microsoft/signalr') 
 
 const App: React.FC<{myServerService: MyServerService}> = ({myServerService}) => {
   let myHealthChecksRepository = new MyHealthChecksRepository();
+  let apis = dashboardSettings.Apis;
+  console.log(apis);
+  var triple = (arr: string | any[]) => {
+    var triples = []
+    for (var i=0; i < arr.length; i=i+2) {
+        triples.push([ arr[ i ]??null, arr[ i + 1 ]??null,arr[ i + 2 ]??null ])
+    }
+    return triples
+  }
   return (
     <div className="App">
-      <ApiWidget 
-          ApiName='Sample Api' 
-          ReceiveMethod='SampleApiHealth' 
-          MyServerService={myServerService} 
-          MyHealthChecksRepository={myHealthChecksRepository} 
-      />
-      <hr />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      { 
+        triple(apis).map((api, i) => {
+          return <div className="row"><div className="col-sm col-md col"><ApiWidget ApiName={api[0].ApiName} ReceiveMethod={api[0].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div>
+          {api[1] != null ? <div className="col-sm col-md col"><ApiWidget ApiName={api[1].ApiName} ReceiveMethod={api[1].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div> : ""}
+          {api[2] != null ? <div className="col-sm col-md col"><ApiWidget ApiName={api[2].ApiName} ReceiveMethod={api[2].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div> : ""}
+          </div>
+        })
+      }      
     </div>
   );
 }

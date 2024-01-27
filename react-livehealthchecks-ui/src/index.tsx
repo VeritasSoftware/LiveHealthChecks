@@ -5,12 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { MyServerService } from './Services/MyServerService';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { DashboardSettings } from './Models/Models';
+import dashboardSettings from './dashboardSettings.json';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-let dashboardSettings = new DashboardSettings();
 const myServerService = new MyServerService();
 myServerService.connect(dashboardSettings);
 root.render(
