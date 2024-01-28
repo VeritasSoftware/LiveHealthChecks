@@ -78,7 +78,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
       healthCheck.ReceiveTimeStamp = new Date().toLocaleString();
       healthCheck.Status = r["Status"] == 2 ? 2 : 1;
 
-      myHealthChecksRepository?.saveHealthChecks(props.ReceiveMethod, healthCheck);
+      myHealthChecksRepository.saveHealthChecks(props.ReceiveMethod, healthCheck);
 
       let dbHealthChecks = myHealthChecksRepository.getDbHealthChecks(props.ReceiveMethod);
       setHealthChecks(dbHealthChecks);

@@ -18,6 +18,14 @@ const App: React.FC<{myServerService: MyServerService}> = ({myServerService}) =>
   }
   return (
     <div className="App">
+      <div className="row">
+          <div className="col-sm col-md col" style={{textAlign: 'center'}}>
+              <h2>Live Health Checks!</h2>
+          </div>
+          <div className="col-sm col-md col" style={{textAlign: 'center'}}>
+              <h2><span style={{color:'green'}}>Healthy</span> vs <span style={{color:'red'}}>Unhealthy</span></h2>
+          </div>
+      </div>
       { 
         triple(apis).map((api, i) => {
           return <div className="row"><div className="col-sm col-md col"><ApiWidget ApiName={api[0].ApiName} ReceiveMethod={api[0].ReceiveMethod} MyServerService={myServerService} MyHealthChecksRepository={myHealthChecksRepository} /></div>
