@@ -7,12 +7,12 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
   ChartJS.register(ArcElement, Tooltip, Legend); 
 
   let myHealthChecksRepository = props.MyHealthChecksRepository!;
-  let myServerService = props.MyServerService;
+  let myServerService = props.MyServerService!;
 
   let [timestamp, setTimestamp] = useState(""); 
   let [status, setStatus] = useState('green');
 
-  let dbResult = myHealthChecksRepository?.getDbResult(props.ReceiveMethod);
+  let dbResult = myHealthChecksRepository.getDbResult(props.ReceiveMethod);
   let [result, setResult] = useState(dbResult);  
 
   let [lastHealthChecks, setLastHealthChecks] = useState(new Array<HealthCheck>());
@@ -46,44 +46,42 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
     setUnhealthyPercent(unhealthyPercent);
   },[healthChecks])   
 
-  if (myServerService != undefined) {    
-    myServerService.subscribe(props.ReceiveMethod, (report: any) => {
-      console.log(report);
-      setTimestamp(new Date().toLocaleString());
+  myServerService.subscribe(props.ReceiveMethod, (report: any) => {
+    console.log(report);
+    setTimestamp(new Date().toLocaleString());
 
-      var r = JSON.parse(report);
+    var r = JSON.parse(report);
 
-      let dbResult = myHealthChecksRepository?.getDbResult(props.ReceiveMethod);
+    let dbResult = myHealthChecksRepository?.getDbResult(props.ReceiveMethod);
 
-      if (dbResult == null) return;
+    if (dbResult == null) return;
 
-      let healthy = dbResult[0];
-      let unHealthy = dbResult[1];
-      
-      if (r["Status"] == 2) {
-        healthy = healthy + 1;
-        setStatus('green');
-      }
-      else {
-        unHealthy = unHealthy + 1;
-        setStatus('red');
-      }
+    let healthy = dbResult[0];
+    let unHealthy = dbResult[1];
+    
+    if (r["Status"] == 2) {
+      healthy = healthy + 1;
+      setStatus('green');
+    }
+    else {
+      unHealthy = unHealthy + 1;
+      setStatus('red');
+    }
 
-      setResult([healthy, unHealthy]);
+    setResult([healthy, unHealthy]);
 
-      var healthCheck = new HealthCheck();
+    var healthCheck = new HealthCheck();
 
-      healthCheck.Api = props.ApiName;
-      healthCheck.ReceiveMethod = props.ReceiveMethod;
-      healthCheck.ReceiveTimeStamp = new Date().toLocaleString();
-      healthCheck.Status = r["Status"] == 2 ? 2 : 1;
+    healthCheck.Api = props.ApiName;
+    healthCheck.ReceiveMethod = props.ReceiveMethod;
+    healthCheck.ReceiveTimeStamp = new Date().toLocaleString();
+    healthCheck.Status = r["Status"] == 2 ? 2 : 1;
 
-      myHealthChecksRepository.saveHealthChecks(props.ReceiveMethod, healthCheck);
+    myHealthChecksRepository.saveHealthChecks(props.ReceiveMethod, healthCheck);
 
-      let dbHealthChecks = myHealthChecksRepository.getDbHealthChecks(props.ReceiveMethod);
-      setHealthChecks(dbHealthChecks);
-    });
-  }
+    let dbHealthChecks = myHealthChecksRepository.getDbHealthChecks(props.ReceiveMethod);
+    setHealthChecks(dbHealthChecks);
+  });
 
   let data = {
     labels: ['Healthy', 'Unhealthy'],
