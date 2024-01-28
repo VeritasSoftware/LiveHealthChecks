@@ -286,7 +286,7 @@ await Connection.SendAsync("DisconnectAsync");
 await Connection.DisposeAsync(); 
 ```
 
-### Sample
+### Samples
 
 I have provided a sample real-time health checks monitoring web app.
 
@@ -294,7 +294,13 @@ The sample web app is containerized & there is an docker image you can download 
 
 ![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
 
-[**LiveHealthChecks.UI**](Docs/README_LiveHealthChecks.UI.md)
+#### Blazor Web Assembly sample app
+
+[**Blazor - LiveHealthChecks.UI**](Docs/README_LiveHealthChecks.UI.md)
+
+#### React sample app
+
+[**React - LiveHealthChecks.UI**](Docs/README_React_LiveHealthChecks.UI.md)
 
 [Table of Contents](#TOC)
 
