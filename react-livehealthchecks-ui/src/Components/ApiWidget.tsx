@@ -10,7 +10,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
   let myServerService = props.MyServerService!;
 
   let [timestamp, setTimestamp] = useState(""); 
-  let [status, setStatus] = useState('green');
+  let [status, setStatus] = useState('');
 
   let dbResult = myHealthChecksRepository.getDbResult(props.ReceiveMethod);
   let [result, setResult] = useState(dbResult);  
@@ -52,7 +52,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
 
     var r = JSON.parse(report);
 
-    let dbResult = myHealthChecksRepository?.getDbResult(props.ReceiveMethod);
+    let dbResult = myHealthChecksRepository.getDbResult(props.ReceiveMethod);
 
     if (dbResult == null) return;
 
