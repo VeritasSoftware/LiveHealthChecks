@@ -1,23 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { ApiWidgetProperties, HealthCheck } from '../Models/Models';
 
 const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
-  let myHealthChecksRepository = props.MyHealthChecksRepository;
+  ChartJS.register(ArcElement, Tooltip, Legend); 
+
+  let myHealthChecksRepository = props.MyHealthChecksRepository!;
   let myServerService = props.MyServerService;
 
   let [timestamp, setTimestamp] = useState(""); 
   let [status, setStatus] = useState('green');
 
   let dbResult = myHealthChecksRepository?.getDbResult(props.ReceiveMethod);
-  let [result, setResult] = useState(dbResult);
+  let [result, setResult] = useState(dbResult);  
 
-  let last = myHealthChecksRepository?.getDbHealthChecks(props.ReceiveMethod)?.reverse().take(5);
+  let [lastHealthChecks, setLastHealthChecks] = useState(new Array<HealthCheck>());
 
-  let [lastHealthChecks, setLastHealthChecks] = useState(last)
+  let [total, setTotal] = useState(0);
+  let [totalHealthy, setTotalHealthy] = useState(0);
+  let [totalUnhealthy, setTotalUnhealthy] = useState(0);
+  let [healthyPercent, setHealthyPercent] = useState(0);
+  let [unhealthyPercent, setUnhealthyPercent] = useState(0);
   
-  ChartJS.register(ArcElement, Tooltip, Legend);  
+  let dbHealthChecks = myHealthChecksRepository.getDbHealthChecks(props.ReceiveMethod);
+
+  let [healthChecks, setHealthChecks] = useState(dbHealthChecks);  
+
+  useEffect(()=>{
+    let last = healthChecks.reverse().take(5);
+
+    setLastHealthChecks(last.toArray());
+
+    total = healthChecks.count();
+    totalHealthy = healthChecks.count(hc => hc.Status == 2);
+    totalUnhealthy = healthChecks.count(hc => hc.Status == 1);
+    
+    healthyPercent = Math.floor(((totalHealthy * 100) / total)); 
+    unhealthyPercent = Math.floor((totalUnhealthy * 100) / total);
+    
+    setTotal(total);
+    setTotalHealthy(totalHealthy);
+    setTotalUnhealthy(totalUnhealthy);
+    setHealthyPercent(healthyPercent);
+    setUnhealthyPercent(unhealthyPercent);
+  },[healthChecks])   
 
   if (myServerService != undefined) {    
     myServerService.subscribe(props.ReceiveMethod, (report: any) => {
@@ -53,8 +80,8 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
 
       myHealthChecksRepository?.saveHealthChecks(props.ReceiveMethod, healthCheck);
 
-      let last = myHealthChecksRepository?.getDbHealthChecks(props.ReceiveMethod)?.reverse().take(5);
-      setLastHealthChecks(last);
+      let dbHealthChecks = myHealthChecksRepository.getDbHealthChecks(props.ReceiveMethod);
+      setHealthChecks(dbHealthChecks);
     });
   }
 
@@ -95,18 +122,51 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
             <hr />
             <div className="row">
                 <div className="col-12" style={{textAlign:'center'}}>
-                    <div style={{width: '80%', margin: '0 auto'}}>
+                    <div style={{width: '70%', margin: '0 auto'}}>
                         <Pie data={data} />
                     </div>                    
                 </div>
             </div>
+            <br /> <br />
+            <div className="row">
+              <div className="col-6" style={{textAlign: 'left'}}>
+                  <b>Total Health Checks</b>
+              </div>
+              <div className="col-3">
+                  {total}
+              </div>
+              <div className="col-3">
+                  <br />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-6" style={{textAlign: 'left'}}>
+                  <b>Total <span style={{color:'green'}}>Healthy</span> Checks</b>
+              </div>
+              <div className="col-3">
+                  {totalHealthy}
+              </div>
+              <div className="col-3">
+                  {healthyPercent} %
+              </div>
+            </div> 
+            <div className="row">
+              <div className="col-6" style={{textAlign: 'left'}}>
+                  <b>Total <span style={{color:'red'}}>Unhealthy</span> Checks</b>
+              </div>
+              <div className="col-3">
+                  {totalUnhealthy}
+              </div>
+              <div className="col-3">
+                  {unhealthyPercent} %
+              </div>
+            </div>           
             <hr />
             <div style={{textAlign: 'left'}}>
               <b>Last 5 Health Checks</b><br />
-            </div>                        
-            
+            </div>                                    
             {
-              lastHealthChecks?.toArray().map((hc, i) => {
+              lastHealthChecks.map((hc, i) => {
                 return <div><br /><div className="row"><div className="col-10" style={{textAlign: 'left'}}>{hc.ReceiveTimeStamp?.toLocaleLowerCase()}</div><div style={{width: '50px', height: '50px', float: 'right', backgroundColor: hc.Status == 2 ? 'green' : 'red'}}></div></div></div>
               })
             }
