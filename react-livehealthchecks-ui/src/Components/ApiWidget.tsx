@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { ApiWidgetProperties, HealthCheck } from '../Models/Models';
 
 const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
-  ChartJS.register(ArcElement, Tooltip, Legend); 
+  ChartJS.register(ArcElement, Tooltip); 
 
   let myHealthChecksRepository = props.MyHealthChecksRepository!;
   let myServerService = props.MyServerService!;
 
-  let [timestamp, setTimestamp] = useState(""); 
+  let [timestamp, setTimestamp] = useState(''); 
   let [status, setStatus] = useState('');
 
   let dbResult = myHealthChecksRepository.getDbResult(props.ReceiveMethod);
@@ -23,9 +23,34 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
   let [healthyPercent, setHealthyPercent] = useState(0);
   let [unhealthyPercent, setUnhealthyPercent] = useState(0);
   
+  let [lastHealthCheck, setLastHealthCheck] = useState(new HealthCheck());
+
   let dbHealthChecks = myHealthChecksRepository.getDbHealthChecks(props.ReceiveMethod);
 
   let [healthChecks, setHealthChecks] = useState(dbHealthChecks);  
+
+  useEffect(() => {
+    let dbResult = myHealthChecksRepository.getDbResult(props.ReceiveMethod);
+
+    if (dbResult == null) return;
+
+    let healthy = dbResult[0];
+    let unHealthy = dbResult[1];
+    
+    if (lastHealthCheck.Status == 2) {
+      healthy = healthy + 1;
+      setStatus('green');
+    }
+    else if (lastHealthCheck.Status == 1) {
+      unHealthy = unHealthy + 1;
+      setStatus('red');
+    }
+    else {
+      setStatus('');
+    }
+
+    setResult([healthy, unHealthy]);
+  }, [lastHealthCheck]);
 
   useEffect(()=>{
     let last = healthChecks.reverse().take(5);
@@ -44,38 +69,23 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
     setTotalUnhealthy(totalUnhealthy);
     setHealthyPercent(healthyPercent);
     setUnhealthyPercent(unhealthyPercent);
-  },[healthChecks])   
+  }, [healthChecks]);   
 
   myServerService.subscribe(props.ReceiveMethod, (report: any) => {
     console.log(report);
-    setTimestamp(new Date().toLocaleString());
+    var timestamp = new Date().toLocaleString();
+    setTimestamp(timestamp);
 
     var r = JSON.parse(report);
-
-    let dbResult = myHealthChecksRepository.getDbResult(props.ReceiveMethod);
-
-    if (dbResult == null) return;
-
-    let healthy = dbResult[0];
-    let unHealthy = dbResult[1];
-    
-    if (r["Status"] == 2) {
-      healthy = healthy + 1;
-      setStatus('green');
-    }
-    else {
-      unHealthy = unHealthy + 1;
-      setStatus('red');
-    }
-
-    setResult([healthy, unHealthy]);
 
     var healthCheck = new HealthCheck();
 
     healthCheck.Api = props.ApiName;
     healthCheck.ReceiveMethod = props.ReceiveMethod;
-    healthCheck.ReceiveTimeStamp = new Date().toLocaleString();
+    healthCheck.ReceiveTimeStamp = timestamp;
     healthCheck.Status = r["Status"] == 2 ? 2 : 1;
+
+    setLastHealthCheck(healthCheck);
 
     myHealthChecksRepository.saveHealthChecks(props.ReceiveMethod, healthCheck);
 
@@ -120,7 +130,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
             <hr />
             <div className="row">
                 <div className="col-12" style={{textAlign:'center'}}>
-                    <div style={{width: '70%', margin: '0 auto'}}>
+                    <div style={{width: '60%', margin: '0 auto'}}>
                         <Pie data={data} />
                     </div>                    
                 </div>
