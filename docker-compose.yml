@@ -11,6 +11,17 @@ services:
       - ASPNETCORE_HTTPS_PORT=8001
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
-      - "8080:80"
       - "8001:443"
       - "8000:80"
+   react-livehealthchecks.ui:
+    image: react-livehealthchecks.ui
+    build:
+      context: .
+      dockerfile: react-livehealthchecks-ui/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=7001
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "7001:443"
+      - "7000:80"

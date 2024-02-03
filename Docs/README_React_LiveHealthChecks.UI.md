@@ -69,3 +69,47 @@ that Api's widget only, is refreshed automatically.
 The web app also uses the **browser's local storage database** for storing the Health Reports,
 
 received from the Server.
+
+## Docker containerization
+
+You can clone the solution and containerize the Monitoring web app.
+
+It is all configured for containerization using **Alpine Linux container** & **nginx**.
+
+Also, **SSL** supported **https**.
+
+From the solution directory, run the build:
+
+```
+docker compose build --pull --no-cache
+```
+
+then, deploy container:
+
+```
+docker compose up
+```
+
+Then, open the app in browser, by url: https://localhost:7001
+
+To run the Sample in the Solution, make sure the below projects, are started up, in the specified order.
+
+![**Solution Startup**](/Docs/LiveHealthChecks-Solution-Startup.jpg)
+
+### Docker Hub
+
+You can pull an image of the monitoring web app, from Docker Hub.
+
+The command is:
+
+```
+docker pull shantanun/react-livehealthchecks.ui:latest
+```
+
+This will create the image in your local docker.
+
+Then, you can start up the image in a container, using command:
+
+```
+docker run -t -d --name react-livehealthchecks.ui -p 7001:443 shantanun/react-livehealthchecks.ui 
+```

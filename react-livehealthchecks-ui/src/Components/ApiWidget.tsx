@@ -61,8 +61,8 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
     totalHealthy = healthChecks.count(hc => hc.Status == 2);
     totalUnhealthy = healthChecks.count(hc => hc.Status == 1);
     
-    healthyPercent = Math.floor(((totalHealthy * 100) / total)); 
-    unhealthyPercent = Math.floor((totalUnhealthy * 100) / total);
+    healthyPercent = total > 0 ? Math.floor(((totalHealthy * 100) / total)) : 0; 
+    unhealthyPercent = total > 0 ? Math.floor((totalUnhealthy * 100) / total) : 0;
     
     setTotal(total);
     setTotalHealthy(totalHealthy);
