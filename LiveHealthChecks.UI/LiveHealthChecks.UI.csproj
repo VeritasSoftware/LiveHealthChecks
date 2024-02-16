@@ -6,12 +6,21 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.16" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.16" PrivateAssets="all" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.16" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">		
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.27" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.27" PrivateAssets="all" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.27" />		
+  </ItemGroup>	
+  
   <ItemGroup>
-    <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.16" />
-    <PackageReference Include="MudBlazor" Version="6.10.0" />
+	  <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+	  <PackageReference Include="MudBlazor" Version="6.15.0" />
   </ItemGroup>
 
   <ItemGroup>

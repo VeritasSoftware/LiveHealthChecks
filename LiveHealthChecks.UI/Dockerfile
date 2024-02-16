@@ -5,7 +5,7 @@ RUN apk add npm
 WORKDIR /app
 COPY . ./
 
-RUN dotnet publish "LiveHealthChecks.UI/LiveHealthChecks.UI.csproj" -c Release -o output
+RUN dotnet publish "LiveHealthChecks.UI/LiveHealthChecks.UI.csproj" -f net7.0 -c Release -o output
 
 FROM nginx:alpine
 WORKDIR /user/share/nginx/html

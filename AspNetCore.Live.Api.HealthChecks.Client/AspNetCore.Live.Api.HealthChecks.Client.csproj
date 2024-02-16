@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cronos" Version="0.7.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.16" />
+    <PackageReference Include="Cronos" Version="0.8.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.27" />
   </ItemGroup>
 
 </Project>
