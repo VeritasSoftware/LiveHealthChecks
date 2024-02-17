@@ -165,7 +165,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
             </div>                                    
             {
               lastHealthChecks.map((hc, i) => {
-                return <div><br /><div className="row"><div className="col-10" style={{textAlign: 'left'}}>{hc.ReceiveTimeStamp?.toLocaleLowerCase()}</div><div style={{width: '25px', height: '25px', float: 'right', backgroundColor: hc.Status == 2 ? 'green' : 'red'}}></div></div></div>
+                return <div><br /><div className="row"><div className="col-10" style={{textAlign: 'left'}}>{hc.ReceiveTimeStamp?.toLocaleLowerCase()}</div><div className="col-2"><div style={{width: '25px', height: '25px', float: 'right', backgroundColor: hc.Status == 2 ? 'green' : 'red'}}></div></div></div></div>
               })
             }
         </div>
