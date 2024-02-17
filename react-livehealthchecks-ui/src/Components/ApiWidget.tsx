@@ -29,27 +29,16 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
 
   let [healthChecks, setHealthChecks] = useState(dbHealthChecks);  
 
-  useEffect(() => {
-    let dbResult = myHealthChecksRepository.getDbResult(props.ReceiveMethod);
-
-    if (dbResult == null) return;
-
-    let healthy = dbResult[0];
-    let unHealthy = dbResult[1];
-    
+  useEffect(() => {    
     if (lastHealthCheck.Status == 2) {
-      healthy = healthy + 1;
       setStatus('green');
     }
     else if (lastHealthCheck.Status == 1) {
-      unHealthy = unHealthy + 1;
       setStatus('red');
     }
     else {
       setStatus('');
     }
-
-    setResult([healthy, unHealthy]);
   }, [lastHealthCheck]);
 
   useEffect(()=>{
@@ -69,6 +58,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
     setTotalUnhealthy(totalUnhealthy);
     setHealthyPercent(healthyPercent);
     setUnhealthyPercent(unhealthyPercent);
+    setResult([totalHealthy, totalUnhealthy]);
   }, [healthChecks]);   
 
   myServerService.subscribe(props.ReceiveMethod, (report: any) => {
@@ -130,7 +120,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
             <hr />
             <div className="row">
                 <div className="col-12" style={{textAlign:'center'}}>
-                    <div style={{width: '60%', margin: '0 auto'}}>
+                    <div style={{width: '40%', margin: '0 auto'}}>
                         <Pie data={data} />
                     </div>                    
                 </div>
@@ -140,7 +130,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
               <div className="col-6" style={{textAlign: 'left'}}>
                   <b>Total Health Checks</b>
               </div>
-              <div className="col-3">
+              <div className="col-3" style={{textAlign: 'right'}}>
                   {total}
               </div>
               <div className="col-3">
@@ -151,10 +141,10 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
               <div className="col-6" style={{textAlign: 'left'}}>
                   <b>Total <span style={{color:'green'}}>Healthy</span> Checks</b>
               </div>
-              <div className="col-3">
+              <div className="col-3" style={{textAlign: 'right'}}>
                   {totalHealthy}
               </div>
-              <div className="col-3">
+              <div className="col-3" style={{textAlign: 'right'}}>
                   {healthyPercent} %
               </div>
             </div> 
@@ -162,10 +152,10 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
               <div className="col-6" style={{textAlign: 'left'}}>
                   <b>Total <span style={{color:'red'}}>Unhealthy</span> Checks</b>
               </div>
-              <div className="col-3">
+              <div className="col-3" style={{textAlign: 'right'}}>
                   {totalUnhealthy}
               </div>
-              <div className="col-3">
+              <div className="col-3" style={{textAlign: 'right'}}>
                   {unhealthyPercent} %
               </div>
             </div>           
@@ -175,7 +165,7 @@ const ApiWidget: React.FC<ApiWidgetProperties> = (props) => {
             </div>                                    
             {
               lastHealthChecks.map((hc, i) => {
-                return <div><br /><div className="row"><div className="col-10" style={{textAlign: 'left'}}>{hc.ReceiveTimeStamp?.toLocaleLowerCase()}</div><div style={{width: '50px', height: '50px', float: 'right', backgroundColor: hc.Status == 2 ? 'green' : 'red'}}></div></div></div>
+                return <div><br /><div className="row"><div className="col-10" style={{textAlign: 'left'}}>{hc.ReceiveTimeStamp?.toLocaleLowerCase()}</div><div style={{width: '25px', height: '25px', float: 'right', backgroundColor: hc.Status == 2 ? 'green' : 'red'}}></div></div></div>
               })
             }
         </div>

@@ -26,4 +26,12 @@ export class MyServerService {
         this.connection.off(receiveMethod);
         this.connection.on(receiveMethod, onHealthReportReceivedHandler);
     }
+
+    disconnect = (receiveMethod: string) => {
+      if (this.connection != null) {
+        this.connection.invoke("DisconnectAsync");
+        this.connection.off(receiveMethod);
+        this.connection = null;
+      }      
+    }
 }
