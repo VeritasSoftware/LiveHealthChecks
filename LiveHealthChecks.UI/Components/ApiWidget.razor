@@ -31,11 +31,11 @@
                         {
                             @if (LastHealthCheck == "green")
                             {
-                                <MudIcon @onmouseenter="x => ShowHealthCheck(LastHealthChecks.FirstOrDefault()!)" Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: green; color: green;" />
+                                <MudIcon @onmouseenter="x => ShowHealthCheck(LastHealthChecks.FirstOrDefault()!)" Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: green; color: green;float:right;" />
                             }
                             else 
                             {
-                                <MudIcon @onmouseenter="x => ShowHealthCheck(LastHealthChecks.FirstOrDefault()!)" Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: red; color: red;" />
+                                <MudIcon @onmouseenter="x => ShowHealthCheck(LastHealthChecks.FirstOrDefault()!)" Icon="@Icons.Material.Filled.Square" Style="font-size: 3rem; background-color: red; color: red;float:right;" />
                             }
                         }                                            
                     </div>
@@ -71,7 +71,7 @@
                                 <div class="col-6">
                                     <b>Total Health Checks</b>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3" style="text-align:right">
                                     @total
                                 </div>
                                 <div class="col-3">
@@ -82,10 +82,10 @@
                                 <div class="col-6">
                                     <b>Total <span style="color:green">Healthy</span> Checks</b>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3" style="text-align:right">
                                     @totalHealthy
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3" style="text-align:right">
                                     @healthyPercent %
                                 </div>
                             </div>
@@ -93,10 +93,10 @@
                                 <div class="col-6">
                                     <b>Total <span style="color:red">Unhealthy</span> Checks</b>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3" style="text-align:right">
                                     @totalUnhealthy
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3" style="text-align:right">
                                     @unhealthyPercent %
                                 </div>
                             </div>
@@ -117,11 +117,11 @@
                             <div class="col-2">
                                 @if(hc.Status == HealthStatus.Healthy)
                                 {
-                                    <MudIcon @onmouseenter="x => ShowHealthCheck(hc)" Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: green; color: green;" />
+                                    <MudIcon @onmouseenter="x => ShowHealthCheck(hc)" Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: green; color: green;float:right;" />
                                 }
                                 else
                                 {
-                                    <MudIcon @onmouseenter="x => ShowHealthCheck(hc)" Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: red; color: red;" />
+                                    <MudIcon @onmouseenter="x => ShowHealthCheck(hc)" Icon="@Icons.Material.Filled.Square" Style="font-size: 1.5rem; background-color: red; color: red;float:right;" />
                                 }
                             </div>
                         </div> 

@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 		README.md = README.md
 		Docs\README_LiveHealthChecks.UI.md = Docs\README_LiveHealthChecks.UI.md
+		Docs\README_React_LiveHealthChecks.UI.md = Docs\README_React_LiveHealthChecks.UI.md
 		Docs\Replace-Dashboard-Settings.ps1 = Docs\Replace-Dashboard-Settings.ps1
 	EndProjectSection
 EndProject
