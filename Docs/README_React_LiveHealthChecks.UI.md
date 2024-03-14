@@ -27,7 +27,7 @@ The widgets are rendered based this data.
 
 ## Dashboard Settings
 
-The web app has a **dashboardSettings.json** file in the **wwwroot** folder.
+The web app has a **dashboardSettings.json** file.
 
 ```JSON
 {
