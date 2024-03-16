@@ -35,7 +35,7 @@ The **Client** package, installed in the Api, runs the **Health Check** periodic
 
 and uploads the generated Health Report to the **Server SignalR Hub**.
 
-The Hub sends a web socket push notification to the connected clients,
+The Hub sends a web socket push notification to the connected Monitoring apps,
 
 notifying them of the Health Report in real-time.
 
@@ -59,7 +59,7 @@ All Health Reports of that Api are published to this ReceiveMethod.
 
 The **Server** has to be set up for each Api Client's ReceiveMethod & SecretKey.
 
-When a **connection request** is made to the Server, the ReceiveMethod & SecretKey have to be provided in **custom headers**.
+When a Monitoring app makes a **connection request** to the Server, the ReceiveMethod & SecretKey have to be provided when you **Authenicate**.
 
 All connections to the Server (from the Api Client & Monitoring apps) are **authorized** using ReceiveMethod & SecretKey.
 
@@ -121,6 +121,12 @@ The list can be stored in a database table (for eg.).
 You could fetch the list from the database & cache it.
 
 This way you do not need a Server shutdown to add a new Client Api to the system.
+
+You can create a **special Client account** with ReceiveMethod of * and a SecretKey.
+
+This account can be used by Monitoring apps that want to get notifications for all Apis in the system,
+
+on the same SignalR connection.
 
 ### Sample ClientsService
 
@@ -221,7 +227,7 @@ Then, the App authenticates & listens to the **ReceiveMethod** to start receivin
 
 If you want to receive notifications for all **ReceiveMethods** in the system, on the same connection,
 
-set the **ReceiveMethod** to * & use the **SecretKey** set in the Server.
+use the special Client account with ReceiveMethod of *, set up on the Server.
 
 The **ClientId** is optional, but useful in the logs.
 
@@ -259,11 +265,6 @@ you can Authenticate with that Api's **ReceiveMethod** & **SecretKey**.
 The **ClientId** is optional, but useful in the logs.
 
 ```C#
-var connection = new HubConnectionBuilder()
-                        .WithUrl("https://localhost:5001/livehealthcheckshub")
-                        .WithAutomaticReconnect()
-                        .Build();
-
 connection.On<string>("SampleApiHealth", report =>
 {
     Console.WriteLine(report);
@@ -313,7 +314,7 @@ Besides, the Client package running the Health Check on the Api itself, periodic
 you can run a Health Check and publish the Health Report to the Server.
 
 
-You can trigger a Health Check, at any point, from anywhere, in your API,
+You can trigger a Health Check, at any point (eg. on the occurance of a specific Exception), from anywhere, in your API,
 
 by injecting the Client package's **IMyHealthCheckService** interface and,
 
