@@ -176,18 +176,20 @@ then
 
 ```C#
 builder.Services.AddHealthChecks() //Required - add all your health checks
+                .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")
+                //Add Live Health Checks Client
                 .AddLiveHealthChecksClient(settings =>
                 {
                     //You can set the health check interval
                     //by a Cron Expression. 
-                    settings.HealthCheckIntervalCronExpression = "0 * * * *";
+                    settings.HealthCheckIntervalCronExpression = "* * * * *";
                     //Or in minutes
-                    //settings.HealthCheckIntervalInMinutes = 60;
-                    //Providing ClientId is optional. Good for tracking in the logs.
-                    settings.ClientId = "SampleApi";
-                    settings.ReceiveMethod = "SampleApiHealth";
-                    settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
+                    //settings.HealthCheckIntervalInMinutes = 1;
+                    settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";                    
+                    settings.ReceiveMethod = "SampleApiHealth";                    
                     settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
+                    //Providing ClientId is optional. Good for tracking in the logs.
+                    settings.ClientId = "Sample Api";
                     settings.PublishOnlyWhenNotHealthy = false;
                     //Optional - transform your health report to as you want it published.
                     settings.TransformHealthReport = healthReport => new
