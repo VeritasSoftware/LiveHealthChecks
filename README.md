@@ -233,6 +233,8 @@ use the special Client account with ReceiveMethod of *, set up on the Server.
 
 The **ClientId** is optional, but useful in the logs.
 
+**.NET C# sample**
+
 ```C#
 var Connection = new HubConnectionBuilder()
                     .WithUrl("https://localhost:5001/livehealthcheckshub")
@@ -260,6 +262,35 @@ await Connection.SendAsync("AuthenticateAsync", new
 });  
 ```
 
+**TypeScript/Javascript sample**
+
+```TypeScript
+const signalr = require('@microsoft/signalr')
+.
+.
+connection: any;
+
+connection = new signalr.HubConnectionBuilder()
+    .withUrl("https://localhost:5001/livehealthcheckshub")
+    .build();
+
+connection.on("SampleApiHealth", (report: any) => {
+    //Handle report here
+});
+
+connection.on("SampleApi2Health", (report: any) => {
+    //Handle report here
+});
+
+connection.start()
+.then(() => connection.invoke("AuthenticateAsync",
+{
+    ReceiveMethod : "*",
+    SecretKey : "f22f3fd2-687d-48a1-aa2f-f2c9181364eb",
+    ClientId : "Monitoring App"
+}));
+```
+
 If you want to receive notification from a specific Api,
 
 you can Authenticate with that Api's **ReceiveMethod** & **SecretKey**.
@@ -284,9 +315,22 @@ await Connection.SendAsync("AuthenticateAsync", new
 
 To **Disconnect** example:
 
+**.NET C# sample**
+
 ```C#
 await Connection.SendAsync("DisconnectAsync");
 await Connection.DisposeAsync(); 
+```
+
+**TypeScript/Javascript sample**
+
+```TypeScript
+if (connection != null) {
+    connection.invoke("DisconnectAsync");
+    connection.off("SampleApiHealth");
+    connection.off("SampleApi2Health");
+    connection = null;
+}
 ```
 
 ### Samples
