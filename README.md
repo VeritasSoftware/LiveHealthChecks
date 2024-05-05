@@ -262,7 +262,7 @@ await Connection.SendAsync("AuthenticateAsync", new
 });  
 ```
 
-**TypeScript/Javascript sample**
+**TypeScript sample**
 
 ```TypeScript
 const signalr = require('@microsoft/signalr')
@@ -322,7 +322,7 @@ await Connection.SendAsync("DisconnectAsync");
 await Connection.DisposeAsync(); 
 ```
 
-**TypeScript/Javascript sample**
+**TypeScript sample**
 
 ```TypeScript
 if (connection != null) {
@@ -372,6 +372,18 @@ This method is a wrapper around the built-in Health Check system's [**HealthChec
 and then, publish the generated Health Report to the Server yourself,
 
 by calling the **PublishHealthReportAsync** method.
+
+This has **machine learning** implications too.
+
+Eg. In your app, you can trap certain types of database exceptions,
+
+and in the error handler, you can trigger the health checks & publish the Health Report,
+
+to the Server & on to the Monitoring apps,
+
+in real-time.
+
+So, this way you can learn the internal state of your app & the machine.
 
 ![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)
 
