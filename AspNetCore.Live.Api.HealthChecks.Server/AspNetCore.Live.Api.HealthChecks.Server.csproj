@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<IsPackable>true</IsPackable>
@@ -11,22 +11,15 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-	<PackageReleaseNotes>Added support for .net 7.</PackageReleaseNotes>
+	<PackageReleaseNotes>Added support for .net 8.</PackageReleaseNotes>
     <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>2.0.0</Version>
-	<AssemblyVersion>2.0.0.0</AssemblyVersion>
-	<FileVersion>2.0.0.0</FileVersion>
+	<Version>2.1.0</Version>
+	<AssemblyVersion>2.1.0.0</AssemblyVersion>
+	<FileVersion>2.1.0.0</FileVersion>
 	<PackageLicenseFile></PackageLicenseFile>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
-
-  <!--<ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>-->
 
 	<ItemGroup>
 		<None Include=".\README.md">
@@ -36,7 +29,7 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
   </ItemGroup>
 
 </Project>

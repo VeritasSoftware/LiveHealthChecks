@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
@@ -24,13 +24,17 @@
     <ProjectReference Include="..\Sample.Api\Sample.Api.csproj" />
     <ProjectReference Include="..\Sample.Server\Sample.Server.csproj" />
   </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+	    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
+    </ItemGroup>	
 	
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">	  
-	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.16" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.20" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">			  
-	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.27" />		
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.32" />		
   </ItemGroup>
 
 </Project>
