@@ -84,6 +84,11 @@ Then, plug in the Server package.
 ```C#
 var builder = WebApplication.CreateBuilder();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("BlazorWasm", builder => builder.WithOrigins("https://localhost:7151").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+});
+
 builder.Services.AddSignalR();
 
 //Load the Clients dynamically
@@ -373,7 +378,7 @@ and then, publish the generated Health Report to the Server yourself,
 
 by calling the **PublishHealthReportAsync** method.
 
-This has **machine learning** implications too.
+This has **machine diagnostic** implications too.
 
 Eg. In your app, you can trap certain types of database exceptions,
 
