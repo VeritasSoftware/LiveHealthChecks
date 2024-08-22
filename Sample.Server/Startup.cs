@@ -14,10 +14,7 @@ namespace Sample.Server
         // This method gets called by the runtime. Use this method to add serices to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("BlazorWasm", builder => builder.WithOrigins("https://localhost:7151").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-            });
+            services.AddCors();
 
             services.AddSignalR();
 
@@ -36,6 +33,12 @@ namespace Sample.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithOrigins(new string[] { "https://localhost:7151" })
+                .AllowCredentials());     // allow credentials
+
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {

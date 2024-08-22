@@ -84,11 +84,6 @@ Then, plug in the Server package.
 ```C#
 var builder = WebApplication.CreateBuilder();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("BlazorWasm", builder => builder.WithOrigins("https://localhost:7151").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-});
-
 builder.Services.AddSignalR();
 
 //Load the Clients dynamically
@@ -132,6 +127,10 @@ You can create a **special Client account** with ReceiveMethod of * and a Secret
 This account can be used by Monitoring apps that want to get notifications for all Apis in the system,
 
 on the same SignalR connection.
+
+**Note :-** If you have any Web monitoring apps connecting to the Server, set up **CORS** for them.
+
+Please see the Sample Server's Starup.cs to get an idea on how to do that.
 
 ### Sample ClientsService
 
