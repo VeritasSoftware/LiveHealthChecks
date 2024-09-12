@@ -1,10 +1,10 @@
 # LiveHealthChecks
 # Real-Time Api Health Check Monitoring
 
-|Packages|Version & Downloads|
-|---------------------------|:---:|
-|*AspNetCore.Live.Api.HealthChecks.Server*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|
-|*AspNetCore.Live.Api.HealthChecks.Client*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
+|Packages|Nuget Version|Downloads|
+|---------------------------|:---:|:---:|
+|*AspNetCore.Live.Api.HealthChecks.Server*|[![Nuget Version](https://img.shields.io/nuget/v/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|[![Downloads count](https://img.shields.io/nuget/dt/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|
+|*AspNetCore.Live.Api.HealthChecks.Client*|[![Nuget Version](https://img.shields.io/nuget/v/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|[![Downloads count](https://img.shields.io/nuget/dt/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
 
 <a name="TOC"/>
 
