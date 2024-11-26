@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<IsPackable>true</IsPackable>
@@ -12,11 +12,12 @@
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-    <PackageReleaseNotes>Updated dependencies.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for .NET 9.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr client</PackageTags>
-	<Version>2.2.0</Version>
-	<AssemblyVersion>2.2.0.0</AssemblyVersion>
-	<FileVersion>2.2.0.0</FileVersion>
+	<Version>3.0.0</Version>
+	<AssemblyVersion>3.0.0.0</AssemblyVersion>
+	<FileVersion>3.0.0.0</FileVersion>
+	<OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,9 +30,13 @@
   <ItemGroup>
     <PackageReference Include="Cronos" Version="0.8.4" />
   </ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
+	</ItemGroup>
 	
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.11" />
 	</ItemGroup>
 	
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
@@ -39,7 +44,7 @@
   </ItemGroup>
 	
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.33" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.36" />
   </ItemGroup>
 
 </Project>
