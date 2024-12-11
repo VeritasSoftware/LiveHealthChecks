@@ -6,6 +6,8 @@
 |*AspNetCore.Live.Api.HealthChecks.Server*|[![Nuget Version](https://img.shields.io/nuget/v/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|[![Downloads count](https://img.shields.io/nuget/dt/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|
 |*AspNetCore.Live.Api.HealthChecks.Client*|[![Nuget Version](https://img.shields.io/nuget/v/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|[![Downloads count](https://img.shields.io/nuget/dt/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
 
+### The Nuget packages support .NET 6/7/8/9.
+
 <a name="TOC"/>
 
 ## Table of Contents
@@ -295,29 +297,47 @@ connection.start()
 }));
 ```
 
-If you want to receive notification from a specific Api,
+If you want to receive notification from a **specific Api**,
 
 you can Authenticate with that Api's **ReceiveMethod** & **SecretKey**.
 
 The **ClientId** is optional, but useful in the logs.
 
+**.NET C# sample**
+
 ```C#
-connection.On<string>("SampleApiHealth", report =>
+Connection.On<string>("SampleApiHealth", report =>
 {
-    Console.WriteLine(report);
+    //Handle report here
 });
 
-await connection.StartAsync();
+await Connection.StartAsync();
 
 await Connection.SendAsync("AuthenticateAsync", new
 {
     ReceiveMethod = "SampleApiHealth",
     SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692",
-    ClientId = "SampleApi"
+    ClientId = "Monitoring app"
 });
 ```
 
-To **Disconnect** example:
+**TypeScript sample**
+
+```TypeScript
+connection.on("SampleApiHealth", (report: any) => {
+    //Handle report here
+});
+
+connection.start()
+.then(() => connection.invoke("AuthenticateAsync",
+{
+    ReceiveMethod : "SampleApiHealth",
+    SecretKey : "43bf0968-17e0-4d22-816a-6eaadd766692",
+    ClientId : "Monitoring App"
+}));
+```
+
+### Disconnect example:
 
 **.NET C# sample**
 
