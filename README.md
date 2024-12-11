@@ -1,5 +1,7 @@
 # LiveHealthChecks
-# Real-Time Api Health Check Monitoring
+# Real-Time Api/App Health Check Monitoring
+
+### Appreciate a star (*) on the repository, if it worked for you.
 
 |Packages|Nuget Version|Downloads|
 |---------------------------|:---:|:---:|
