@@ -6,14 +6,19 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
     internal class LiveHealthChecksExceptionFilter : IAsyncExceptionFilter
     {
         private readonly IMyHealthCheckService _healthCheckService;
+        private readonly ILogger<LiveHealthChecksExceptionFilter>? _logger;
 
-        public LiveHealthChecksExceptionFilter(IMyHealthCheckService healthCheckService)
+        public LiveHealthChecksExceptionFilter(IMyHealthCheckService healthCheckService, 
+                                                ILogger<LiveHealthChecksExceptionFilter>? logger = null)
         {
             _healthCheckService = healthCheckService;
+            _logger = logger;
         }
 
         public async Task OnExceptionAsync(ExceptionContext context)
         {
+            _logger?.LogError(context.Exception, "LiveHealthChecks: An exception occurred.");
+
             var exceptionReport = new HealthReport(new Dictionary<string, HealthReportEntry>
             {
                 {
@@ -31,9 +36,13 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                 }
             }, TimeSpan.Zero);
 
+            _logger?.LogInformation("LiveHealthChecks: Publishing exception report.");
+
             await _healthCheckService.PublishHealthReportAsync(exceptionReport);
 
             var healthReport = await _healthCheckService.CheckHealthAsync();
+
+            _logger?.LogInformation("LiveHealthChecks: Publishing health report.");
 
             await _healthCheckService.PublishHealthReportAsync(healthReport);
         }
