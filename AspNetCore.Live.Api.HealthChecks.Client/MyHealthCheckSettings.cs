@@ -12,5 +12,6 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
         public string SecretKey { get; set; } = string.Empty;
         public bool PublishOnlyWhenNotHealthy { get; set; }
         public Func<HealthReport, object>? TransformHealthReport { get; set; } = null;
+        public bool AddHealthCheckMiddleware { get; set; } = true;
     }
 }

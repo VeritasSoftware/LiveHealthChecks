@@ -22,12 +22,18 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
         public async Task PublishAsync(HealthReport healthReport)
         {
+            var settings = new JsonSerializerOptions
+            {
+                Converters = { new SystemTextJsonExceptionConverter() },
+                WriteIndented = true
+            };
+
             bool isTransform = _settings.TransformHealthReport != null;
             string? publishedReport = null;
 
             publishedReport = JsonSerializer.Serialize(isTransform 
                                                 ? _settings.TransformHealthReport?.Invoke(healthReport)
-                                                : healthReport, typeof(HealthReport));
+                                                : healthReport, typeof(HealthReport), settings);
             
             var connection = MyHealthCheckExtensions._healthChecksHubConnection;
 

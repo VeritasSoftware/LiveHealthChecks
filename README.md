@@ -209,6 +209,7 @@ builder.Services.AddHealthChecks() //Required - add all your health checks
                             value = e.Value.Status.ToString()
                         })
                     };
+                    settings.AddHealthCheckMiddleware = true;
                 });
 ```
 The **ReceiveMethod** is the SignalR method that Monitoring app needs to listen to.
@@ -412,5 +413,13 @@ in real-time.
 So, this way you can learn the internal state of your app & the machine.
 
 ![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)
+
+You can set property **AddHealthCheckMiddleware** to **true** in the Client settings,
+
+to add a middleware to the Api, which will add an [**Exception Filter**](/AspNetCore.Live.Api.HealthChecks.Client/LiveHealthChecksExceptionFilter.cs), 
+
+that will publish an **ExceptionReport** & trigger the Health Checks & publish the Health Report,
+
+in case of an unhandled exception, in real-time.
 
 [Table of Contents](#TOC)

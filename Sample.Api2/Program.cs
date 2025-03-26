@@ -29,6 +29,8 @@ builder.Services.AddHealthChecks()
                     //        value = e.Value.Status.ToString()
                     //    })
                     //};
+
+                    settings.AddHealthCheckMiddleware = true;
                 });
 
 builder.Services.AddControllers();

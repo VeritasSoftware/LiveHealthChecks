@@ -18,6 +18,11 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             services.AddSingleton<IMyHealthCheckService, MyHealthCheckService>();
             services.AddHostedService<MyHealthCheckBackgroundService>();
 
+            if (mySettings.AddHealthCheckMiddleware)
+            {
+                services.AddMvc(o => o.Filters.Add<LiveHealthChecksExceptionFilter>());
+            }
+
             _healthChecksHubConnection = new HubConnectionBuilder()
                     .WithUrl(mySettings.HealthCheckServerHubUrl, o =>
                     {
