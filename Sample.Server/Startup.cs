@@ -1,5 +1,6 @@
 ﻿using AspNetCore.Live.Api.HealthChecks.Server;
 using AspNetCore.Live.Api.HealthChecks.Server.Hubs;
+using MongoDB.Driver;
 
 namespace Sample.Server
 {
@@ -27,6 +28,8 @@ namespace Sample.Server
                 //Provide the MongoDB connection string.
                 options.UseDatabase = false;
                 options.DatabaseConnectionString = Configuration.GetConnectionString("MongoDb");
+                //Optional - Configure MongoClient.
+                //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);
             });
         }
 

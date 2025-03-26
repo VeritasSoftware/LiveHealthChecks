@@ -1,4 +1,6 @@
-﻿namespace AspNetCore.Live.Api.HealthChecks.Server
+﻿using MongoDB.Driver;
+
+namespace AspNetCore.Live.Api.HealthChecks.Server
 {
     public class ClientSettings
     {
@@ -13,5 +15,7 @@
         public bool UseDatabase { get; set; } = false;
 
         public string? DatabaseConnectionString { get; set; }
+
+        public Func<IServiceProvider, MongoClient>? Configure { get; set; }
     }
 }

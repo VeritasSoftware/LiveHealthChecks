@@ -99,6 +99,8 @@ builder.Services.AddLiveHealthChecksServer(options =>
     //Provide the MongoDB connection string.
     options.UseDatabase = true;
     options.DatabaseConnectionString = "mongodb://localhost:27017/ServerDb";
+    //Optional - Configure MongoClient.
+    //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);
 });
 
 var app = builder.Build();

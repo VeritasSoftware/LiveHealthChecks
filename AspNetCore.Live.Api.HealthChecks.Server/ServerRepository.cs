@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using System.Text.RegularExpressions;
 
 namespace AspNetCore.Live.Api.HealthChecks.Server
 {
@@ -11,9 +12,18 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
     {
         private readonly IMongoDatabase _database;
 
-        public ServerRepository(IMongoClient client)
+        private static string _collectionName = "ServerDb";
+
+        public ServerRepository(IMongoClient client, MyHealthCheckSettings settings)
         {
-            _database = client.GetDatabase("ServerDb");
+            if (string.IsNullOrEmpty(_collectionName))
+            {
+                var m = Regex.Match(settings.DatabaseConnectionString!, @"^.*/(?<dbName>.+)$");
+
+                _collectionName = m.Success ? m.Groups["dbName"].Captures[0].Value : "ServerDb";
+            }
+
+            _database = client.GetDatabase(_collectionName);
         }
 
         public async Task AddHealthCheckAsync(MyHealthCheckDbModel model)
