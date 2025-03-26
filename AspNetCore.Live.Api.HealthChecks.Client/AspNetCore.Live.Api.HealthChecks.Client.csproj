@@ -12,12 +12,13 @@
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-    <PackageReleaseNotes>Added support for .NET 9.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added middleware for publishing real-time exception and health check report on any unhandled exception.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr client</PackageTags>
-	<Version>3.0.0</Version>
-	<AssemblyVersion>3.0.0.0</AssemblyVersion>
-	<FileVersion>3.0.0.0</FileVersion>
+	<Version>3.1.0</Version>
+	<AssemblyVersion>3.1.0.0</AssemblyVersion>
+	<FileVersion>3.1.0.0</FileVersion>
 	<OutputType>Exe</OutputType>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
