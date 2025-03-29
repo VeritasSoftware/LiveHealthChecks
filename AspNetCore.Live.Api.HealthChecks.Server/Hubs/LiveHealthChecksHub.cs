@@ -217,7 +217,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                                 ClientId = myHealthCheck.ClientId,
                                 ReceiveMethod = myHealthCheck.ReceiveMethod,
                                 Report = myHealthCheck.Report,
-                                Timestamp = myHealthCheck.Timestamp
+                                Timestamp = myHealthCheck.Timestamp ?? DateTime.UtcNow
                             });
 
                         _logger?.LogInformation($"Saved Health Check to the database.");

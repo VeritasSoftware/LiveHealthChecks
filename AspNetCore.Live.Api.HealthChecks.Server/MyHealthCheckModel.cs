@@ -12,7 +12,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
     public class MyHealthCheckModel : MyHealthCheckBaseModel
     {     
         public string Report { get; set; } = string.Empty;
-        public DateTime Timestamp { get; set; }
+        public DateTime? Timestamp { get; set; }
     }
 
     public class MyHealthCheckDbModel
