@@ -23,14 +23,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
         {
             try
             {
-                try
-                {
-                    await RunHealthCheckAndPublishHealthReport(stoppingToken);
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
-                }
+                await RunHealthCheckAndPublishHealthReport(stoppingToken);
 
                 if (!string.IsNullOrEmpty(_settings.HealthCheckIntervalCronExpression))
                 {
@@ -43,14 +36,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                     {
                         await Task.Delay((nextUtc! - utcNow).Value);
 
-                        try
-                        {
-                            await RunHealthCheckAndPublishHealthReport(stoppingToken);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
-                        }
+                        await RunHealthCheckAndPublishHealthReport(stoppingToken);
 
                         utcNow = DateTimeOffset.UtcNow;
                         nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);                        
@@ -64,14 +50,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
                     while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
                     {
-                        try
-                        {
-                            await RunHealthCheckAndPublishHealthReport(stoppingToken);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
-                        }
+                        await RunHealthCheckAndPublishHealthReport(stoppingToken);
                     }
                 }
                 else
@@ -87,9 +66,16 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
         private async Task RunHealthCheckAndPublishHealthReport(CancellationToken stoppingToken)
         {
-            var report = await _myHealthCheckService.CheckHealthAsync(stoppingToken);
+            try
+            {
+                var report = await _myHealthCheckService.CheckHealthAsync(stoppingToken);
 
-            await _myHealthCheckService.PublishHealthReportAsync(report);
+                await _myHealthCheckService.PublishHealthReportAsync(report);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
+            }            
         }
     }
 }
