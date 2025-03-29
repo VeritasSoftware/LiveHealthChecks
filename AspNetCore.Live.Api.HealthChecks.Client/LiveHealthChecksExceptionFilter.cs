@@ -3,7 +3,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace AspNetCore.Live.Api.HealthChecks.Client
 {
-    internal class LiveHealthChecksExceptionFilter : IAsyncExceptionFilter
+    public class LiveHealthChecksExceptionFilter : IAsyncExceptionFilter
     {
         private readonly IMyHealthCheckService _healthCheckService;
         private readonly ILogger<LiveHealthChecksExceptionFilter>? _logger;
