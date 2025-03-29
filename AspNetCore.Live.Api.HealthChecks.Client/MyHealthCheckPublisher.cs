@@ -31,9 +31,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             bool isTransform = _settings.TransformHealthReport != null;
             string? publishedReport = null;
 
-            publishedReport = JsonSerializer.Serialize(isTransform 
-                                                ? _settings.TransformHealthReport?.Invoke(healthReport)
-                                                : healthReport, typeof(HealthReport), settings);
+            if(isTransform)
+            {
+                publishedReport = JsonSerializer.Serialize(_settings.TransformHealthReport!(healthReport), settings);
+            }
+            else
+            {
+                publishedReport = JsonSerializer.Serialize(healthReport, typeof(HealthReport), settings);
+            }            
             
             var connection = MyHealthCheckExtensions._healthChecksHubConnection;
 
