@@ -17,34 +17,40 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
         public async Task OnExceptionAsync(ExceptionContext context)
         {
-            _logger?.LogError(context.Exception, "LiveHealthChecks: An exception occurred.");
-
-            var exceptionReport = new HealthReport(new Dictionary<string, HealthReportEntry>
+            try
             {
+                _logger?.LogError(context.Exception, "LiveHealthChecks: An exception occurred.");
+
+                var exceptionReport = new HealthReport(new Dictionary<string, HealthReportEntry>
                 {
-                    "ExceptionReport",
-                    new HealthReportEntry(
-                        HealthStatus.Unhealthy,
-                        "An exception occurred.",
-                        TimeSpan.Zero,
-                        context.Exception,
-                        new Dictionary<string, object>
-                        {
-                            { "StackTrace", (context.Exception.InnerException??context.Exception).StackTrace! }
-                        }
-                        )
-                }
-            }, TimeSpan.Zero);
+                    {
+                        "ExceptionReport",
+                        new HealthReportEntry(
+                            HealthStatus.Unhealthy,
+                            "An exception occurred.",
+                            TimeSpan.Zero,
+                            context.Exception,
+                            new Dictionary<string, object>
+                            {
+                                { "StackTrace", (context.Exception.InnerException??context.Exception).StackTrace! }
+                            })
+                    }
+                }, TimeSpan.Zero);
 
-            _logger?.LogInformation("LiveHealthChecks: Publishing exception report.");
+                _logger?.LogInformation("LiveHealthChecks: Publishing exception report.");
 
-            await _healthCheckService.PublishHealthReportAsync(exceptionReport);
+                await _healthCheckService.PublishHealthReportAsync(exceptionReport);
 
-            var healthReport = await _healthCheckService.CheckHealthAsync();
+                var healthReport = await _healthCheckService.CheckHealthAsync();
 
-            _logger?.LogInformation("LiveHealthChecks: Publishing health report.");
+                _logger?.LogInformation("LiveHealthChecks: Publishing health report.");
 
-            await _healthCheckService.PublishHealthReportAsync(healthReport);
+                await _healthCheckService.PublishHealthReportAsync(healthReport);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"LiveHealthChecks: An exception occurred in {nameof(LiveHealthChecksExceptionFilter)}.");
+            }            
         }
     }
 }
