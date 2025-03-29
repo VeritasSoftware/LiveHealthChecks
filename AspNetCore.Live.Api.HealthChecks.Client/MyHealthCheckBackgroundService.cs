@@ -23,7 +23,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
         {
             try
             {
-                await RunHealthCheckAndPublishHealthReport(stoppingToken);
+                try
+                {
+                    await RunHealthCheckAndPublishHealthReport(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, $"Error in {nameof(MyHealthCheckBackgroundService)}.");
+                }
 
                 if (!string.IsNullOrEmpty(_settings.HealthCheckIntervalCronExpression))
                 {
