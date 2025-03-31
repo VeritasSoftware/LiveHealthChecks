@@ -14,9 +14,9 @@
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
     <PackageReleaseNotes>Minor enhancements and fixes.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr web sockets push notification client</PackageTags>
-	<Version>3.1.1</Version>
-	<AssemblyVersion>3.1.1.0</AssemblyVersion>
-	<FileVersion>3.1.1.0</FileVersion>
+	<Version>3.1.2</Version>
+	<AssemblyVersion>3.1.2.0</AssemblyVersion>
+	<FileVersion>3.1.2.0</FileVersion>
 	<OutputType>Exe</OutputType>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
