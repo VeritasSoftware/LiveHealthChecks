@@ -414,6 +414,8 @@ in real-time.
 
 So, this way you can learn the internal state of your app & the machine.
 
+![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)
+
 ### Live Health Checks Middleware
 
 You can set property **AddHealthCheckMiddleware** to **true** in the Client settings,
