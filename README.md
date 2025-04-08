@@ -414,7 +414,7 @@ in real-time.
 
 So, this way you can learn the internal state of your app & the machine.
 
-![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)
+### Live Health Checks Middleware
 
 You can set property **AddHealthCheckMiddleware** to **true** in the Client settings,
 
@@ -423,5 +423,7 @@ to add a middleware to the Api, which will add an [**Exception Filter**](/AspNet
 that will publish an **ExceptionReport** & trigger the Health Checks & publish the Health Report,
 
 in case of an unhandled exception, in real-time.
+
+![**Exception Filter**](/Docs/ExceptionFilter.jpg)
 
 [Table of Contents](#TOC)
