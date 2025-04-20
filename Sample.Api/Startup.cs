@@ -1,4 +1,6 @@
-﻿namespace Sample.Api
+﻿using Sample.Api.HealthChecks;
+
+namespace Sample.Api
 {
     public class Startup
     {

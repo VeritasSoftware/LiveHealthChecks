@@ -1,4 +1,4 @@
-using Sample.Api;
+using Sample.Api.HealthChecks;
 
 Console.WriteLine("Hello, Api!");
 Console.WriteLine(Environment.NewLine);
@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddHealthChecks() //Required - add all your health checks
+                //Add Health Check for IsAlive
+                .AddCheck<IsAliveHealthCheck>("Is Alive Health Check Api 1")
                 .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")
                 //Add Live Health Checks Client
                 .AddLiveHealthChecksClient(settings =>
@@ -38,6 +40,7 @@ builder.Services.AddHealthChecks() //Required - add all your health checks
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

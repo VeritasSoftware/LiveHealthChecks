@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Sample.Api
+namespace Sample.Api.HealthChecks
 {
     public class SampleHealthCheck : IHealthCheck
     {

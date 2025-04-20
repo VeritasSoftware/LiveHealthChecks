@@ -33,7 +33,32 @@ This project taps into that system & makes the generated [**Health Report**](htt
 
 available to Monitoring applications, in real-time.
 
+The generated health report is a JSON object, which contains the status of all the health checks in the Api.
 
+```json
+{
+  "Entries": {
+    "Is Alive Health Check Api 1": {
+      "Data": {},
+      "Description": "The API is alive and reachable.",
+      "Duration": "00:00:00.0646557",
+      "Exception": null,
+      "Status": 2,
+      "Tags": []
+    },
+    "Sample Health Check Api 1": {
+      "Data": {},
+      "Description": null,
+      "Duration": "00:00:00.0004172",
+      "Exception": null,
+      "Status": 0,
+      "Tags": []
+    }
+  },
+  "Status": 0,
+  "TotalDuration": "00:00:00.0648796"
+}
+```
 
 The **Client** package, installed in the Api, runs the **Health Check** periodically,
 
@@ -186,6 +211,7 @@ then
 
 ```C#
 builder.Services.AddHealthChecks() //Required - add all your health checks
+                .AddCheck<IsAliveHealthCheck>("Is Alive Health Check Api 1")
                 .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")
                 //Add Live Health Checks Client
                 .AddLiveHealthChecksClient(settings =>
