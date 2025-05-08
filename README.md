@@ -452,6 +452,6 @@ that will publish an **ExceptionReport** & trigger the Health Checks & publish t
 
 in case of an unhandled exception, in real-time.
 
-![**Exception Filter**](/Docs/ExceptionFilter.jpg)
+[![**Exception Filter**](/Docs/ExceptionFilter.jpg)](/AspNetCore.Live.Api.HealthChecks.Client/LiveHealthChecksExceptionFilter.cs)
 
 [Table of Contents](#TOC)
