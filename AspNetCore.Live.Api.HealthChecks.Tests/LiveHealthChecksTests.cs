@@ -2,7 +2,9 @@ using AspNetCore.Live.Api.HealthChecks.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using Sample.Server;
+using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -64,7 +66,12 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
             var publishedHealthReport = await myHealthCheckService.CheckHealthAsync();
             //Act - Publish health report to Server
             await myHealthCheckService.PublishHealthReportAsync(publishedHealthReport);
-            var publishedHealthReportStr = JsonSerializer.Serialize(publishedHealthReport);
+
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new IntPtrConverter());
+            options.Converters.Add(new SystemTextJsonExceptionConverter());
+            options.WriteIndented = true;
+            var publishedHealthReportStr = JsonSerializer.Serialize(publishedHealthReport, options);
 
             while (string.IsNullOrWhiteSpace(receivedHealthReportStr))
             {
@@ -75,4 +82,55 @@ namespace AspNetCore.Live.Api.HealthChecks.Tests
             Assert.Equal(publishedHealthReportStr, receivedHealthReportStr);
         }
     }
+
+    public class IntPtrConverter : JsonConverter<IntPtr>
+    {
+        public override IntPtr Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            return new IntPtr(reader.GetInt64());
+        }
+
+        public override void Write(Utf8JsonWriter writer, IntPtr value, JsonSerializerOptions options)
+        {
+            writer.WriteNumberValue(value.ToInt64());
+        }
+    }
+
+    public class SystemTextJsonExceptionConverter : JsonConverter<Exception>
+    {
+        public override Exception Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, Exception value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WriteString(nameof(Exception.Message), value.Message);
+
+            if (value.InnerException is not null)
+            {
+                writer.WriteStartObject(nameof(Exception.InnerException));
+                Write(writer, value.InnerException, options);
+                writer.WriteEndObject();
+            }
+
+            if (value.TargetSite is not null)
+            {
+                writer.WriteStartObject(nameof(Exception.TargetSite));
+                writer.WriteString(nameof(Exception.TargetSite.Name), value.TargetSite?.Name);
+                writer.WriteString(nameof(Exception.TargetSite.DeclaringType), value.TargetSite?.DeclaringType?.FullName);
+                writer.WriteEndObject();
+            }
+
+            if (value.StackTrace is not null)
+            {
+                writer.WriteString(nameof(Exception.StackTrace), value.StackTrace);
+            }
+
+            writer.WriteString(nameof(Type), value.GetType().ToString());
+            writer.WriteEndObject();
+        }
+    }
+
 }
