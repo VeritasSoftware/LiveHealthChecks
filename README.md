@@ -130,7 +130,7 @@ builder.Services.AddLiveHealthChecksServer(options =>
     //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);
 
     //If you want to use a different database
-    //Provide your own implementation of IServerRepository.
+    //Provide your own implementation of interface IServerRepository.
     //options.MyServerRepository = (sp) => new MyServerRepository(...);
 });
 
