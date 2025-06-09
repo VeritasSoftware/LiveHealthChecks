@@ -17,5 +17,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
         public string? DatabaseConnectionString { get; set; }
 
         public Func<IServiceProvider, MongoClient>? Configure { get; set; }
+
+        public Func<IServiceProvider, IServerRepository>? MyServerRepository { get; set; }
     }
 }

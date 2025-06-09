@@ -14,15 +14,25 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
 
             if (mySettings.UseDatabase)
             {
-                if (mySettings.Configure != null)
+                // If a custom repository is provided, use it; otherwise, use the default MongoDB Repository.
+                if (mySettings.MyServerRepository != null)
                 {
-                    services.AddSingleton<IMongoClient, MongoClient>(mySettings.Configure);
+                    services.AddScoped(mySettings.MyServerRepository);
                 }
                 else
                 {
-                    services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(mySettings.DatabaseConnectionString));
-                }
-                services.AddScoped<IServerRepository, ServerRepository>();
+                    // Default MongoDB repository
+                    if (mySettings.Configure != null)
+                    {
+                        services.AddSingleton<IMongoClient, MongoClient>(mySettings.Configure);
+                    }
+                    else
+                    {
+                        services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(mySettings.DatabaseConnectionString));
+                    }
+
+                    services.AddScoped<IServerRepository, ServerRepository>();
+                }                               
             }
 
             return services;

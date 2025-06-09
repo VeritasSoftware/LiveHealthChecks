@@ -119,13 +119,19 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<IClientsService, ClientsService>();
 builder.Services.AddLiveHealthChecksServer(options =>
 {
-    //Optional - Save Health Check info with Report to MongoDB database.
-    //Set UseDatabase flag to true.
-    //Provide the MongoDB connection string.
+    //Optional - Save Health Check info with Report to database.
+    //Set UseDatabase flag to true.    
     options.UseDatabase = true;
+
+    //Default - MongoDB
+    //Provide the MongoDB connection string.
     options.DatabaseConnectionString = "mongodb://localhost:27017/ServerDb";
     //Optional - Configure MongoClient.
     //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);
+
+    //If you want to use a different database
+    //Provide your own implementation of IServerRepository.
+    //options.MyServerRepository = (sp) => new MyServerRepository(...);
 });
 
 var app = builder.Build();
