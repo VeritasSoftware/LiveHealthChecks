@@ -123,7 +123,7 @@ builder.Services.AddLiveHealthChecksServer(options =>
     //Set UseDatabase flag to true.    
     options.UseDatabase = true;
 
-d    //If you want to use a custom database
+    //If you want to use a custom database
     //Provide your own implementation of IServerRepository.
     //options.UseCustomDatabase = true;
 
