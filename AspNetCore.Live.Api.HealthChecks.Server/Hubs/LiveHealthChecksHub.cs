@@ -184,7 +184,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
             }
         }
 
-        public async Task PublishMyHealthCheck(MyHealthCheckModel myHealthCheck)
+        public async Task PublishMyHealthCheck(MyHealthCheckPublishModel myHealthCheck)
         {
             try
             {

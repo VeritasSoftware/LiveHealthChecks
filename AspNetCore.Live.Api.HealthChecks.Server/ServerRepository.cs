@@ -28,7 +28,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
 
         public async Task AddHealthCheckAsync(MyHealthCheckModel model)
         {
-            var dbModel = new MyHealthCheckDbModel
+            var dbModel = new MyHealthCheckMongoDbModel
             {
                 ClientId = model.ClientId,
                 ReceiveMethod = model.ReceiveMethod,
@@ -39,9 +39,9 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
             await AddHealthCheckAsync(dbModel);
         }
 
-        private async Task AddHealthCheckAsync(MyHealthCheckDbModel model)
+        private async Task AddHealthCheckAsync(MyHealthCheckMongoDbModel model)
         {
-            var collection = _database.GetCollection<MyHealthCheckDbModel>(model.ReceiveMethod);
+            var collection = _database.GetCollection<MyHealthCheckMongoDbModel>(model.ReceiveMethod);
 
             await collection.InsertOneAsync(model, new InsertOneOptions
             {
