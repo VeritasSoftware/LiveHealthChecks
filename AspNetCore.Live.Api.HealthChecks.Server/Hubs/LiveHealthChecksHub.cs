@@ -212,7 +212,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server.Hubs
                         _logger?.LogInformation($"Saving Health Check to the database.");
 
                         await _repository.AddHealthCheckAsync(
-                            new MyHealthCheckDbModel
+                            new MyHealthCheckModel
                             {
                                 ClientId = myHealthCheck.ClientId,
                                 ReceiveMethod = myHealthCheck.ReceiveMethod,

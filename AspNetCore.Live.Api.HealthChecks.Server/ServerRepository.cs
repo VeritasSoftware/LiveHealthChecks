@@ -5,7 +5,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
 {
     public interface IServerRepository
     {
-        Task AddHealthCheckAsync(MyHealthCheckDbModel model);
+        Task AddHealthCheckAsync(MyHealthCheckModel model);
     }
 
     public class ServerRepository : IServerRepository
@@ -26,7 +26,20 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
             _database = client.GetDatabase(_collectionName);
         }
 
-        public async Task AddHealthCheckAsync(MyHealthCheckDbModel model)
+        public async Task AddHealthCheckAsync(MyHealthCheckModel model)
+        {
+            var dbModel = new MyHealthCheckDbModel
+            {
+                ClientId = model.ClientId,
+                ReceiveMethod = model.ReceiveMethod,
+                Report = model.Report,
+                Timestamp = model.Timestamp
+            };
+
+            await AddHealthCheckAsync(dbModel);
+        }
+
+        private async Task AddHealthCheckAsync(MyHealthCheckDbModel model)
         {
             var collection = _database.GetCollection<MyHealthCheckDbModel>(model.ReceiveMethod);
 

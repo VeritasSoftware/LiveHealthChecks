@@ -21,6 +21,6 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
         public string ClientId { get; set; } = string.Empty;
         public string ReceiveMethod { get; set; } = string.Empty;
         public string Report { get; set; } = string.Empty;
-        public DateTime Timestamp { get; set; }
+        public DateTime? Timestamp { get; set; }
     }
 }
