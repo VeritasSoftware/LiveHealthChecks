@@ -209,7 +209,7 @@ By default, the Server persists Health Report data in a **MongoDB** database.
 
 If you want, you can **persist the data to any database of your choice**.
 
-![Third-party database](/Docs/ServerRepository.png)
+<img src="/Docs/ServerRepository.png" alt="Third-party database" width="400px" height="250px">
 
 Just implement interface `IServerRepository` and create your own class (eg `MySQLServerRepository`) that talks to any database.
 
