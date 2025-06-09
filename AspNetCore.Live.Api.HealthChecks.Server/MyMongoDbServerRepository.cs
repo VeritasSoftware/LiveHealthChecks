@@ -3,13 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace AspNetCore.Live.Api.HealthChecks.Server
 {
-    public class MongoDbServerRepository : IServerRepository
+    public class MyMongoDbServerRepository : IServerRepository
     {
         private readonly IMongoDatabase _database;
 
         private static string _collectionName = "ServerDb";
 
-        public MongoDbServerRepository(IMongoClient client, MyHealthCheckSettings settings)
+        public MyMongoDbServerRepository(IMongoClient client, MyHealthCheckSettings settings)
         {
             if (string.IsNullOrEmpty(_collectionName))
             {

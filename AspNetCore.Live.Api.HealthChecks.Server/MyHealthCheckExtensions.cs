@@ -31,7 +31,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
                         services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(mySettings.DatabaseConnectionString));
                     }
 
-                    services.AddScoped<IServerRepository, MongoDbServerRepository>();
+                    services.AddScoped<IServerRepository, MyMongoDbServerRepository>();
                 }                               
             }
 
