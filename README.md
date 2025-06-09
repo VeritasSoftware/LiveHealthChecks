@@ -193,7 +193,7 @@ Please see the Sample Server's Starup.cs to get an idea on how to do that.
                 },
                 //Optional
                 //Monitoring app connecting with ReceiveMethod *
-                //will receive notifications for all ReceiveMethods in the system.
+                //will receive notifications for all ReceiveMethods in the system on the same connection.
                 new ClientSettings {
                     ReceiveMethod = "*",
                     SecretKey = "f22f3fd2-687d-48a1-aa2f-f2c9181364eb"
@@ -202,6 +202,34 @@ Please see the Sample Server's Starup.cs to get an idea on how to do that.
         }
     }
 ```
+
+### Server database
+
+By default, the Server persists Health Report data in a MongoDB database.
+
+If you want, you can **persist the data to any database of your choice**.
+
+![Third-party database](/Docs/ServerRepository.png)
+
+Just implement interface `IServerRepository` and create your own class (eg `MySQLServerRepository`) that talks to any database.
+
+Persist the `model` in the interface method implementation.
+
+Then, supply it to the `MyServerRepository` setting :
+
+```C#
+Func<IServiceProvider, IServerRepository>? MyServerRepository { get; set; }
+```
+
+as shown below:
+
+```C#
+options.MyServerRepository = (sp) => new MySQLServerRepository(...);
+```
+
+This wires it up for Scoped dependency injection.
+
+### Sample
 
 ![**Sample Server**](/Docs/Server.jpg)
 
