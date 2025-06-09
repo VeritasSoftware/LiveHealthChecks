@@ -215,13 +215,13 @@ Just implement interface `IServerRepository` and create your own class (eg `MySQ
 
 Persist the `model` in the interface method implementation.
 
-Then, supply it to the `MyServerRepository` setting :
+Then, supply your implementation class to the `MyServerRepository` setting :
 
 ```C#
 Func<IServiceProvider, IServerRepository>? MyServerRepository { get; set; }
 ```
 
-as shown below:
+as shown below :
 
 ```C#
 options.MyServerRepository = (sp) => new MySQLServerRepository(...);
