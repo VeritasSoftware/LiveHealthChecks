@@ -205,7 +205,7 @@ Please see the Sample Server's Starup.cs to get an idea on how to do that.
 
 ### Server database
 
-By default, the Server persists Health Report data in a MongoDB database.
+By default, the Server persists Health Report data in a **MongoDB** database.
 
 If you want, you can **persist the data to any database of your choice**.
 
@@ -213,7 +213,7 @@ If you want, you can **persist the data to any database of your choice**.
 
 Just implement interface `IServerRepository` and create your own class (eg `MySQLServerRepository`) that talks to any database.
 
-Persist the `model` in the interface method implementation.
+Persist the `model` in your interface method implementation.
 
 Then, supply your implementation class to the `MyServerRepository` setting :
 
@@ -285,6 +285,8 @@ ie those Health Reports with **not Healthy** [**status**](https://learn.microsof
 The Server sends the Health Report as a real-time push notification.
 
 **Note:-** You can host a Server & Client in the same Api too. 
+
+### Sample
 
 ![**Sample Api**](/Docs/Api.jpg)
 

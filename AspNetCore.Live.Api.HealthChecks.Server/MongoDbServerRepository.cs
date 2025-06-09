@@ -3,18 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace AspNetCore.Live.Api.HealthChecks.Server
 {
-    public interface IServerRepository
-    {
-        Task AddHealthCheckAsync(MyHealthCheckModel model);
-    }
-
-    public class ServerRepository : IServerRepository
+    public class MongoDbServerRepository : IServerRepository
     {
         private readonly IMongoDatabase _database;
 
         private static string _collectionName = "ServerDb";
 
-        public ServerRepository(IMongoClient client, MyHealthCheckSettings settings)
+        public MongoDbServerRepository(IMongoClient client, MyHealthCheckSettings settings)
         {
             if (string.IsNullOrEmpty(_collectionName))
             {
