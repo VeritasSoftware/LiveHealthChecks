@@ -27,15 +27,15 @@ namespace Sample.Server
                 //Set UseDatabase flag to true.    
                 options.UseDatabase = true;
 
-                //Default - MongoDB
+                //If you want to use a custom database
+                //Provide your own implementation of IServerRepository.
+                //options.UseCustomDatabase = true;
+
+                //Default database - MongoDB
                 //Provide the MongoDB connection string.
                 options.DatabaseConnectionString = "mongodb://localhost:27017/ServerDb";
                 //Optional - Configure MongoClient.
-                //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);
-
-                //If you want to use a different database
-                //Provide your own implementation of IServerRepository.
-                //options.MyServerRepository = (sp) => new MyServerRepository(...);
+                //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);                
             });
         }
 

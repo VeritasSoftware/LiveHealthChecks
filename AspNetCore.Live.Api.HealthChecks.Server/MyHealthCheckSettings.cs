@@ -14,10 +14,10 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
 
         public bool UseDatabase { get; set; } = false;
 
+        public bool UseCustomDatabase { get; set; } = false;
+
         public string? DatabaseConnectionString { get; set; }
 
-        public Func<IServiceProvider, MongoClient>? Configure { get; set; }
-
-        public Func<IServiceProvider, IServerRepository>? MyServerRepository { get; set; }
+        public Func<IServiceProvider, MongoClient>? Configure { get; set; }        
     }
 }

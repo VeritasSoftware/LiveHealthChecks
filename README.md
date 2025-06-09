@@ -123,15 +123,15 @@ builder.Services.AddLiveHealthChecksServer(options =>
     //Set UseDatabase flag to true.    
     options.UseDatabase = true;
 
-    //Default - MongoDB
+d    //If you want to use a custom database
+    //Provide your own implementation of IServerRepository.
+    //options.UseCustomDatabase = true;
+
+    //Default database - MongoDB
     //Provide the MongoDB connection string.
     options.DatabaseConnectionString = "mongodb://localhost:27017/ServerDb";
     //Optional - Configure MongoClient.
-    //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);
-
-    //If you want to use a different database
-    //Provide your own implementation of interface IServerRepository.
-    //options.MyServerRepository = (sp) => new MyServerRepository(...);
+    //options.Configure = sp => new MongoClient(options.DatabaseConnectionString);  
 });
 
 var app = builder.Build();
@@ -211,23 +211,21 @@ If you want, you can **persist the data to any database of your choice**.
 
 <img src="/Docs/ServerRepository.png" alt="Third-party database" width="400px" height="250px">
 
-Just implement interface `IServerRepository` and create your own class (eg `MySQLServerRepository`) that talks to any database.
+Just implement interface `IServerRepository` and create your own class (eg `SQLServerRepository`) that talks to any database.
 
 Persist the `model` in your interface method implementation.
 
-Then, supply your implementation class to the `MyServerRepository` setting :
+Set the settings property `UseCustomDatabase` to `true`.
 
 ```C#
-Func<IServiceProvider, IServerRepository>? MyServerRepository { get; set; }
+options.UseCustomDatabase = true;
 ```
 
-as shown below :
+Wire up your implementation class for dependency injection. Eg.
 
 ```C#
-options.MyServerRepository = (sp) => new MySQLServerRepository(...);
+services.AddScoped<IServerRepository>(sp => new SQLServerRepository(...));
 ```
-
-This wires it up for Scoped dependency injection.
 
 ### Sample
 
