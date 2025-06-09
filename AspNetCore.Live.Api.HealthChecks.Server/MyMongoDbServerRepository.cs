@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using System.Text.RegularExpressions;
 
 namespace AspNetCore.Live.Api.HealthChecks.Server
 {
@@ -7,15 +6,13 @@ namespace AspNetCore.Live.Api.HealthChecks.Server
     {
         private readonly IMongoDatabase _database;
 
-        private static string _collectionName = "ServerDb";
+        private static string _collectionName = string.Empty;
 
         public MyMongoDbServerRepository(IMongoClient client, MyHealthCheckSettings settings)
         {
             if (string.IsNullOrEmpty(_collectionName))
             {
-                var m = Regex.Match(settings.DatabaseConnectionString!, @"^.*/(?<dbName>.+)$");
-
-                _collectionName = m.Success ? m.Groups["dbName"].Captures[0].Value : "ServerDb";
+                _collectionName = settings.DatabaseName;
             }
 
             _database = client.GetDatabase(_collectionName);

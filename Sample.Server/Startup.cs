@@ -25,7 +25,7 @@ namespace Sample.Server
             {
                 //Optional - Save Health Check info with Report to database.
                 //Set UseDatabase flag to true.    
-                options.UseDatabase = true;
+                options.UseDatabase = false;
 
                 //If you want to use a custom database
                 //Provide your own implementation of IServerRepository.

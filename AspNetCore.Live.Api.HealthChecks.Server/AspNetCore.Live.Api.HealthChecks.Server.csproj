@@ -11,13 +11,12 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-	<PackageReleaseNotes>Internal improvements.</PackageReleaseNotes>
+	<PackageReleaseNotes>Added feature to support third-party databases. Other enhancements.</PackageReleaseNotes>
     <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring. Supports .NET 6/7/8/9.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>3.1.0</Version>
-	<AssemblyVersion>3.1.0.0</AssemblyVersion>
-	<FileVersion>3.1.0.0</FileVersion>
-	<PackageLicenseFile></PackageLicenseFile>
+	<Version>3.2.0</Version>
+	<AssemblyVersion>3.2.0.0</AssemblyVersion>
+	<FileVersion>3.2.0.0</FileVersion>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<OutputType>Exe</OutputType>
   </PropertyGroup>
