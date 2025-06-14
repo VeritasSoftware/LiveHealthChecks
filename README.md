@@ -428,6 +428,18 @@ I have provided a sample real-time health checks monitoring web app.
 
 The sample web app is containerized & there is an docker image you can download from **DockerHub**.
 
+#### Certificate files
+
+You may need to replace the **certificate files** (in the `/etc/nginx` folder of the docker image) with your own, if they have expired.
+
+The new certificate should have the same name as the existing one.
+
+The certificate files needed to be replaced are:
+
+- `livehealthchecks.ui.crt`
+- `livehealthchecks.ui.key`
+- `livehealthchecks.ui.pem`
+
 ![**Sample Monitoring web app - LiveHealthChecks.UI**](/Docs/LiveHealthChecks-UI.jpg)
 
 #### Blazor Web Assembly sample app
