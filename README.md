@@ -430,7 +430,9 @@ The sample web app is containerized & there is an docker image you can download 
 
 #### Certificate files
 
-You may need to replace the **certificate files** (in the `/etc/nginx` folder of the docker image) with your own, if they have expired.
+You may need to replace the **certificate files** (in the `/etc/nginx` folder of the docker container) with your own, if they have expired.
+
+You can use the `docker cp` command to copy the new certificate files into the container.
 
 The new certificate should have the same name as the existing one.
 
