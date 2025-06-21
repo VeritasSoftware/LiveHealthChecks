@@ -113,3 +113,17 @@ Then, you can start up the image in a container, using command:
 ```
 docker run -t -d --name react-livehealthchecks.ui -p 7001:443 shantanun/react-livehealthchecks.ui 
 ```
+
+#### Certificate files
+
+You may need to replace the **certificate files** (in the `/etc/nginx` folder of the docker container) with your own, if they have expired.
+
+You can use the `docker cp` command to copy the new certificate files into the container.
+
+The new certificate should have the same name as the existing one.
+
+The certificate files needed to be replaced are:
+
+- `livehealthchecks.ui.crt`
+- `livehealthchecks.ui.key`
+- `livehealthchecks.ui.pem`
