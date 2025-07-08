@@ -100,7 +100,7 @@ To run the Sample in the Solution, make sure the below projects, are started up,
 
 You can pull an image of the monitoring web app, from Docker Hub.
 
-Browse my [**Docker Hub**](https://hub.docker.com/r/shantanun) for all available images of the Monitoring web app.
+Browse [**my Docker Hub**](https://hub.docker.com/r/shantanun) for all available images of the Monitoring web app.
 
 The command is:
 

@@ -45,7 +45,7 @@ namespace Sample.Server
             app.UseCors(x => x
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .WithOrigins(new string[] { "https://localhost:7151" })
+                .WithOrigins(new string[] { "https://localhost:7151", "https://localhost:8001", "https://localhost:7001" })
                 .AllowCredentials());     // allow credentials
 
             app.UseRouting();
