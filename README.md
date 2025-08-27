@@ -480,15 +480,15 @@ public interface IMyHealthCheckService
 
 This method is a wrapper around the built-in Health Check system's [**HealthCheckService**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthcheckservice?view=dotnet-plat-ext-6.0).
 
-and then, publish the generated Health Report to the Server yourself,
+and then, publish the generated Health Report to the Server yourself, by calling the **PublishHealthReportAsync** method.
 
-by calling the **PublishHealthReportAsync** method.
+You can also call the **PublishExceptionHealthReportAsync** method, to publish an Exception as a Health Report.
 
 This has **machine diagnostic** implications too.
 
 Eg. In your app, you can trap certain types of database exceptions,
 
-and in the error handler, you can trigger the health checks & publish the Health Report,
+and in the error handler, publish the Exception Health Report and/or you can trigger the health checks & publish the Health Report,
 
 to the Server & on to the Monitoring apps,
 
@@ -503,7 +503,7 @@ You can set property **AddHealthCheckMiddleware** to **true** in the Client sett
 
 to add a middleware to the Api, which will add an [**Exception Filter**](/AspNetCore.Live.Api.HealthChecks.Client/LiveHealthChecksExceptionFilter.cs), 
 
-that will publish an **ExceptionReport** & trigger the Health Checks & publish the Health Report,
+that will publish an **ExceptionHealthReport** & trigger the Health Checks & publish the Exception Health Report,
 
 in case of an unhandled exception, in real-time.
 
