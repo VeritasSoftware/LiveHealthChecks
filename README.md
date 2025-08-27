@@ -465,10 +465,18 @@ you can run a Health Check and publish the Health Report to the Server.
 
 You can trigger a Health Check, at any point (eg. on the occurance of a specific Exception), from anywhere, in your API,
 
-by injecting the Client package's **IMyHealthCheckService** interface and,
+by injecting the Client package's [**IMyHealthCheckService**](/AspNetCore.Live.Api.HealthChecks.Client/MyHealthCheckService.cs) interface and,
 
 calling the **CheckHealthAsync** method.
 
+```C#
+public interface IMyHealthCheckService
+{
+    Task<HealthReport> CheckHealthAsync(CancellationToken stoppingToken = default);
+    Task PublishHealthReportAsync(HealthReport report);
+    Task PublishExceptionHealthReportAsync(Exception exception);
+}
+```
 
 This method is a wrapper around the built-in Health Check system's [**HealthCheckService**](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.diagnostics.healthchecks.healthcheckservice?view=dotnet-plat-ext-6.0).
 
@@ -488,7 +496,6 @@ in real-time.
 
 So, this way you can learn the internal state of your app & the machine.
 
-![**IMyHealthCheckService**](/Docs/IMyHealthCheckService.png)
 
 ### Live Health Checks Middleware
 
