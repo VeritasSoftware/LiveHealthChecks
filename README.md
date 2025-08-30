@@ -503,7 +503,7 @@ You can set property **AddHealthCheckMiddleware** to **true** in the Client sett
 
 to add a middleware to the Api, which will add an [**Exception Filter**](/AspNetCore.Live.Api.HealthChecks.Client/LiveHealthChecksExceptionFilter.cs), 
 
-that will publish an **ExceptionHealthReport** & trigger the Health Checks & publish the Exception Health Report,
+that will publish an **ExceptionHealthReport** & trigger the Health Checks & publish the Health Report,
 
 in case of an unhandled exception, in real-time.
 
