@@ -492,9 +492,9 @@ and in the error handler, publish the Exception Health Report and/or you can tri
 
 to the Server & on to the Monitoring apps,
 
-in real-time.
+in **real-time**.
 
-So, this way you can learn the internal state of your app & the machine.
+So, this way you can learn the internal state of your app & the machine in real-time.
 
 
 ### Live Health Checks Middleware
