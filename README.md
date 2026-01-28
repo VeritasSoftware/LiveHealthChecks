@@ -8,7 +8,7 @@
 |*AspNetCore.Live.Api.HealthChecks.Server*|[![Nuget Version](https://img.shields.io/nuget/v/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|[![Downloads count](https://img.shields.io/nuget/dt/AspNetCore.Live.Api.HealthChecks.Server)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Server)|
 |*AspNetCore.Live.Api.HealthChecks.Client*|[![Nuget Version](https://img.shields.io/nuget/v/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|[![Downloads count](https://img.shields.io/nuget/dt/AspNetCore.Live.Api.HealthChecks.Client)](https://www.nuget.org/packages/AspNetCore.Live.Api.HealthChecks.Client)|
 
-### The Nuget packages support .NET 6/7/8/9.
+### The Nuget packages support .NET 6/7/8/9/10.
 
 <a name="TOC"/>
 
@@ -474,7 +474,8 @@ public interface IMyHealthCheckService
 {
     Task<HealthReport> CheckHealthAsync(CancellationToken stoppingToken = default);
     Task PublishHealthReportAsync(HealthReport report);
-    Task PublishExceptionHealthReportAsync(Exception exception);
+    Task PublishExceptionHealthReportAsync<TException>(TException exception)
+            where TException : Exception;
 }
 ```
 
