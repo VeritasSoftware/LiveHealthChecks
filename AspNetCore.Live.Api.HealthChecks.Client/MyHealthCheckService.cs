@@ -65,6 +65,8 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
         public async Task PublishExceptionHealthReportAsync(Exception exception)
         {
+            _logger?.LogError(exception, "LiveHealthChecks: An exception occurred.");
+
             var exceptionHealthReport = new HealthReport(new Dictionary<string, HealthReportEntry>
                 {
                     {
@@ -76,6 +78,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                             exception,
                             new Dictionary<string, object>
                             {
+                                { "Message", (exception.InnerException??exception).Message! },
                                 { "StackTrace", (exception.InnerException??exception).StackTrace! }
                             })
                     }

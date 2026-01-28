@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<IsPackable>true</IsPackable>
@@ -11,12 +11,12 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-	<PackageReleaseNotes>Added feature to support third-party databases. Other enhancements.</PackageReleaseNotes>
+	<PackageReleaseNotes>Added support for .NET 10. Now, .NET 6/7/8/9/10 are supported.</PackageReleaseNotes>
     <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring. Supports .NET 6/7/8/9.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>3.2.0</Version>
-	<AssemblyVersion>3.2.0.0</AssemblyVersion>
-	<FileVersion>3.2.0.0</FileVersion>
+	<Version>4.0.0</Version>
+	<AssemblyVersion>4.0.0.0</AssemblyVersion>
+	<FileVersion>4.0.0.0</FileVersion>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<OutputType>Exe</OutputType>
   </PropertyGroup>
@@ -29,7 +29,7 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
   </ItemGroup>
 
 </Project>
