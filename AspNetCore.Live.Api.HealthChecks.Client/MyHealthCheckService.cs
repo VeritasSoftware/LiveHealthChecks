@@ -6,7 +6,8 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
     {
         Task<HealthReport> CheckHealthAsync(CancellationToken stoppingToken = default);
         Task PublishHealthReportAsync(HealthReport report);
-        Task PublishExceptionHealthReportAsync(Exception exception);
+        Task PublishExceptionHealthReportAsync<TException>(TException exception)
+            where TException : Exception;
     }
 
     public class MyHealthCheckService : IMyHealthCheckService
@@ -63,7 +64,8 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             return report;
         }
 
-        public async Task PublishExceptionHealthReportAsync(Exception exception)
+        public async Task PublishExceptionHealthReportAsync<TException>(TException exception)
+            where TException : Exception
         {
             _logger?.LogError(exception, "LiveHealthChecks: An exception occurred.");
 
