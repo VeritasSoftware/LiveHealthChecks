@@ -474,8 +474,7 @@ public interface IMyHealthCheckService
 {
     Task<HealthReport> CheckHealthAsync(CancellationToken stoppingToken = default);
     Task PublishHealthReportAsync(HealthReport report);
-    Task PublishExceptionHealthReportAsync<TException>(TException exception)
-            where TException : Exception;
+    Task PublishExceptionHealthReportAsync(Exception exception, IReadOnlyDictionary<string, string>? data = null);
 }
 ```
 

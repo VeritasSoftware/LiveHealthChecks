@@ -6,8 +6,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
     {
         Task<HealthReport> CheckHealthAsync(CancellationToken stoppingToken = default);
         Task PublishHealthReportAsync(HealthReport report);
-        Task PublishExceptionHealthReportAsync<TException>(TException exception)
-            where TException : Exception;
+        Task PublishExceptionHealthReportAsync(Exception exception, IReadOnlyDictionary<string, string>? data = null);
     }
 
     public class MyHealthCheckService : IMyHealthCheckService
@@ -64,10 +63,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             return report;
         }
 
-        public async Task PublishExceptionHealthReportAsync<TException>(TException exception)
-            where TException : Exception
+        public async Task PublishExceptionHealthReportAsync(Exception exception, IReadOnlyDictionary<string, string>? data = null)
         {
             _logger?.LogError(exception, "LiveHealthChecks: An exception occurred.");
+
+            if (data == null)
+            {
+                data = new Dictionary<string, string>();
+            }
 
             var exceptionHealthReport = new HealthReport(new Dictionary<string, HealthReportEntry>
                 {
@@ -78,11 +81,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                             "An exception occurred.",
                             TimeSpan.Zero,
                             exception,
-                            new Dictionary<string, object>
-                            {
-                                { "Message", (exception.InnerException??exception).Message! },
-                                { "StackTrace", (exception.InnerException??exception).StackTrace! }
-                            })
+                            new Dictionary<string, object>(data!.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value)))
                     }
                 }, TimeSpan.Zero);
 
