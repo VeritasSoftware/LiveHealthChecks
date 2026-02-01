@@ -81,7 +81,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                             "An exception occurred.",
                             TimeSpan.Zero,
                             exception,
-                            new Dictionary<string, object>(data!.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value)))
+                            data.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value))
                     }
                 }, TimeSpan.Zero);
 
