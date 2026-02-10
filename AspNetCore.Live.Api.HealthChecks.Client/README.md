@@ -1,7 +1,7 @@
 ﻿# LiveHealthChecks
 # Real-Time Api/App Health Check Monitoring
 
-### Supports .NET 6/7/8/9.
+### Supports .NET 6/7/8/9/10.
 
 |Packages|Version & Downloads|
 |---------------------------|:---:|

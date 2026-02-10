@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
 	<PackageReleaseNotes>Added support for .NET 10. Now, .NET 6/7/8/9/10 are supported.</PackageReleaseNotes>
-    <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring. Supports .NET 6/7/8/9.</Description>
+    <Description>LiveHealthChecks - Server package for Real-Time Api Health Check Monitoring. Supports .NET 6/7/8/9/10.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<Version>4.0.0</Version>
 	<AssemblyVersion>4.0.0.0</AssemblyVersion>

@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Shantanu</Authors>
     <Company>Veritas Software</Company>
-    <Description>LiveHealthChecks - Client package for Real-Time Api Health Check Monitoring. Supports .NET 6/7/8/9.</Description>
+    <Description>LiveHealthChecks - Client package for Real-Time Api Health Check Monitoring. Supports .NET 6/7/8/9/10.</Description>
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
