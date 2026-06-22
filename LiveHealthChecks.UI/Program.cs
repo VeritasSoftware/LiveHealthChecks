@@ -25,5 +25,14 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<IMyHealthChecksRepository, MyHealthChecksRepository>();
 builder.Services.AddScoped<IMyDialogService, MyDialogService>();
 builder.Services.AddSingleton<IMyServerService, MyServerService>();
+builder.Services.AddSingleton<ISystemStateService, SystemStateService>();
 
-await builder.Build().RunAsync();
+var sp = builder.Build();
+
+var systemStateService = sp.Services.GetRequiredService<ISystemStateService>();
+if (systemStateService != null)
+{
+    systemStateService.Start();
+}
+
+await sp.RunAsync();

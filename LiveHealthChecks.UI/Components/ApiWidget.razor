@@ -9,6 +9,7 @@
 @inject IMyDialogService MyDialogService
 @inject IMyHealthChecksRepository Repository;
 @inject IMyServerService MyServerService;
+@inject ISystemStateService SystemStateService;
 
 @if(Api != null)
 {     
@@ -162,6 +163,8 @@
     {
         try
         {
+            SystemStateService.SystemResumed += SystemStateService_SystemResumed;
+
             ChartOptions.ChartPalette = new string[] { "green", "red" };
             ChartOptions.DisableLegend = true;
 
@@ -178,6 +181,18 @@
             MyDialogService.OpenMessageDialog(errorMsg);
             Logger.LogError(errorMsg, ex);
         }        
+    }
+
+    private async Task SystemStateService_SystemResumed()
+    {
+        Console.WriteLine("System resumed event handler called in api widget...");
+        if (Api != null)
+        {
+            await RefreshAsync(Api);
+
+            await BindApiAsync(Api);
+        }
+        Console.WriteLine("System resumed event handler finished in api widget...");
     }
 
     public async Task BindApiAsync(MyApiHealthCheckModel model)

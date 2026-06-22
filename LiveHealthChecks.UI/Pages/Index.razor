@@ -10,6 +10,7 @@
 @inject IDialogService DialogService
 @inject IMyDialogService MyDialogService
 @inject IMyServerService MyServerService
+@inject ISystemStateService SystemStateService
 @inject NavigationManager NavigationManager
 
 <PageTitle>LiveHealthChecks.UI</PageTitle>
@@ -157,7 +158,18 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SystemStateService.SystemResumed += SystemStateService_SystemResumed;
+
         await ConnectToServerAsync();
+    }
+
+    private async Task SystemStateService_SystemResumed()
+    {
+        Console.WriteLine("System resumed event handler called in index...");
+
+        await ConnectToServerAsync();
+
+        Console.WriteLine("System resumed event handler finished in index...");
     }
 
     public async ValueTask DisposeAsync()
