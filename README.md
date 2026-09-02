@@ -41,7 +41,18 @@ The generated health report is a JSON object, which contains the status of all t
     "Is Alive Health Check Api 1": {
       "Data": {},
       "Description": "The API is alive and reachable.",
-      "Duration": "00:00:00.0646557",
+      "Duration": "00:00:00.0151380",
+      "Exception": null,
+      "Status": 2,
+      "Tags": []
+    },
+    "System Health Check Api 1": {
+      "Data": {
+        "CPU Usage (%)": "16.75",
+        "RAM Usage (%)": "56.50"
+      },
+      "Description": "System is performing well.",
+      "Duration": "00:00:24.5404132",
       "Exception": null,
       "Status": 2,
       "Tags": []
@@ -49,24 +60,24 @@ The generated health report is a JSON object, which contains the status of all t
     "Sample Health Check Api 1": {
       "Data": {},
       "Description": null,
-      "Duration": "00:00:00.0004172",
+      "Duration": "00:00:00.0000595",
       "Exception": null,
       "Status": 0,
       "Tags": []
     }
   },
   "Status": 0,
-  "TotalDuration": "00:00:00.0648796"
+  "TotalDuration": "00:00:24.5427638"
 }
 ```
 
-The **Client** package, installed in the Api, runs the **Health Check** periodically,
+The **Client** package, installed in the Api, runs the **Health Check** periodically or if triggered,
 
-and uploads the generated Health Report to the **Server SignalR Hub**.
+and publishes the generated Health Report to the **Server SignalR Hub**.
 
-The Hub sends a web socket push notification to the connected Monitoring apps,
+The Hub sends a **web socket push notification** to the connected **Monitoring apps**,
 
-notifying them of the Health Report in real-time.
+notifying them of the Health Report in **real-time**.
 
 ![**LiveHealthChecks**](/Docs/SequenceDiagram.png)
 
