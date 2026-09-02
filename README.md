@@ -12,7 +12,7 @@
 
 ## How it works
 
-<video src="Docs/LiveHealthChecks.mp4" controls></video>
+<video src="https://github.com/VeritasSoftware/LiveHealthChecks/blob/master/Docs/LiveHealthChecks.mp4" controls></video>
 
 <a name="TOC"/>
 
