@@ -10,6 +10,10 @@
 
 ### The Nuget packages support .NET 6/7/8/9/10.
 
+```diff
++ This project has been on-boarded by the .NET Foundation, in the Seed category.
+```
+
 ## How it works
 
 https://github.com/user-attachments/assets/8d93b92f-85cd-40fc-9113-1890bcf8e352
