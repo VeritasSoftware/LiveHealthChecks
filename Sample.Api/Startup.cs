@@ -19,7 +19,8 @@ namespace Sample.Api
             // Add services to the container.
             services.AddHealthChecks()
                     .AddCheck<IsAliveHealthCheck>("Is Alive Health Check Api 1")
-                    .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")
+                    .AddCheck<SystemHealthCheck>("System Health Check Api 1")
+                    .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")                    
                     .AddLiveHealthChecksClient(settings =>
                     {
                         //You can set the health check interval
@@ -29,10 +30,11 @@ namespace Sample.Api
                         //settings.HealthCheckIntervalInMinutes = 1;
                         //Providing ClientId is optional. Good for tracking in the logs.
                         settings.ClientId = "SampleApi";
-                                    settings.ReceiveMethod = "SampleApiHealth";
-                                    settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
-                                    settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
-                                    settings.PublishOnlyWhenNotHealthy = false;
+                        settings.ReceiveMethod = "SampleApiHealth";                       
+                        settings.SecretKey = "43bf0968-17e0-4d22-816a-6eaadd766692";
+                        settings.PublishOnlyWhenNotHealthy = false;
+
+                        settings.HealthCheckServerHubUrl = "https://localhost:5001/livehealthcheckshub";
                         //Optional - transform your health report to as you want it published.
                         //settings.TransformHealthReport = healthReport => new
                         //{
