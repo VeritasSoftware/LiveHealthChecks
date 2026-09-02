@@ -12,7 +12,7 @@
 
 ## How it works
 
-![**LiveHealthChecks**](/Docs/LiveHealthChecks.gif)
+![**LiveHealthChecks**](/Docs/LiveHealthChecks.mp4)
 
 <a name="TOC"/>
 
