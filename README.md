@@ -10,6 +10,10 @@
 
 ### The Nuget packages support .NET 6/7/8/9/10.
 
+## How it works
+
+![**LiveHealthChecks**](/Docs/LiveHealthChecks.gif)
+
 <a name="TOC"/>
 
 ## Table of Contents
