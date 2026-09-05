@@ -33,14 +33,18 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
             settingsHolder.OnSettingsChanged += async (newSettings) =>
             {
-                if (_healthChecksHubConnection != null)
+                if (!string.IsNullOrEmpty(newSettings.HealthCheckServerHubUrl) 
+                    && mySettings.HealthCheckServerHubUrl.Trim() != newSettings.HealthCheckServerHubUrl.Trim())
                 {
-                    await _healthChecksHubConnection.StopAsync();
-                    await _healthChecksHubConnection.DisposeAsync();
-                    _healthChecksHubConnection = null;
-                }
+                    if (_healthChecksHubConnection != null)
+                    {
+                        await _healthChecksHubConnection.StopAsync();
+                        await _healthChecksHubConnection.DisposeAsync();
+                        _healthChecksHubConnection = null;
+                    }
 
-                BuildHealthChecksHubConnection(newSettings);
+                    BuildHealthChecksHubConnection(newSettings);
+                }                
             };
 
             BuildHealthChecksHubConnection(mySettings);
