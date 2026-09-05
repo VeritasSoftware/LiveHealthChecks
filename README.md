@@ -302,7 +302,13 @@ ie those Health Reports with **not Healthy** [**status**](https://learn.microsof
 
 The Server sends the Health Report as a real-time push notification.
 
-**Note:-** You can host a Server & Client in the same Api too. 
+### Note
+
+You can host a Server & Client in the same Api/App too.
+
+### Replace basic settings without re-starting Api/App.
+
+[**Replace basic settings**](/Docs/README_ReplaceBasicSettings.md)
 
 ### Sample
 
