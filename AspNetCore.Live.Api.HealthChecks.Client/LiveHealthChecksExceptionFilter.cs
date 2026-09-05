@@ -35,4 +35,41 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             }            
         }
     }
+
+    public class FilterRemovalProvider : IFilterProvider
+    {
+        private readonly IServiceProvider _serviceProvider;
+
+        public int Order => -1000; // Run early
+
+        public FilterRemovalProvider(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public void OnProvidersExecuting(FilterProviderContext context)
+        {
+            var settings = _serviceProvider.GetRequiredService<MyHealthCheckSettingsHolder>().Current;
+
+            if (settings.AddHealthCheckMiddleware)
+            {
+                return;
+            };
+
+            // Remove all instances of the target filter type
+            var toRemove = context.Results
+                .Where(r => r.Filter is LiveHealthChecksExceptionFilter)
+                .ToList();
+
+            foreach (var item in toRemove)
+            {
+                context.Results.Remove(item);
+            }
+        }
+
+        public void OnProvidersExecuted(FilterProviderContext context)
+        {
+            // No-op
+        }
+    }
 }
