@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace AspNetCore.Live.Api.HealthChecks.Client
 {
@@ -12,7 +14,9 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
             settings(mySettings);
 
-            services.AddSingleton(sp => mySettings);
+            var settingsHolder = new MyHealthCheckSettingsHolder(mySettings);
+
+            services.AddSingleton(sp => settingsHolder);
             
             services.AddSingleton<IMyHealthCheckPublisher, MyHealthCheckPublisher>();
             services.AddSingleton<IMyHealthCheckService, MyHealthCheckService>();
@@ -20,22 +24,64 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
             if (mySettings.AddHealthCheckMiddleware)
             {
-                services.AddMvc(o => o.Filters.Add<LiveHealthChecksExceptionFilter>());
+                services.AddMvc(o => o.Filters.Add<LiveHealthChecksExceptionFilter>());                
             }
 
-            _healthChecksHubConnection = new HubConnectionBuilder()
-                    .WithUrl(mySettings.HealthCheckServerHubUrl, o =>
-                    {
-                        o.Headers.Add("LiveHealthChecks-ReceiveMethod", mySettings.ReceiveMethod);
-                        o.Headers.Add("LiveHealthChecks-SecretKey", mySettings.SecretKey);
+            services.AddSingleton<IFilterProvider, FilterRemovalProvider>();
 
-                        if (!string.IsNullOrEmpty(mySettings.ClientId))
-                            o.Headers.Add("LiveHealthChecks-ClientId", mySettings.ClientId);
-                    })
-                    .WithAutomaticReconnect()
-                    .Build();
+            services.AddControllers();
+
+            settingsHolder.OnSettingsChanged += async (newSettings) =>
+            {
+                if (_healthChecksHubConnection != null)
+                {
+                    await _healthChecksHubConnection.StopAsync();
+                    await _healthChecksHubConnection.DisposeAsync();
+                    _healthChecksHubConnection = null;
+                }
+
+                BuildHealthChecksHubConnection(newSettings);
+            };
+
+            BuildHealthChecksHubConnection(mySettings);
 
             return services;
+        }
+
+        public static WebApplication UseLiveHealthChecksClient(this WebApplication app)
+        {
+            app.MapGet("/livehealthchecks/settings", (MyHealthCheckSettingsHolder holder) => new MyHealthCheckBasicSettings
+            {
+                HealthCheckIntervalCronExpression = holder.Current.HealthCheckIntervalCronExpression,
+                HealthCheckIntervalInMinutes = holder.Current.HealthCheckIntervalInMinutes,
+                HealthCheckServerHubUrl = holder.Current.HealthCheckServerHubUrl,
+                PublishOnlyWhenNotHealthy = holder.Current.PublishOnlyWhenNotHealthy,
+                AddHealthCheckMiddleware = holder.Current.AddHealthCheckMiddleware
+            });
+
+            app.MapPost("/livehealthchecks/settings/replace", (MyHealthCheckBasicSettings newSettings, [FromServices] MyHealthCheckSettingsHolder holder) =>
+            {
+                holder.Replace(newSettings);
+                return Results.Ok("Settings replaced");
+            });
+
+            app.MapControllers();
+
+            return app;
+        }
+
+        private static void BuildHealthChecksHubConnection(MyHealthCheckSettings settings)
+        {
+            _healthChecksHubConnection = new HubConnectionBuilder()
+                .WithUrl(settings.HealthCheckServerHubUrl, o =>
+                {
+                    o.Headers.Add("LiveHealthChecks-ReceiveMethod", settings.ReceiveMethod);
+                    o.Headers.Add("LiveHealthChecks-SecretKey", settings.SecretKey);
+                    if (!string.IsNullOrEmpty(settings.ClientId))
+                        o.Headers.Add("LiveHealthChecks-ClientId", settings.ClientId);
+                })
+                .WithAutomaticReconnect()
+                .Build();
         }
     }
 }

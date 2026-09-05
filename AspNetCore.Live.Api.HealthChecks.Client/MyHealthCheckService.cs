@@ -11,19 +11,19 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
     public class MyHealthCheckService : IMyHealthCheckService
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<MyHealthCheckService>? _logger;
-        private readonly MyHealthCheckSettings _settings;
         private readonly HealthCheckService _healthCheckService;
         private readonly IMyHealthCheckPublisher _healthCheckPublisher;
 
-        public MyHealthCheckService(                                        
-                                        MyHealthCheckSettings settings, 
+        public MyHealthCheckService(                        
+                                        IServiceProvider serviceProvider,
                                         IMyHealthCheckPublisher healthCheckPublisher,
                                         HealthCheckService healthCheckService,
                                         ILogger<MyHealthCheckService>? logger = null
                                     )
         {
-            _settings = settings;
+            _serviceProvider = serviceProvider;
             _healthCheckPublisher = healthCheckPublisher;
             _healthCheckService = healthCheckService ?? throw new ArgumentNullException(nameof(healthCheckService));            
             _logger = logger;
@@ -31,7 +31,8 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
         public async Task PublishHealthReportAsync(HealthReport report)
         {
-            if (_settings.PublishOnlyWhenNotHealthy)
+            var settings = _serviceProvider.GetRequiredService<MyHealthCheckSettingsHolder>().Current;
+            if (settings.PublishOnlyWhenNotHealthy)
             {
                 if (report.Status != HealthStatus.Healthy)
                 {

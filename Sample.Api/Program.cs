@@ -1,3 +1,4 @@
+using AspNetCore.Live.Api.HealthChecks.Client;
 using Sample.Api.HealthChecks;
 
 Console.WriteLine("Hello, Api!");
@@ -68,6 +69,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.UseLiveHealthChecksClient();
 
 app.MapControllers();
 

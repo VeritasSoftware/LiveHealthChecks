@@ -13,10 +13,11 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
     {
         private readonly MyHealthCheckSettings _settings;
         private readonly ILogger<MyHealthCheckPublisher>? _logger;
+        private readonly IServiceProvider _serviceProvider;
 
-        public MyHealthCheckPublisher(MyHealthCheckSettings settings, ILogger<MyHealthCheckPublisher>? logger = null)
+        public MyHealthCheckPublisher(IServiceProvider serviceProvider, ILogger<MyHealthCheckPublisher>? logger = null)
         {
-            _settings = settings;
+            _serviceProvider = serviceProvider;
             _logger = logger;
         }
 
@@ -28,12 +29,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                 WriteIndented = true
             };
 
-            bool isTransform = _settings.TransformHealthReport != null;
+            var healthChecksettings = _serviceProvider.GetRequiredService<MyHealthCheckSettingsHolder>().Current;
+
+            bool isTransform = healthChecksettings.TransformHealthReport != null;
             string? publishedReport = null;
 
             if(isTransform)
             {
-                publishedReport = JsonSerializer.Serialize(_settings.TransformHealthReport!(healthReport), settings);
+                publishedReport = JsonSerializer.Serialize(healthChecksettings.TransformHealthReport!(healthReport), settings);
             }
             else
             {
@@ -50,14 +53,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
             if (connection.State != HubConnectionState.Connected)
                 await connection.StartAsync();
-
-            _logger?.LogInformation($"Published Health Report: {publishedReport}, ReceiveMethod: {_settings.ReceiveMethod}, ClientId: {_settings.ClientId}");
+            
+            _logger?.LogInformation($"Published Health Report: {publishedReport}, ReceiveMethod: {healthChecksettings.ReceiveMethod}, ClientId: {healthChecksettings.ClientId}");
 
             var request = new MyHealthCheckModel
             {
-                ClientId = _settings.ClientId,
-                ReceiveMethod = _settings.ReceiveMethod,
-                SecretKey = _settings.SecretKey,
+                ClientId = healthChecksettings.ClientId,
+                ReceiveMethod = healthChecksettings.ReceiveMethod,
+                SecretKey = healthChecksettings.SecretKey,
                 Report = publishedReport
             };
 

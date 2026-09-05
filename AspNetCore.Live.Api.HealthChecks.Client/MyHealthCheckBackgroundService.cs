@@ -4,17 +4,17 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 {
     public class MyHealthCheckBackgroundService : BackgroundService
     {
-        private readonly MyHealthCheckSettings _settings;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<MyHealthCheckBackgroundService>? _logger;
         private readonly IMyHealthCheckService _myHealthCheckService;
 
         public MyHealthCheckBackgroundService(
-                                                MyHealthCheckSettings settings, 
+                                                IServiceProvider serviceProvider,
                                                 IMyHealthCheckService myHealthCheckService, 
                                                 ILogger<MyHealthCheckBackgroundService>? logger = null
                                             )
         {            
-            _settings = settings;
+            _serviceProvider = serviceProvider;
             _myHealthCheckService = myHealthCheckService;
             _logger = logger;
         }
@@ -25,9 +25,11 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             {
                 await RunHealthCheckAndPublishHealthReport(stoppingToken);
 
-                if (!string.IsNullOrEmpty(_settings.HealthCheckIntervalCronExpression))
+                var settings = _serviceProvider.GetRequiredService<MyHealthCheckSettingsHolder>().Current;
+
+                if (!string.IsNullOrEmpty(settings.HealthCheckIntervalCronExpression))
                 {
-                    var expression = CronExpression.Parse(_settings.HealthCheckIntervalCronExpression);
+                    var expression = CronExpression.Parse(settings.HealthCheckIntervalCronExpression);
 
                     var utcNow = DateTimeOffset.UtcNow;
                     var nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);
@@ -42,9 +44,9 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                         nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);                        
                     }
                 }
-                else if (_settings.HealthCheckIntervalInMinutes.HasValue)
+                else if (settings.HealthCheckIntervalInMinutes.HasValue)
                 {
-                    TimeSpan interval = TimeSpan.FromMinutes(_settings.HealthCheckIntervalInMinutes.Value);
+                    TimeSpan interval = TimeSpan.FromMinutes(settings.HealthCheckIntervalInMinutes.Value);
 
                     using PeriodicTimer timer = new PeriodicTimer(interval);
 
