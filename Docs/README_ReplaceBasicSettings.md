@@ -20,6 +20,12 @@ This endpoint allows for replacing the basic settings with new values.
 
 The new values can be provided in the request body as a JSON object.
 
+To include the endpoints in your Api/App client, you can use the following code:
+
+```csharp
+app.UseLiveHealthChecksClient();
+```
+
 ## Get basic settings
 
 ![Get basic settings](/Docs/GetBasicSettings.png)
