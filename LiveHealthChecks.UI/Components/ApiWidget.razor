@@ -203,22 +203,6 @@
             {
                 var deserializedHealthReport = JsonSerializer.Deserialize<HealthReport>(report);
 
-                ////Generate random Status
-                ////dynamic jsonReport = JsonSerializer.Deserialize<JsonObject>(report);
-
-                //var td = int.Parse(deserializedHealthReport.TotalDuration?.ToString().Replace(":", "").Replace(".", ""));
-
-                //Random = new Random(td);
-
-                //var seed = Random.Next();
-
-                //var random = new Random(seed);
-                //var num = random.Next(1, 100);
-
-                ////jsonReport["Status"] = num % 2 == 0 ? 2 : 1;
-
-                //deserializedHealthReport.Status = num % 2 == 0 ? Status.Healthy : Status.Unhealthy;
-
                 List<HealthCheck> healthChecksTemp;
 
                 if (await Repository.ContainKeyAsync(model.ReceiveMethod))
@@ -251,6 +235,7 @@
                     Api = model.ApiName,
                     ReceiveMethod = model.ReceiveMethod,
                     Report = deserializedHealthReport,
+                    ReportStr = report,
                     ReceiveTimeStamp = DateTime.UtcNow,
                     Status = healthStatus
                 });

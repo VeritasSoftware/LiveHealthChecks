@@ -35,6 +35,7 @@ namespace LiveHealthChecks.UI.Models
         public string ReceiveMethod { get; set; } = string.Empty;
         public DateTime? ReceiveTimeStamp { get; set; } = null;
         public HealthReport? Report { get; set; }
+        public string? ReportStr { get; set; }
         public double Status { get; set; }
     }
 

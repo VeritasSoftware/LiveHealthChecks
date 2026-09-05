@@ -263,6 +263,7 @@ then
 ```C#
 builder.Services.AddHealthChecks() //Required - add all your health checks
                 .AddCheck<IsAliveHealthCheck>("Is Alive Health Check Api 1")
+                .AddCheck<SystemHealthCheck>("System Health Check Api 1")
                 .AddCheck<SampleHealthCheck>("Sample Health Check Api 1")
                 //Add Live Health Checks Client
                 .AddLiveHealthChecksClient(settings =>
