@@ -63,28 +63,6 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             return services;
         }
 
-        public static WebApplication UseLiveHealthChecksClient(this WebApplication app)
-        {
-            app.MapGet("/livehealthchecks/settings", (MyHealthCheckSettingsHolder holder) => new MyHealthCheckBasicSettings
-            {
-                HealthCheckIntervalCronExpression = holder.Current.HealthCheckIntervalCronExpression,
-                HealthCheckIntervalInMinutes = holder.Current.HealthCheckIntervalInMinutes,
-                HealthCheckServerHubUrl = holder.Current.HealthCheckServerHubUrl,
-                PublishOnlyWhenNotHealthy = holder.Current.PublishOnlyWhenNotHealthy,
-                AddHealthCheckMiddleware = holder.Current.AddHealthCheckMiddleware
-            });
-
-            app.MapPost("/livehealthchecks/settings/replace", (MyHealthCheckBasicSettings newSettings, [FromServices] MyHealthCheckSettingsHolder holder) =>
-            {
-                holder.Replace(newSettings);
-                return Results.Ok("Settings replaced");
-            });
-
-            app.MapControllers();
-
-            return app;
-        }
-
         private static void BuildHealthChecksHubConnection(MyHealthCheckSettings settings)
         {
             _healthChecksHubConnection = new HubConnectionBuilder()
