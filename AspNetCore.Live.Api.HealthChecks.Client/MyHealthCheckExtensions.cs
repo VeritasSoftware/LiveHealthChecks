@@ -14,7 +14,18 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
             settings(mySettings);
 
-            var settingsHolder = new MyHealthCheckSettingsHolder(mySettings);
+            var settingsHolder = new MyHealthCheckSettingsHolder(new MyHealthCheckSettings
+            {
+                AddHealthCheckMiddleware = mySettings.AddHealthCheckMiddleware,
+                HealthCheckIntervalCronExpression = mySettings.HealthCheckIntervalCronExpression,
+                HealthCheckIntervalInMinutes = mySettings.HealthCheckIntervalInMinutes,
+                HealthCheckServerHubUrl = mySettings.HealthCheckServerHubUrl,
+                PublishOnlyWhenNotHealthy = mySettings.PublishOnlyWhenNotHealthy,
+                ClientId = mySettings.ClientId,
+                ReceiveMethod = mySettings.ReceiveMethod,
+                SecretKey = mySettings.SecretKey,
+                TransformHealthReport = mySettings.TransformHealthReport
+            });
 
             services.AddSingleton(sp => settingsHolder);
             
