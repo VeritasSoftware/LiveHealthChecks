@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace AspNetCore.Live.Api.HealthChecks.Client
 {
@@ -53,8 +52,18 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
             if (settings.AddHealthCheckMiddleware)
             {
+                if (!context.Results.Any(r => r.Filter is LiveHealthChecksExceptionFilter))
+                {
+                    context.Results.Add(new FilterItem(new FilterDescriptor(new LiveHealthChecksExceptionFilter(
+                    _serviceProvider.GetRequiredService<IMyHealthCheckService>(),
+                    _serviceProvider.GetService<ILogger<LiveHealthChecksExceptionFilter>>()), FilterScope.Global),
+                    new LiveHealthChecksExceptionFilter(
+                    _serviceProvider.GetRequiredService<IMyHealthCheckService>(),
+                    _serviceProvider.GetService<ILogger<LiveHealthChecksExceptionFilter>>())));
+                }
+
                 return;
-            };
+            }
 
             // Remove all instances of the target filter type
             var toRemove = context.Results
