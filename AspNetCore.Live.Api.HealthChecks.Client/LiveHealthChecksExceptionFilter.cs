@@ -20,9 +20,9 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             {
                 _logger?.LogError(context.Exception, "LiveHealthChecks: An exception occurred.");
 
-                await _healthCheckService.PublishExceptionHealthReportAsync(context.Exception);
-
                 var healthReport = await _healthCheckService.CheckHealthAsync();
+
+                await _healthCheckService.PublishExceptionHealthReportAsync(context.Exception);                
 
                 _logger?.LogInformation("LiveHealthChecks: Publishing health report.");
 
