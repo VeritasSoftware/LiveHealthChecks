@@ -20,10 +20,22 @@ This endpoint allows for replacing the basic settings with new values.
 
 The new values can be provided in the request body as a JSON object.
 
-To include the endpoints in your Api/App client, you can use the following code:
+To include the unsecured endpoints in your Api/App client, you can use the following code:
 
 ```csharp
 app.UseLiveHealthChecksClient();
+```
+
+To include the secured endpoints in your Api/App client, you can use the following code:
+
+```csharp
+app.MapGetLiveHealthChecksSettings()
+   .RequireAuthorization(); // Provide your own authorization policy here
+							// or remove this line to allow anonymous access.
+
+app.MapPostReplaceLiveHealthChecksSettings()
+   .RequireAuthorization(); // Provide your own authorization policy here
+							// or remove this line to allow anonymous access.
 ```
 
 ## Get basic settings

@@ -70,7 +70,11 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.UseLiveHealthChecksClient();
+//app.UseLiveHealthChecksClient();
+
+app.MapGetLiveHealthChecksSettings();
+
+app.MapPostReplaceLiveHealthChecksSettings();
 
 app.MapControllers();
 

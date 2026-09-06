@@ -28,14 +28,14 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
             });
 
             services.AddSingleton(sp => settingsHolder);
-            
+
             services.AddSingleton<IMyHealthCheckPublisher, MyHealthCheckPublisher>();
             services.AddSingleton<IMyHealthCheckService, MyHealthCheckService>();
             services.AddHostedService<MyHealthCheckBackgroundService>();
 
             if (mySettings.AddHealthCheckMiddleware)
             {
-                services.AddMvc(o => o.Filters.Add<LiveHealthChecksExceptionFilter>());                
+                services.AddMvc(o => o.Filters.Add<LiveHealthChecksExceptionFilter>());
             }
 
             services.AddSingleton<IFilterProvider, FilterRemovalProvider>();
@@ -44,7 +44,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
 
             settingsHolder.OnSettingsChanged += async (newSettings) =>
             {
-                if (!string.IsNullOrEmpty(newSettings.HealthCheckServerHubUrl) 
+                if (!string.IsNullOrEmpty(newSettings.HealthCheckServerHubUrl)
                     && mySettings.HealthCheckServerHubUrl.Trim() != newSettings.HealthCheckServerHubUrl.Trim())
                 {
                     if (_healthChecksHubConnection != null)
@@ -55,7 +55,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                     }
 
                     BuildHealthChecksHubConnection(newSettings);
-                }                
+                }
             };
 
             BuildHealthChecksHubConnection(mySettings);
@@ -97,6 +97,30 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                 })
                 .WithAutomaticReconnect()
                 .Build();
+        }
+
+        public static RouteHandlerBuilder MapGetLiveHealthChecksSettings(this WebApplication app)
+        {
+            var routeHandler = app.MapGet("/livehealthchecks/settings", (MyHealthCheckSettingsHolder holder) => new MyHealthCheckBasicSettings
+            {
+                HealthCheckIntervalCronExpression = holder.Current.HealthCheckIntervalCronExpression,
+                HealthCheckIntervalInMinutes = holder.Current.HealthCheckIntervalInMinutes,
+                HealthCheckServerHubUrl = holder.Current.HealthCheckServerHubUrl,
+                PublishOnlyWhenNotHealthy = holder.Current.PublishOnlyWhenNotHealthy,
+                AddHealthCheckMiddleware = holder.Current.AddHealthCheckMiddleware
+            });
+
+            return routeHandler;
+        }
+
+        public static RouteHandlerBuilder MapPostReplaceLiveHealthChecksSettings(this WebApplication app)
+        {
+            var routeHandler = app.MapPost("/livehealthchecks/settings/replace", (MyHealthCheckBasicSettings newSettings, [FromServices] MyHealthCheckSettingsHolder holder) =>
+            {
+                holder.Replace(newSettings);
+                return Results.Ok("Settings replaced");
+            });
+            return routeHandler;
         }
     }
 }
