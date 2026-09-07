@@ -12,6 +12,7 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
         private readonly IMyHealthCheckService _myHealthCheckService;
 
         private bool IsSettingsChanged { get; set; } = false;
+        private static CancellationTokenSource? _cts;
 
         public MyHealthCheckBackgroundService(
                                                 IServiceProvider serviceProvider,
@@ -35,10 +36,11 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                 _previousHealthCheckInterval != newSettings.HealthCheckIntervalInMinutes)
             {
                 _logger?.LogInformation($"Health check settings changed. Restarting {nameof(MyHealthCheckBackgroundService)}.");
-
+                
+                IsSettingsChanged = true;
+                _cts?.Cancel();
                 _previousCronExpression = newSettings.HealthCheckIntervalCronExpression;
                 _previousHealthCheckInterval = newSettings.HealthCheckIntervalInMinutes;
-                IsSettingsChanged = true;
             }
         }
 
@@ -49,61 +51,101 @@ namespace AspNetCore.Live.Api.HealthChecks.Client
                 await RunHealthCheckAndPublishHealthReport(stoppingToken);
 
                 var settings = _settingsHolder.Current;
-
-                if (!string.IsNullOrEmpty(settings.HealthCheckIntervalCronExpression))
+                
+                while(!stoppingToken.IsCancellationRequested)
                 {
-                    var expression = CronExpression.Parse(settings.HealthCheckIntervalCronExpression);
-
-                    var utcNow = DateTimeOffset.UtcNow;
-                    var nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);
-
-                    while(!stoppingToken.IsCancellationRequested && nextUtc.HasValue)
+                    if (!string.IsNullOrEmpty(settings.HealthCheckIntervalCronExpression))
                     {
-                        await Task.Delay((nextUtc! - utcNow).Value);
+                        var expression = CronExpression.Parse(settings.HealthCheckIntervalCronExpression);
 
-                        await RunHealthCheckAndPublishHealthReport(stoppingToken);
+                        var utcNow = DateTimeOffset.UtcNow;
+                        var nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);
 
-                        utcNow = DateTimeOffset.UtcNow;
-
-                        if (IsSettingsChanged)
+                        while (!stoppingToken.IsCancellationRequested && nextUtc.HasValue)
                         {
-                            _logger?.LogInformation($"Health check settings changed. Restarting {nameof(MyHealthCheckBackgroundService)}.");
-                            nextUtc = null;
-                            expression = CronExpression.Parse(settings.HealthCheckIntervalCronExpression);
-                            IsSettingsChanged = false;
+                            _cts = new CancellationTokenSource();
+                            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, _cts.Token);
+
+                            try
+                            {
+                                await Task.Delay((nextUtc! - utcNow).Value, linkedCts.Token);
+                            }
+                            catch (TaskCanceledException)
+                            {
+                                _logger?.LogWarning("Delay cancelled manually.");
+                            }
+
+                            if (!linkedCts.Token.IsCancellationRequested)
+                                await RunHealthCheckAndPublishHealthReport(linkedCts.Token);
+
+                            utcNow = DateTimeOffset.UtcNow;
+
+                            if (IsSettingsChanged)
+                            {
+                                _logger?.LogInformation($"Health check settings changed. Restarting {nameof(MyHealthCheckBackgroundService)}.");
+                                nextUtc = null;
+                                if (string.IsNullOrEmpty(settings.HealthCheckIntervalCronExpression))
+                                {
+                                    IsSettingsChanged = false;
+                                    break;
+                                }
+                                expression = CronExpression.Parse(settings.HealthCheckIntervalCronExpression);
+                                IsSettingsChanged = false;                                
+                            }
+
+                            nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);
                         }
 
-                        nextUtc = expression.GetNextOccurrence(utcNow, TimeZoneInfo.Utc);                        
+                        nextUtc = null;
                     }
+                    else if (settings.HealthCheckIntervalInMinutes.HasValue)
+                    {
+                        TimeSpan interval = TimeSpan.FromMinutes(settings.HealthCheckIntervalInMinutes.Value);
 
-                    nextUtc = null;
-                }
-                else if (settings.HealthCheckIntervalInMinutes.HasValue)
-                {
-                    TimeSpan interval = TimeSpan.FromMinutes(settings.HealthCheckIntervalInMinutes.Value);
+                        PeriodicTimer timer = new PeriodicTimer(interval);
 
-                    PeriodicTimer timer = new PeriodicTimer(interval);
-
-                    while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
-                    {                        
-                        await RunHealthCheckAndPublishHealthReport(stoppingToken);
-
-                        if (IsSettingsChanged)
+                        while (true)
                         {
-                            _logger?.LogInformation($"Health check settings changed. Restarting {nameof(MyHealthCheckBackgroundService)}.");
-                            interval = TimeSpan.FromMinutes(settings.HealthCheckIntervalInMinutes.Value);
-                            timer = new PeriodicTimer(interval);
-                            IsSettingsChanged = false;
-                            break;
-                        }
-                    }
+                            _cts = new CancellationTokenSource();
+                            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, _cts.Token);
 
-                    timer.Dispose();
-                }
-                else
-                {
-                    throw new ApplicationException("Please specify health check interval in cron expression or minutes");
-                }                
+                            try
+                            {
+                                // Wait for next tick, cancellable by either token
+                                if (!await timer.WaitForNextTickAsync(linkedCts.Token))
+                                    break; // Timer disposed or stopped
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                _logger?.LogWarning("Delay cancelled manually.");
+                            }
+
+                            if (!linkedCts.Token.IsCancellationRequested)
+                                await RunHealthCheckAndPublishHealthReport(linkedCts.Token);
+
+                            if (IsSettingsChanged)
+                            {
+                                _logger?.LogInformation($"Health check settings changed. Restarting {nameof(MyHealthCheckBackgroundService)}.");
+                                if (settings.HealthCheckIntervalInMinutes == null 
+                                    || settings.HealthCheckIntervalInMinutes == 0
+                                    || !string.IsNullOrEmpty(settings.HealthCheckIntervalCronExpression))
+                                {
+                                    IsSettingsChanged = false;
+                                    break;
+                                }
+                                interval = TimeSpan.FromMinutes(settings.HealthCheckIntervalInMinutes.Value);
+                                timer = new PeriodicTimer(interval);
+                                IsSettingsChanged = false;                                
+                            }
+                        }
+
+                        timer.Dispose();
+                    }
+                    else
+                    {
+                        throw new ApplicationException("Please specify health check interval in cron expression or minutes");
+                    }
+                }                                
             }
             catch (Exception ex)
             {
