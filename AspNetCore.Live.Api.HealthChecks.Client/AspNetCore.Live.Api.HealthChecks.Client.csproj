@@ -12,11 +12,11 @@
     <PackageProjectUrl>https://github.com/VeritasSoftware/LiveHealthChecks</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/VeritasSoftware/LiveHealthChecks</RepositoryUrl>
-    <PackageReleaseNotes>Added support for .NET 10. Now, .NET 6/7/8/9/10 are supported.</PackageReleaseNotes>
+    <PackageReleaseNotes>added feature to replace basic settings at runtime, without restarting the application.</PackageReleaseNotes>
     <PackageTags>asp net core web api health check live real time signalr web sockets push notification client</PackageTags>
-	<Version>4.0.0</Version>
-	<AssemblyVersion>4.0.0.0</AssemblyVersion>
-	<FileVersion>4.0.0.0</FileVersion>
+	<Version>4.1.0</Version>
+	<AssemblyVersion>4.1.0.0</AssemblyVersion>
+	<FileVersion>4.1.0.0</FileVersion>
 	<OutputType>Exe</OutputType>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
@@ -29,19 +29,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cronos" Version="0.11.1" />
+    <PackageReference Include="Cronos" Version="0.13.0" />
   </ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.11" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.12" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.19" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.23" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.30" />
 	</ItemGroup>
 	
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">

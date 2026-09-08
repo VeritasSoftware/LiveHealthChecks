@@ -1,4 +1,4 @@
-# Replace Basic Settings
+# Replace Basic Settings at runtime
 
 The Client package provides a set of basic settings that can be used to configure the behavior of the client. 
 
