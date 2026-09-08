@@ -14,6 +14,10 @@
 + This project has been on-boarded by the .NET Foundation, in the Seed category.
 ```
 
+Foundation Social Media: LinkedIn [post](https://www.linkedin.com/posts/dotnetfoundation_livehealthchecks-innovative-system-for-activity-7503084254835253248-F84g/).
+
+[![.NET Foundation endorsement](/Docs/LiveHealthChecks.png)](https://www.linkedin.com/posts/dotnetfoundation_livehealthchecks-innovative-system-for-activity-7503084254835253248-F84g/)
+
 ## How it works
 
 https://github.com/user-attachments/assets/8d93b92f-85cd-40fc-9113-1890bcf8e352
